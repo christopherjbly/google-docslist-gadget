@@ -1,7 +1,48 @@
+
 /**
  * Constructor for Doclist class.
  */
 function Doclist() {
+  this.isUploaderOpen = false;  
+  this.content = doclistContent;    
+  
+  commandUpload.onclick = this.openUploader.bind(this);
+  uploadOption.onclick = this.closeUploader.bind(this);  
+}
+
+/**
+ * Open uploader
+ */
+Doclist.prototype.openUploader = function() {
+  this.isUploaderOpen = true;
+  this.content = uploaderContent;
+  
+  sortOptions.visible = false;
+  searchArea.visible = false; 
+  uploadStatus.visible = true;
+  uploaderContent.visible = true;
+  doclistContent.visible = false;
+  
+  this.draw();
+  customScrollbar.draw();
+}
+
+/**
+ * Close uploader
+ */
+Doclist.prototype.closeUploader = function() {
+  if (!this.isUploaderOpen) return;
+  this.isUploaderOpen = false;
+  this.content = doclistContent;  
+  
+  sortOptions.visible = true;
+  searchArea.visible = true;
+  uploadStatus.visible = false; 
+  uploaderContent.visible = false;
+  doclistContent.visible = true;
+  
+  this.draw(); 
+  customScrollbar.draw(); 
 }
 
 /**
@@ -9,40 +50,51 @@ function Doclist() {
  */
 Doclist.prototype.draw = function() {
 	
-	if (content.height <= contentContainer.height) {
-		content.width = contentContainer.width;
-		scrollbar.visible = false;			
-	} else {
-		content.width = contentContainer.width - (scrollbar.width + 14);			
-		scrollbar.visible = true;									
-	}
-
+	// height and vertical position 
+	
 	var y = 0;
-	for (var i=0; i<content.children.count; i++) {
-		var div = content.children.item(i);
-		div.width = contentContainer.width - (scrollbar.visible ? 0 : 8);			
+	for (var i=0; i<this.content.children.count; i++) {
+    var div = this.content.children.item(i);		
 		div.y = y;
 		y += div.height;
+	}
+	
+	this.content.height = y;
+	
+	// show or hide scrollbar
+	
+	if (this.content.height <= contentContainer.height) {
+		this.content.width = contentContainer.width;
+		scrollbar.visible = false;			
+	} else {
+		this.content.width = contentContainer.width - (scrollbar.width + 14);			
+		scrollbar.visible = true;
+    this.content.height--;
+	}
+	
+	// width and horizontal position
+	
+	for (var i=0; i<this.content.children.count; i++) {
+		var div = this.content.children.item(i);
+		div.width = contentContainer.width - (scrollbar.visible ? 0 : 8);			
 		
-		div.onmousewheel = function() { customScrollbar.wheel(); }
+		div.onmousewheel = customScrollbar.wheel.bind(customScrollbar);
 		
 		if (div.children.count > 0) {
-			if (uploader.isOpen) {
+			if (this.isUploaderOpen) {
 				this.drawUploader(div);				
 			} else {
 				this.drawFiles(div);
 			}
 		}			
-	}
-	if (scrollbar.visible && y>0) y--;
-	content.height = y;
+	}	
 }
 
 /**
  * Draw doclist uploader
  */
-Doclist.prototype.drawUploader = function() {
-	
+Doclist.prototype.drawUploader = function(div) {
+	div.children.item(2).width = div.width - div.children.item(2).x;
 }
 
 /**

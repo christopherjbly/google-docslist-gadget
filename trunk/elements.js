@@ -137,39 +137,6 @@ SortOptions.prototype.date = function() {
 // instantiate object in the global scope
 var sortOptionsObject = new SortOptions();
 
-/**
- * Constructor for Uploader class.
- */
-function Uploader() {
-  this.isOpen = false;
-  commandUpload.onclick = this.open.bind(this);
-  uploadOption.onclick = this.close.bind(this);
-}
-
-/**
- * Open options box
- */
-Uploader.prototype.open = function() {
-  this.isOpen = true;
-  sortOptions.visible = false;
-  searchArea.visible = false; 
-  uploadStatus.visible = true;
-}
-
-/**
- * Close options box
- */
-Uploader.prototype.close = function() {
-  if (!this.isOpen) return;
-  this.isOpen = false;
-  sortOptions.visible = true;
-  searchArea.visible = true;
-  uploadStatus.visible = false; 
-}
-
-// instantiate object in the global scope
-var uploader = new Uploader();
-
 
 /**
  * Constructor for OptionBox class.
@@ -254,7 +221,7 @@ CustomScrollbar.prototype.wheel = function() {
  * Scroll button up
  */
 CustomScrollbar.prototype.startUp = function() {    
-  var time = 100 / (scrollbarBar.height / scrollbarTrack.height);
+  var time = (scrollbarBar.height && scrollbarTrack.height) ? 100 / (scrollbarBar.height / scrollbarTrack.height) : 100;
   
   this.up = view.beginAnimation(function() {
     scrollbarBar.y = event.value;
@@ -266,7 +233,7 @@ CustomScrollbar.prototype.startUp = function() {
  * Scroll button down
  */
 CustomScrollbar.prototype.startDown = function() {  
-  var time = 100 / (scrollbarBar.height / scrollbarTrack.height);   
+  var time = (scrollbarBar.height && scrollbarTrack.height) ? 100 / (scrollbarBar.height / scrollbarTrack.height) : 100;
   
   this.down = view.beginAnimation(function() {
     scrollbarBar.y = event.value;
@@ -329,13 +296,13 @@ CustomScrollbar.prototype.ratio = function() {
  * Scroll content area
  */
 CustomScrollbar.prototype.scroll = function() { 
-  var maxY = content.height - contentContainer.height;
+  var maxY = doclist.content.height - contentContainer.height;
   if (maxY < 0) maxY = 0;
 
   var newY = maxY * this.ratio(); 
   
-  if (newY > maxY) content.y = -maxY;
-  else content.y = -newY;
+  if (newY > maxY) doclist.content.y = -maxY;
+  else doclist.content.y = -newY;
 }
 
 /**
@@ -387,15 +354,19 @@ CustomScrollbar.prototype.draw = function() {
   
   var scrollRatio = scrollbarTrack.height ? ((scrollbarBar.y - scrollbarUp.height) / (scrollbarTrack.height)) : 0;    
 
-  scrollbar.x = content.width + 9;
+  scrollbar.x = doclist.content.width + 9;
   scrollbar.height = contentContainer.height - 5;
 
   scrollbarDown.y = scrollbar.height - scrollbarDown.height;          
   scrollbarTrack.height = scrollbar.height - (scrollbarDown.height + scrollbarUp.height);
   
-  var newHeight = Math.ceil(scrollbarTrack.height * (contentContainer.height / content.height));
-  if (newHeight < 10) newHeight = 10;
-  scrollbarBar.height = newHeight >= scrollbarTrack.height ? scrollbarTrack.height - 1 : newHeight;
+  if (doclist.content.height == 0) {
+    scrollbarBar.height = scrollbarTrack.height - 1;
+  } else {
+    var newHeight = Math.ceil(scrollbarTrack.height * (contentContainer.height / doclist.content.height));
+    if (newHeight < 10) newHeight = 10;
+    scrollbarBar.height = newHeight >= scrollbarTrack.height ? scrollbarTrack.height - 1 : newHeight;    
+  }
   
   var newY = scrollRatio * scrollbarTrack.height + scrollbarUp.height;
   
