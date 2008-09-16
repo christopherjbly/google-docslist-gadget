@@ -1,0 +1,392 @@
+<view width="165" height="235" resizable="true" resizeBorder="10 15 15 15" onopen="mainView.onOpen()">
+
+  <script src="util.js" />
+  <script src="elements.js" />
+  <script src="main.js" />
+
+  <div x="2" y="9" name="window" enabled="true">
+    
+    <div name="bottomRightMainBg" width="35" height="29"
+       background="images/base_bottomright.png" />
+    <div name="bottomCenterMainBg" x="31" height="29"
+         background="images/base_bottom.png" />
+    <div name="bottomLeftMainBg" width="31" height="29"
+         background="images/base_bottomleft.png" />
+    <div name="middleRightMainBg" y="25" width="35"
+         background="images/base_right.png" />
+    <div name="middleCenterMainBg" x="31" y="25"
+         background="images/base_fill.png" />
+    <div name="middleLeftMainBg" y="25" width="31"
+         background="images/base_left.png" />
+    <div name="topRightMainBg" width="35" height="25"
+         background="images/base_topright.png" />
+    <div name="topCenterMainBg" x="31" height="25"
+         background="images/base_top.png">
+      <label name="lblAccount" width="100%" height="23" vAlign="bottom"
+             font="arial" size="10" color="#0070bf"
+             trimming="character-ellipsis" />
+    </div>
+    <div name="topLeftMainBg" width="31" height="25" enabled="true"
+         background="images/base_topleft.png" />
+
+    <label name="username" x="35" y="6" size="10" font="helvetica" color="#0070bf">james.yum</label>
+
+    <div name="loginDiv" x="10" y="40" height="180" visible="false">
+      <label width="100%" height="16"
+             font="arial" size="9">&SIGN_IN_TO_GMAIL;</label>
+      <label width="100%" y="18" height="16"
+             font="arial" size="9">&YOUR;</label>
+      <img x="30" y="18" width="55" height="19"
+           src="images/google_logo.png" />
+      <label width="100%" x="88" y="18" height="16"
+             font="arial" size="9" bold="true">&ACCOUNT;</label>
+
+      <div name="userBg" y="64" width="100%" height="19" background="#7f9db9"/>
+      <div name="passBg" y="104" width="100%" height="18" background="#7f9db9"/>
+
+      <label name="userLabel" y="50" width="100%" height="16"
+             font="arial" size="9" color="#0066cc">&USERNAME;</label>
+      <edit name="user" x="1" y="65" height="17" font="arial"
+            onkeypress="_loginView_onUsernameKeyPress()"
+            onfocusin="_loginView_onUsernameFocus(true)"
+            onfocusout="_loginView_onUsernameFocus(false)" />
+
+      <label name="passLabel" y="90" height="16"
+             font="arial" size="9" color="#0066cc">&PASSWORD;</label>
+      <edit name="pass" x="1" y="105" height="16" font="arial" passwordChar="*"
+            onkeypress="_loginView_onPasswordKeyPress()"
+            onfocusin="_loginView_onPasswordFocus(true)"
+            onfocusout="_loginView_onPasswordFocus(false)"/>
+
+      <img name="rememberFocus" visible="false" y="127" width="22" height="22"
+           src="images/checkbox_focus.png" />
+      <checkbox name="remember" x="3" y="130" width="100%" height="16"
+                font="arial" size="9" trimming="word-ellipsis"
+                caption="&REMEMBER_ME;" value="false" cursor="hand"
+                onchange="_loginView_onRememberFocus(true)"
+                onkeypress="_loginView_onRememberKeyPress()"
+                onfocusin="_loginView_onRememberFocus(true)"
+                onfocusout="_loginView_onRememberFocus(false)"
+                image="images/checkbox_default.png"
+                overImage="images/checkbox_default.png"
+                downImage="images/checkbox_default.png"
+                checkedImage="images/checkbox_checked.png"
+                checkedOverImage="images/checkbox_checked.png"
+                checkedDownImage="images/checkbox_checked.png" />
+
+      <button name="login" y="155" width="84" height="24"
+              font="Arial" size="8" caption="&LOGIN;" cursor="hand"
+              onkeypress="_loginView_onLoginKeyPress()"
+              onfocusin="_loginView_onLoginFocus(true)"
+              onfocusout="_loginView_onLoginFocus(false)"
+              onclick="_login()"
+              image="images/action_default.png" downImage="images/action_down.png"
+              overImage="images/action_hover.png" />
+    </div>
+
+    <div name="mainDiv" x="7" y="26" visible="true">
+
+      <div name="searchStatus" y="0" height="64">
+        <div name="searchStatusLeft" width="4" height="64" 
+          background="images/blue-area-left.gif" />
+        <div name="searchStatusContent" x="4" height="64"
+          background="images/blue-area-fill.gif">        
+            <div name="searchArea" x="7" y="12" height="25" background="#5697de">
+              <div name="searchContainer" x="1" y="1" height="23" background="#ffffff">
+                <edit name="search" y="3" size="11" height="17" font="helvetica" 
+                  background="#ffffff" color="#999999" value="search docs" enabled="true" />              
+                <div name="searchClear" y="2" width="19" height="19" 
+                  background="images/textbox-close.gif" cursor="hand" visible="false" enabled="true" />              
+              </div>
+            </div>
+            <div name="uploadStatus" x="9" y="7" height="50" visible="false">
+              <label name="uploadStatusLine1" size="11" width="100%" height="18" font="helvetica" color="#ffffff">Now uploading...</label>
+              <label y="18" name="uploadStatusLine2" size="11" width="100%" height="18" font="helvetica" color="#ffffff">2 of 5</label>              
+              <a y="35" name="uploadOption" size="8" font="helvetica" color="#ffffff" underline="true">Cancel</a>                            
+            </div>
+        </div>
+        <div name="searchStatusRight" width="6" height="64"
+          background="images/blue-area-right.gif" />    
+        
+        <div name="sortOptions" y="46" height="18">
+          <div name="sortOptionsName" height="18"
+            background="images/inactive-bg.gif" cursor="hand" enabled="true">
+              <label x="6" y="1" font="helvetica" size="8" color="#000000">Name</label>
+              <div name="sortOptionsNameArrow" y="7" width="9" height="6" background="images/name-date-arrow.gif" visible="false" />              
+          </div>
+          <div name="sortOptionsNameDateDivider" width="2" height="18"
+            background="images/name-date-divider.gif" />
+          <div name="sortOptionsDateNameDivider" width="2" height="18"
+            background="images/date-name-divider.gif" visible="false" />                  
+          <div name="sortOptionsDate" height="18"
+            background="images/active-bg.gif" enabled="true">
+              <label x="5" y="1" font="helvetica" size="8" color="#000000">Date</label>
+              <div name="sortOptionsDateArrow" y="7" width="9" height="6" background="images/name-date-arrow.gif" />
+          </div>
+        </div>
+      </div>
+        
+      <div name="contentArea" y="64">
+        <div name="contentContainer" background="#FFFFFF">
+          <div x="4" y="0" name="content" background="#FFFFFF">
+            <div height="20" cursor="hand" enabled="true"
+              onmouseover="event.srcElement.background='#e0ecf7'" 
+              onmouseout="event.srcElement.background=''">
+              <div x="2" y="2" width="16" height="16" background="images/icon-document.gif" />
+              <label x="26" y="2" font="helvetica" size="8" color="#000000" trimming="character-ellipsis">Network Solutions</label>
+              <label y="2" font="helvetica" size="8" color="#66b3ff" align="right">7:30pm</label>                                                                                                          
+            </div>
+            <div height="1" background="#dddddd" />
+            <div height="20" cursor="hand" enabled="true"
+              onmouseover="event.srcElement.background='#e0ecf7'" 
+              onmouseout="event.srcElement.background=''">
+              <div x="2" y="2" width="16" height="16" background="images/icon-form.gif" />      
+              <label x="26" y="2" font="helvetica" size="8" color="#000000" trimming="character-ellipsis">Chicken Town</label>
+              <label y="2" font="helvetica" size="8" color="#66b3ff" align="right">Yesterday</label>                                                                                                                                              
+            </div>
+            <div height="1" background="#dddddd" />
+            <div height="20" cursor="hand" enabled="true"
+              onmouseover="event.srcElement.background='#e0ecf7'" 
+              onmouseout="event.srcElement.background=''">
+              <div x="2" y="2" width="16" height="16" background="images/icon-presentation.gif" />   
+              <label x="26" y="2" font="helvetica" size="8" color="#000000" trimming="character-ellipsis">Lolcat Fever Revision 01</label>
+              <label y="2" font="helvetica" size="8" color="#66b3ff" align="right">Aug 12</label>                                                                                            
+            </div>
+            <div height="1" background="#dddddd" />
+            <div height="20" cursor="hand" enabled="true"
+              onmouseover="event.srcElement.background='#e0ecf7'" 
+              onmouseout="event.srcElement.background=''">
+              <div x="2" y="2" width="16" height="16" background="images/icon-spreadsheet.gif" />      
+              <label x="26" y="2" font="helvetica" size="8" color="#000000" trimming="character-ellipsis">Bridge to Nowhere Budget</label>      
+              <div y="4" width="12" height="12" background="images/icon-star.gif" />
+              <label y="2" font="helvetica" size="8" color="#66b3ff" align="right">Oct 28</label>                                                                                                                                                                    
+            </div>
+            <div height="1" background="#dddddd" />
+            <div height="20" cursor="hand" enabled="true"
+              onmouseover="event.srcElement.background='#e0ecf7'" 
+              onmouseout="event.srcElement.background=''">
+              <div x="2" y="2" width="16" height="16" background="images/icon-document.gif" />
+              <label x="26" y="2" font="helvetica" size="8" color="#000000" trimming="character-ellipsis">Network Solutions</label>
+              <label y="2" font="helvetica" size="8" color="#66b3ff" align="right">7:30pm</label>                                                                                                          
+            </div>
+            <div height="1" background="#dddddd" />
+            <div height="20" cursor="hand" enabled="true"
+              onmouseover="event.srcElement.background='#e0ecf7'" 
+              onmouseout="event.srcElement.background=''">
+              <div x="2" y="2" width="16" height="16" background="images/icon-form.gif" />      
+              <label x="26" y="2" font="helvetica" size="8" color="#000000" trimming="character-ellipsis">Chicken Town</label>
+              <label y="2" font="helvetica" size="8" color="#66b3ff" align="right">Yesterday</label>                                                                                                                                              
+            </div>
+            <div height="1" background="#dddddd" />
+            <div height="20" cursor="hand" enabled="true"
+              onmouseover="event.srcElement.background='#e0ecf7'" 
+              onmouseout="event.srcElement.background=''">
+              <div x="2" y="2" width="16" height="16" background="images/icon-presentation.gif" />   
+              <label x="26" y="2" font="helvetica" size="8" color="#000000" trimming="character-ellipsis">Lolcat Fever Revision 01</label>
+              <label y="2" font="helvetica" size="8" color="#66b3ff" align="right">Aug 12</label>                                                                                            
+            </div>
+            <div height="1" background="#dddddd" />
+            <div height="20" cursor="hand" enabled="true"
+              onmouseover="event.srcElement.background='#e0ecf7'" 
+              onmouseout="event.srcElement.background=''">
+              <div x="2" y="2" width="16" height="16" background="images/icon-spreadsheet.gif" />      
+              <label x="26" y="2" font="helvetica" size="8" color="#000000" trimming="character-ellipsis">Bridge to Nowhere Budget</label>      
+              <div y="4" width="12" height="12" background="images/icon-star.gif" />
+              <label y="2" font="helvetica" size="8" color="#66b3ff" align="right">Oct 28</label>                                                                                                                                                                    
+            </div>
+            <div height="1" background="#dddddd" />            
+            <div height="20" cursor="hand" enabled="true"
+              onmouseover="event.srcElement.background='#e0ecf7'" 
+              onmouseout="event.srcElement.background=''">
+              <div x="2" y="2" width="16" height="16" background="images/icon-document.gif" />
+              <label x="26" y="2" font="helvetica" size="8" color="#000000" trimming="character-ellipsis">Network Solutions</label>
+              <label y="2" font="helvetica" size="8" color="#66b3ff" align="right">7:30pm</label>                                                                                                          
+            </div>
+            <div height="1" background="#dddddd" />
+            <div height="20" cursor="hand" enabled="true"
+              onmouseover="event.srcElement.background='#e0ecf7'" 
+              onmouseout="event.srcElement.background=''">
+              <div x="2" y="2" width="16" height="16" background="images/icon-form.gif" />      
+              <label x="26" y="2" font="helvetica" size="8" color="#000000" trimming="character-ellipsis">Chicken Town</label>
+              <label y="2" font="helvetica" size="8" color="#66b3ff" align="right">Yesterday</label>                                                                                                                                              
+            </div>
+            <div height="1" background="#dddddd" />
+            <div height="20" cursor="hand" enabled="true"
+              onmouseover="event.srcElement.background='#e0ecf7'" 
+              onmouseout="event.srcElement.background=''">
+              <div x="2" y="2" width="16" height="16" background="images/icon-presentation.gif" />   
+              <label x="26" y="2" font="helvetica" size="8" color="#000000" trimming="character-ellipsis">Lolcat Fever Revision 01</label>
+              <label y="2" font="helvetica" size="8" color="#66b3ff" align="right">Aug 12</label>                                                                                            
+            </div>
+            <div height="1" background="#dddddd" />
+            <div height="20" cursor="hand" enabled="true"
+              onmouseover="event.srcElement.background='#e0ecf7'" 
+              onmouseout="event.srcElement.background=''">
+              <div x="2" y="2" width="16" height="16" background="images/icon-spreadsheet.gif" />      
+              <label x="26" y="2" font="helvetica" size="8" color="#000000" trimming="character-ellipsis">Bridge to Nowhere Budget</label>      
+              <div y="4" width="12" height="12" background="images/icon-star.gif" />
+              <label y="2" font="helvetica" size="8" color="#66b3ff" align="right">Oct 28</label>                                                                                                                                                                    
+            </div>
+            <div height="1" background="#dddddd" />            
+            <div height="20" cursor="hand" enabled="true"
+              onmouseover="event.srcElement.background='#e0ecf7'" 
+              onmouseout="event.srcElement.background=''">
+              <div x="2" y="2" width="16" height="16" background="images/icon-document.gif" />
+              <label x="26" y="2" font="helvetica" size="8" color="#000000" trimming="character-ellipsis">Network Solutions</label>
+              <label y="2" font="helvetica" size="8" color="#66b3ff" align="right">7:30pm</label>                                                                                                          
+            </div>
+            <div height="1" background="#dddddd" />
+            <div height="20" cursor="hand" enabled="true"
+              onmouseover="event.srcElement.background='#e0ecf7'" 
+              onmouseout="event.srcElement.background=''">
+              <div x="2" y="2" width="16" height="16" background="images/icon-form.gif" />      
+              <label x="26" y="2" font="helvetica" size="8" color="#000000" trimming="character-ellipsis">Chicken Town</label>
+              <label y="2" font="helvetica" size="8" color="#66b3ff" align="right">Yesterday</label>                                                                                                                                              
+            </div>
+            <div height="1" background="#dddddd" />
+            <div height="20" cursor="hand" enabled="true"
+              onmouseover="event.srcElement.background='#e0ecf7'" 
+              onmouseout="event.srcElement.background=''">
+              <div x="2" y="2" width="16" height="16" background="images/icon-presentation.gif" />   
+              <label x="26" y="2" font="helvetica" size="8" color="#000000" trimming="character-ellipsis">Lolcat Fever Revision 01</label>
+              <label y="2" font="helvetica" size="8" color="#66b3ff" align="right">Aug 12</label>                                                                                            
+            </div>
+            <div height="1" background="#dddddd" />
+            <div height="20" cursor="hand" enabled="true"
+              onmouseover="event.srcElement.background='#e0ecf7'" 
+              onmouseout="event.srcElement.background=''">
+              <div x="2" y="2" width="16" height="16" background="images/icon-spreadsheet.gif" />      
+              <label x="26" y="2" font="helvetica" size="8" color="#000000" trimming="character-ellipsis">Bridge to Nowhere Budget</label>      
+              <div y="4" width="12" height="12" background="images/icon-star.gif" />
+              <label y="2" font="helvetica" size="8" color="#66b3ff" align="right">Oct 28</label>                                                                                                                                                                    
+            </div>
+            <div height="1" background="#dddddd" />            
+          </div>
+          <div y="3" width="14" name="scrollbar" background="#FFFFFF">
+            <div width="14" height="12" name="scrollbarUp" background="images/scroll-up.gif" enabled="true"/>
+            <div width="14" y="12" name="scrollbarTrack" background="images/scroll-track.gif" enabled="true" />        
+            <div width="14" y="12" name="scrollbarBar" background="images/scroll-bar.gif" enabled="true" />                            
+            <div width="14" height="11" name="scrollbarDown" background="images/scroll-down.gif" enabled="true" />            
+          </div>     
+        </div>
+      
+        <div name="contentShadowRight" width="2"
+          background="images/dropshadow-right.gif" />              
+        <div name="contentShadowBottomLeft" width="2" height="2"
+          background="images/dropshadow-left-bottom.gif" />                         
+        <div name="contentShadowBottom" height="2"
+          background="images/dropshadow-bottom.gif" />                      
+        <div name="contentShadowBottomRight" width="2" height="2"
+          background="images/dropshadow-right-bottom.gif" />              
+            
+      </div>
+
+      <div name="commands" height="23">
+        <a name="commandsNew" x="3" height="14" font="helvetica" size="8" color="#0065cd" underline="true">New</a>
+        <div name="commandsNewArrow" cursor="hand" width="7" height="4" background="images/down-arrow.gif" enabled="true" />
+        <a name="commandUpload" font="helvetica" size="8" color="#0065cd" underline="true">Upload</a>
+        <a name="commandSignout" font="helvetica" size="8" color="#0065cd" underline="true">Sign out</a>
+      </div>
+      
+    </div>
+
+    <div name="autoFill" x="16" y="60" height="88" visible="false">
+      <div name="autoFillTopLeft" width="3" height="3"
+           background="images/dropdown-top-left.png" />             
+      <div name="autoFillTopCenter" x="3" height="3"
+           background="images/dropdown-top.png" />
+      <div name="autoFillTopRight" width="5" height="3"
+           background="images/dropdown-top-right.png" />
+
+      <div name="autoFillMiddleLeft" y="3" width="3" height="80"
+           background="images/dropdown-left.png" />        
+      <div name="autoFillMiddleRight" y="3" width="5" height="80"
+           background="images/dropdown-right.png" />
+
+      <div name="autoFillBottomLeft" y="83" width="3" height="5"
+           background="images/dropdown-bottom-left.png" />           
+      <div name="autoFillBottomCenter" x="3" y="83" height="5"
+           background="images/dropdown-bottom.png" />
+      <div name="autoFillBottomRight" y="83" width="5" height="5"
+         background="images/dropdown-bottom-right.png" />
+
+      <div name="autoFillOptions" x="3" y="3" height="80" background="#ffffff">
+        <div height="20" enabled="true" cursor="hand"
+          onmouseover="event.srcElement.background='#e0ecf7'" 
+          onmouseout="event.srcElement.background=''">
+            <div x="5" y="2" width="16" height="16" background="images/icon-document.gif" />
+            <label x="28" y="2" font="helvetica" size="8" color="#000000" trimming="character-ellipsis">Secret Documents to Shred</label>
+        </div>
+        <div height="20" enabled="true" cursor="hand"
+          onmouseover="event.srcElement.background='#e0ecf7'"
+          onmouseout="event.srcElement.background=''">
+            <div x="5" y="2" width="16" height="16" background="images/icon-document.gif" />          
+            <label x="28" y="2" font="helvetica" size="8" color="#000000" trimming="character-ellipsis">Bridge to Nowhere Budget FY2008</label>
+        </div>
+        <div height="20" enabled="true" cursor="hand"
+          onmouseover="event.srcElement.background='#e0ecf7'" 
+          onmouseout="event.srcElement.background=''">
+            <div x="5" y="2" width="16" height="16" background="images/icon-document.gif" />          
+            <label x="28" y="2" font="helvetica" size="8" color="#000000" trimming="character-ellipsis">Directions to Dick Cheney's Undisclosed Location</label>
+        </div>
+        <div height="20" enabled="true" cursor="hand"
+          onmouseover="event.srcElement.background='#e0ecf7'" 
+          onmouseout="event.srcElement.background=''">
+            <div x="5" y="2" width="16" height="16" background="images/icon-document.gif" />          
+            <label x="28" y="2" font="helvetica" size="8" color="#000000" trimming="character-ellipsis">Tina Fey as Sarah Palin Transcript</label>
+        </div>   
+      </div>
+
+    </div>
+
+    <div name="newDocument" x="2" width="100" height="88" visible="false">
+      <div name="newDocumentTopLeft" width="3" height="3"
+           background="images/dropdown-top-left.png" />             
+      <div name="newDocumentTopCenter" x="3" width="92" height="3"
+           background="images/dropdown-top.png" />
+      <div name="newDocumentTopRight" x="95" width="5" height="3"
+           background="images/dropdown-top-right.png" />
+
+      <div name="newDocumentMiddleLeft" y="3" width="3" height="80"
+           background="images/dropdown-left.png" />        
+      <div name="newDocumentMiddleRight" x="95 " y="3" width="5" height="80"
+           background="images/dropdown-right.png" />
+              
+      <div name="newDocumentBottomLeft" y="83" width="3" height="5"
+           background="images/dropdown-bottom-left.png" />           
+      <div name="newDocumentBottomCenter" x="3" y="83" width="92" height="5"
+           background="images/dropdown-bottom.png" />
+      <div name="newDocumentBottomRight" x="95" y="83" width="5" height="5"
+         background="images/dropdown-bottom-right.png" />
+
+      <div name="newDocumentOptions" x="3" y="3" width="92" height="80" background="#ffffff">
+        <div width="92" height="20" enabled="true" cursor="hand"
+          onmouseover="event.srcElement.background='#e0ecf7'" 
+          onmouseout="event.srcElement.background=''">
+            <label x="6" y="2" font="helvetica" size="8" color="#000000">Form</label>
+        </div>
+        <div y="20" width="92" height="20" enabled="true" cursor="hand"
+          onmouseover="event.srcElement.background='#e0ecf7'"
+          onmouseout="event.srcElement.background=''">
+            <label x="6" y="2" font="helvetica" size="8" color="#000000">Presentation</label>
+        </div>
+        <div y="40" width="92" height="20" enabled="true" cursor="hand"
+          onmouseover="event.srcElement.background='#e0ecf7'" 
+          onmouseout="event.srcElement.background=''">
+            <label x="6" y="2" font="helvetica" size="8" color="#000000">Spreadsheet</label>
+        </div>
+        <div y="60" width="92" height="20" enabled="true" cursor="hand"
+          onmouseover="event.srcElement.background='#e0ecf7'" 
+          onmouseout="event.srcElement.background=''">
+            <label x="6" y="2" font="helvetica" size="8" color="#000000">Document</label>
+        </div>   
+      </div>
+      
+    </div>
+
+    <img name="imgLoading" visible="false" y="6" src="images/loading.png" />
+  </div>
+  
+  <div width="33" height="34" background="images/logo.png" />
+  
+</view>
