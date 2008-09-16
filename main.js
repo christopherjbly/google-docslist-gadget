@@ -12,15 +12,12 @@
  * Constructor for Main class.
  */
 function Main() {
-  // XXX: tmp
-  uploader.open();
 };
 
 /**
  * Draw the gadget when the view opens.
  */
 Main.prototype.onOpen = function() {
-
   view.onsize = this.onSize.bind(this); 
   this.onSize();
 }
@@ -85,7 +82,7 @@ Main.prototype.onSize = function() {
     uploadOption.x = uploadStatus.width - labelCalcWidth(uploadOption);
     
     contentArea.width = mainDiv.width;
-    contentArea.height = mainDiv.height - (searchStatus.height + 14);
+    contentArea.height = mainDiv.height - (searchStatus.height + 14) - 5;
     
     contentContainer.width = contentArea.width - contentShadowRight.width;
     contentContainer.height = contentArea.height - contentShadowBottom.height;
@@ -102,7 +99,7 @@ Main.prototype.onSize = function() {
     contentShadowBottomRight.x = contentContainer.width;
     contentShadowBottomRight.y = contentContainer.height;
     
-    commands.y = contentArea.height + contentArea.y;
+    commands.y = contentArea.height + contentArea.y + 5;
     commands.width = contentArea.width;
     commandsNewArrow.x = labelCalcWidth(commandsNew) + 2;
     commandsNewArrow.y = commandsNewArrow.height + 3;

@@ -128,9 +128,8 @@
       </div>
         
       <div name="contentArea" y="64">
-<!--
         <div name="contentContainer" background="#FFFFFF">
-          <div x="4" y="0" name="content" background="#FFFFFF">
+          <div x="4" y="0" name="doclistContent" background="#FFFFFF">
             <div height="20" cursor="hand" enabled="true"
               onmouseover="event.srcElement.background='#e0ecf7'" 
               onmouseout="event.srcElement.background=''">
@@ -264,38 +263,33 @@
             </div>
             <div height="1" background="#dddddd" />            
           </div>
-          <div y="3" width="14" name="scrollbar" background="#FFFFFF">
-            <div width="14" height="12" name="scrollbarUp" background="images/scroll-up.gif" enabled="true"/>
-            <div width="14" y="12" name="scrollbarTrack" background="images/scroll-track.gif" enabled="true" />        
-            <div width="14" y="12" name="scrollbarBar" background="images/scroll-bar.gif" enabled="true" />                            
-            <div width="14" height="11" name="scrollbarDown" background="images/scroll-down.gif" enabled="true" />            
-          </div>     
-        </div>
-
--->
-        <div name="contentContainer" background="#FFFFFF">
-          <div x="4" y="0" name="content" background="#FFFFFF">
+          <div x="4" y="0" name="uploaderContent" background="#FFFFFF" visible="false">
             <div height="20">
-              <div x="2" y="2" width="16" height="16" background="images/icon-upload-loading.gif" />              
+              <div x="2" y="2" width="16" height="16" background="images/icon-upload-success.gif" />              
               <div x="22" y="2" width="16" height="16" background="images/icon-document.gif" />
-              <label x="26" y="2" font="helvetica" size="8" color="#000000" trimming="character-ellipsis">Network Solutions</label>
+              <label x="46" y="2" font="helvetica" size="8" color="#000000" trimming="character-ellipsis">Network Solutions</label>
             </div>
             <div height="1" background="#dddddd" />
             <div height="20">
-              <div x="2" y="2" width="16" height="16" background="images/icon-form.gif" />      
-              <label x="26" y="2" font="helvetica" size="8" color="#000000" trimming="character-ellipsis">Chicken Town</label>
+              <div x="2" y="2" width="16" height="16" background="images/icon-upload-loading.gif" />                            
+              <div x="22" y="2" width="16" height="16" background="images/icon-form.gif" />      
+              <label x="46" y="2" font="helvetica" size="8" color="#000000" trimming="character-ellipsis">Chicken Town</label>
+            </div>
+            <div height="1" background="#dddddd" />
+            <div height="33">
+              <div x="2" y="2" width="16" height="16" background="images/icon-upload-error.gif" />                                          
+              <div x="22" y="2" width="16" height="16" background="images/icon-presentation.gif" />   
+              <label x="46" y="2" font="helvetica" size="8" color="#000000" trimming="character-ellipsis">Lolcat Fever Revision 01</label>
+              <label x="46" y="15" height="15" font="helvetica" size="8" color="#ff0000" trimming="character-ellipsis">file is corrupt</label>              
             </div>
             <div height="1" background="#dddddd" />
             <div height="20">
-              <div x="2" y="2" width="16" height="16" background="images/icon-presentation.gif" />   
-              <label x="26" y="2" font="helvetica" size="8" color="#000000" trimming="character-ellipsis">Lolcat Fever Revision 01</label>
+              <div x="2" y="2" width="16" height="16" />                                                        
+              <div x="22" y="2" width="16" height="16" background="images/icon-spreadsheet.gif" />      
+              <label x="46" y="2" font="helvetica" size="8" color="#999999" trimming="character-ellipsis">Bridge to Nowhere Budget</label>      
             </div>
             <div height="1" background="#dddddd" />
-            <div height="20">
-              <div x="2" y="2" width="16" height="16" background="images/icon-spreadsheet.gif" />      
-              <label x="26" y="2" font="helvetica" size="8" color="#000000" trimming="character-ellipsis">Bridge to Nowhere Budget</label>      
-            </div>
-            <div height="1" background="#dddddd" />
+            
           </div>
           <div y="3" width="14" name="scrollbar" background="#FFFFFF">
             <div width="14" height="12" name="scrollbarUp" background="images/scroll-up.gif" enabled="true"/>
