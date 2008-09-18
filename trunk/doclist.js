@@ -8,7 +8,45 @@ function Doclist() {
   
   commandUpload.onclick = this.openUploader.bind(this);
   uploadOption.onclick = this.closeUploader.bind(this);  
+   
+  newDocumentForm.onclick = this.newDocument.bind(this);
+  newDocumentPresentation.onclick = this.newDocument.bind(this);
+  newDocumentSpreadsheet.onclick = this.newDocument.bind(this);
+  newDocumentDocument.onclick = this.newDocument.bind(this);
 }
+
+/**
+ * Open doclist after login
+ */
+Doclist.prototype.login = function() {
+  loginDiv.visible = false;
+  mainDiv.visible = true;
+  gadget.draw();
+}
+
+/**
+* Close doclist after logout
+*/
+Doclist.prototype.logout = function() {
+  loginDiv.visible = true;
+  mainDiv.visible = false;  
+  gadget.draw();  
+}
+
+/**
+ * Launch new document
+ */
+Doclist.prototype.newDocument = function() {
+  newDocumentMenu.close();
+  if (!framework.system.network.online) {
+    errorMessage.display(SERVER_OR_NETWORK_ERROR);
+    return;
+  }
+  if (NEW_DOC[event.srcElement.name]) {
+    var winShell = new ActiveXObject("Shell.Application"); 
+    winShell.ShellExecute(NEW_DOC[event.srcElement.name]);     
+  }
+};
 
 /**
  * Open uploader

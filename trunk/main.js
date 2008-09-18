@@ -18,14 +18,15 @@ function Main() {
  * Draw the gadget when the view opens.
  */
 Main.prototype.onOpen = function() {
-  view.onsize = this.onSize.bind(this); 
-  this.onSize();
+  view.onsize = this.draw.bind(this); 
+  this.draw();  
 }
+
 
 /**
  * Resize the gadget.
  */
-Main.prototype.onSize = function() {
+Main.prototype.draw = function() {
   
   window.width = view.width - 2;
   window.height = view.height - 9;
@@ -40,13 +41,14 @@ Main.prototype.onSize = function() {
   middleLeftMainBg.height = middleCenterMainBg.height =
       middleRightMainBg.height = bottomRightMainBg.y - middleLeftMainBg.y;
   // Adjust the positions of a images to move to the top right corner
-  imgLoading.x = window.width - 60;
+  loading.x = window.width - 60;
 
   if (loginDiv.visible) {
     loginDiv.width = window.width - 24;
     loginDiv.height = window.height - 50;
     user.width = pass.width = loginDiv.width - user.x - user.x;
     login.x = loginDiv.width - login.width;
+    login.y = loginDiv.height - (login.height + 10);    
   }
   
   if (mainDiv.visible) {
@@ -112,5 +114,5 @@ Main.prototype.onSize = function() {
 }
 
 // instantiate object in the global scope
-var mainView = new Main();
+var gadget = new Main();
 

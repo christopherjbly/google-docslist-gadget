@@ -6,6 +6,18 @@ Function.prototype.bind = function(context) {
   };
 };
 
+// generate query string for POST
+Object.prototype.toQueryString = function() {
+  var str = [];
+  for (var key in this) {
+    var type = typeof this[key];
+    if (type == 'boolean' || type == 'number' || type == 'string') {
+      str.push(key + '=' + encodeURIComponent(this[key].toString()));
+    }
+  }
+  return str.join('&');
+}
+
 // Strips whitespace from beginning and end of string
 String.prototype.trim = function()
 {
@@ -14,7 +26,12 @@ String.prototype.trim = function()
 
 // Calculate the width of a label
 function labelCalcWidth(ele) { 
-  var edit = view.appendElement("<edit />"); 
+  try {
+    var edit = labelCalcHelper;
+  } catch(e) {
+    var edit = view.appendElement('<edit name="labelCalcHelper" />');
+  }
+
   edit.visible = false; 
   edit.y = 2000; 
   edit.x = 0; 
@@ -29,6 +46,5 @@ function labelCalcWidth(ele) {
   var idealRect = edit.idealBoundingRect; 
   edit.width = idealRect.width; 
   edit.height = idealRect.height; 
-  view.removeElement(edit); 
   return idealRect.width; 
 } 

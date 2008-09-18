@@ -1,8 +1,12 @@
-<view width="165" height="235" resizable="true" resizeBorder="10 15 15 15" onopen="mainView.onOpen()">
+<view width="165" height="235" resizable="true" resizeBorder="10 15 15 15" onopen="gadget.onOpen()">
 
-  <script src="util.js" />
+  <script src="constants.js" />
+  <script src="util.js" />    
+  <script src="httpRequest.js" />  
+  <script src="errorMessage.js" />  
   <script src="elements.js" />
   <script src="doclist.js" />  
+  <script src="login.js" />
   <script src="main.js" />
 
   <div x="2" y="9" name="window" enabled="true">
@@ -17,37 +21,33 @@
     <div name="topCenterMainBg" x="31" height="25" background="images/base_top.png" />
     <div name="topLeftMainBg" width="31" height="25" enabled="true" background="images/base_topleft.png" />
 
-    <label name="username" x="35" y="6" size="10" font="helvetica" color="#0070bf">james.yum</label>
+    <label name="username" x="35" y="6" size="10" font="helvetica" color="#0070bf" visible="false"></label>
 
-    <div name="loginDiv" x="10" y="40" height="180" visible="false">      
-      <label width="100%" height="16" font="arial" size="9">&SIGN_IN_TO_GMAIL;</label>
-      <label width="100%" y="18" height="16" font="arial" size="9">&YOUR;</label>
+    <div name="loginDiv" x="10" y="40" height="180" visible="true">      
+      <label width="100%" height="16" font="helvetica" size="9">&SIGN_IN_TO_GMAIL;</label>
+      <label width="100%" y="18" height="16" font="helvetica" size="9">&YOUR;</label>
       <img x="30" y="18" width="55" height="19" src="images/google_logo.png" />
-      <label width="100%" x="88" y="18" height="16" font="arial" size="9" bold="true">&ACCOUNT;</label>
+      <label width="100%" x="88" y="18" height="16" font="helvetica" size="9" bold="true">&ACCOUNT;</label>
 
       <div name="userBg" y="64" width="100%" height="19" background="#7f9db9"/>
       <div name="passBg" y="104" width="100%" height="18" background="#7f9db9"/>
 
-      <label name="userLabel" y="50" width="100%" height="16" font="arial" size="9" color="#0066cc">&USERNAME;</label>
-      <edit name="user" x="1" y="65" height="17" font="arial"
-        onkeypress="_loginView_onUsernameKeyPress()"
-        onfocusin="_loginView_onUsernameFocus(true)"
-        onfocusout="_loginView_onUsernameFocus(false)" />
+      <label name="userLabel" y="48" width="100%" height="16" font="helvetica" size="9" color="#0066cc">&USERNAME;</label>
+      <edit name="user" x="1" y="65" height="17" font="helvetica"
+        onkeypress="loginSession.onUsernameKeyPress()" />
 
-      <label name="passLabel" y="90" height="16" font="arial" size="9" color="#0066cc">&PASSWORD;</label>
-      <edit name="pass" x="1" y="105" height="16" font="arial" passwordChar="*"
-        onkeypress="_loginView_onPasswordKeyPress()"
-        onfocusin="_loginView_onPasswordFocus(true)"
-        onfocusout="_loginView_onPasswordFocus(false)" />
+      <label name="passLabel" y="88" height="16" font="helvetica" size="9" color="#0066cc">&PASSWORD;</label>
+      <edit name="pass" x="1" y="105" height="16" font="helvetica" passwordChar="*"
+        onkeypress="loginSession.onPasswordKeyPress()" />
 
       <img name="rememberFocus" visible="false" y="127" width="22" height="22" src="images/checkbox_focus.png" />
       <checkbox name="remember" x="3" y="130" width="100%" height="16"
-        font="arial" size="9" trimming="word-ellipsis"
+        font="helvetica" size="9" trimming="word-ellipsis"
         caption="&REMEMBER_ME;" value="false" cursor="hand"
-        onchange="_loginView_onRememberFocus(true)"
-        onkeypress="_loginView_onRememberKeyPress()"
-        onfocusin="_loginView_onRememberFocus(true)"
-        onfocusout="_loginView_onRememberFocus(false)"
+        onchange="loginSession.onRememberFocus(true)"
+        onkeypress="loginSession.onRememberKeyPress()"
+        onfocusin="loginSession.onRememberFocus(true)"
+        onfocusout="loginSession.onRememberFocus(false)"
         image="images/checkbox_default.png"
         overImage="images/checkbox_default.png"
         downImage="images/checkbox_default.png"
@@ -56,16 +56,15 @@
         checkedDownImage="images/checkbox_checked.png" />
 
       <button name="login" y="155" width="84" height="24"
-        font="Arial" size="8" caption="&LOGIN;" cursor="hand"
-        onkeypress="_loginView_onLoginKeyPress()"
-        onfocusin="_loginView_onLoginFocus(true)"
-        onfocusout="_loginView_onLoginFocus(false)"
-        onclick="_login()"
+        font="helvetica" size="8" caption="&LOGIN;" cursor="hand"
+        onkeypress="loginSession.onLoginKeyPress()"
+        onfocusin="loginSession.onLoginFocus(true)"
+        onfocusout="loginSession.onLoginFocus(false)"
         image="images/action_default.png" downImage="images/action_down.png"
         overImage="images/action_hover.png" />
     </div>
 
-    <div name="mainDiv" x="7" y="26" visible="true">
+    <div name="mainDiv" x="7" y="26" visible="false">
 
       <div name="searchStatus" y="0" height="64">
         <div name="searchStatusLeft" width="4" height="64" 
@@ -359,7 +358,7 @@
            background="images/dropdown-left.png" />        
       <div name="newDocumentMiddleRight" x="95 " y="3" width="5" height="80"
            background="images/dropdown-right.png" />
-              
+
       <div name="newDocumentBottomLeft" y="83" width="3" height="5"
            background="images/dropdown-bottom-left.png" />           
       <div name="newDocumentBottomCenter" x="3" y="83" width="92" height="5"
@@ -368,22 +367,22 @@
          background="images/dropdown-bottom-right.png" />
 
       <div name="newDocumentOptions" x="3" y="3" width="92" height="80" background="#ffffff">
-        <div width="92" height="20" enabled="true" cursor="hand"
+        <div name="newDocumentForm" width="92" height="20" enabled="true" cursor="hand"
           onmouseover="event.srcElement.background='#e0ecf7'" 
           onmouseout="event.srcElement.background=''">
             <label x="6" y="2" font="helvetica" size="8" color="#000000">Form</label>
         </div>
-        <div y="20" width="92" height="20" enabled="true" cursor="hand"
+        <div name="newDocumentPresentation" y="20" width="92" height="20" enabled="true" cursor="hand"
           onmouseover="event.srcElement.background='#e0ecf7'"
           onmouseout="event.srcElement.background=''">
             <label x="6" y="2" font="helvetica" size="8" color="#000000">Presentation</label>
         </div>
-        <div y="40" width="92" height="20" enabled="true" cursor="hand"
+        <div name="newDocumentSpreadsheet" y="40" width="92" height="20" enabled="true" cursor="hand"
           onmouseover="event.srcElement.background='#e0ecf7'" 
           onmouseout="event.srcElement.background=''">
             <label x="6" y="2" font="helvetica" size="8" color="#000000">Spreadsheet</label>
         </div>
-        <div y="60" width="92" height="20" enabled="true" cursor="hand"
+        <div name="newDocumentDocument" y="60" width="92" height="20" enabled="true" cursor="hand"
           onmouseover="event.srcElement.background='#e0ecf7'" 
           onmouseout="event.srcElement.background=''">
             <label x="6" y="2" font="helvetica" size="8" color="#000000">Document</label>
@@ -392,9 +391,8 @@
       
     </div>
 
-    <img name="imgLoading" visible="false" y="6" src="images/loading.png" />
+    <img name="loading" visible="false" y="6" src="images/loading.png" />
   </div>
   
   <div width="33" height="34" background="images/logo.png" />
-  
 </view>

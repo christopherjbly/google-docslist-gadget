@@ -2,6 +2,9 @@
   <GADGET_NAME>The Watercooler</GADGET_NAME>
   <GADGET_DESCRIPTION>Colorful characters chat around the watercooler about the latest web trends.</GADGET_DESCRIPTION>
   <GADGET_ABOUT_TEXT>The Watercooler © 2008</GADGET_ABOUT_TEXT>
+  <GADGET_COPYRIGHT>Copyright 2008 Google Inc. All Rights Reserved.</GADGET_COPYRIGHT>
+  <GADGET_OWNER>Google</GADGET_OWNER>
+  <VERSION_STRING>1.0.0.0</VERSION_STRING>
 
   <!-- labels -->
   <GADGET_INTEREST_LABEL>Select your interest:</GADGET_INTEREST_LABEL>
@@ -60,7 +63,7 @@
   	
   <LOGIN>Sign in</LOGIN>
   <FROM>From:</FROM>
-  <SIGN_IN_TO_GMAIL>Sign in to Gmail with</SIGN_IN_TO_GMAIL>
+  <SIGN_IN_TO_GMAIL>Sign in to Doclist with</SIGN_IN_TO_GMAIL>
   <YOUR>your</YOUR>
   <ACCOUNT>Account</ACCOUNT>
   <REPLY_TO>Reply to:</REPLY_TO>
@@ -131,16 +134,9 @@
   <MENU_MARK_UNREAD>Mark as unread</MENU_MARK_UNREAD>
 
   <!-- Error Messages -->
-  <INVALID_EMAIL_ADDRESS>
-    Please enter valid email addresses.
-  </INVALID_EMAIL_ADDRESS>
   <BAD_CREDENTIALS_ERROR_MESSAGE>
     Username and Password don't match
   </BAD_CREDENTIALS_ERROR_MESSAGE>
-  <CAPTCHA_ERROR_MESSAGE>
-    Your account appears to be locked on a captcha.
-    Please login using a browser to unlock.
-  </CAPTCHA_ERROR_MESSAGE>
   <ACCOUNT_LOCKED_ERROR>
     Your account appears to be locked.
   </ACCOUNT_LOCKED_ERROR>
@@ -148,8 +144,34 @@
     Oops.. Network/Server error.
     Please try again later.
   </SERVER_OR_NETWORK_ERROR>
-  <ERROR_LOADING_CONVERSATION>
-    Error Loading Conversation...
-  </ERROR_LOADING_CONVERSATION>
-  
+
+  <!-- Login error messages -->
+  <ERROR_BAD_AUTH>
+    Your username and password did not match.
+  </ERROR_BAD_AUTH>
+  <ERROR_NOT_VERIFIED>
+    Your account has not been verified.
+  </ERROR_NOT_VERIFIED>
+  <ERROR_TERMS>
+    You did not yet agree to the terms.
+  </ERROR_TERMS>
+  <ERROR_CAPTCHA>
+    A captcha is required.
+  </ERROR_CAPTCHA>
+  <ERROR_UNKNOWN>
+    An unknown error occurred.
+  </ERROR_UNKNOWN>
+  <ERROR_ACCOUNT_DELETED>
+    Your account was deleted.
+  </ERROR_ACCOUNT_DELETED>
+  <ERROR_ACCOUNT_DISABLED>
+    Your account was disabled.
+  </ERROR_ACCOUNT_DISABLED>
+  <ERROR_SERVICE_DISABLED>
+    This service has been disabled.
+  </ERROR_SERVICE_DISABLED>
+  <ERROR_SERVICE_UNAVAILABLE>
+    This service is unavailable.
+  </ERROR_SERVICE_UNAVAILABLE>
+    
 </strings>

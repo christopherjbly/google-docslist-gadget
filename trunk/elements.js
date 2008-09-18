@@ -167,7 +167,7 @@ OptionBox.prototype.close = function() {
 }
 
 // instantiate object in the global scope
-var optionBox = new OptionBox();
+var newDocumentMenu = new OptionBox();
 
 
 
