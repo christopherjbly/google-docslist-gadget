@@ -138,7 +138,7 @@ Doclist.prototype.getSuccess = function(responseText) {
  */
 Doclist.prototype.getError = function(status, responseText) {
   if (doclistContent.children.count == 0) {
-    errorMessage.display(SERVER_OR_NETWORK_ERROR);
+    errorMessage.display(ERROR_SERVER_OR_NETWORK);
     this.clearTimeout();
   }
 }
@@ -264,9 +264,7 @@ Doclist.prototype.draw = function() {
 	for (var i=0; i<this.content.children.count; i++) {
 		var div = this.content.children.item(i);
 		div.width = contentContainer.width - (scrollbar.visible ? 0 : 8);			
-		
-		div.onmousewheel = customScrollbar.wheel.bind(customScrollbar);
-		
+				
 		if (div.children.count > 0) {
 			if (this.isUploaderOpen) {
 				this.drawUploader(div);				

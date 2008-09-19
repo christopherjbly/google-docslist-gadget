@@ -63,6 +63,10 @@ Main.prototype.draw = function() {
     sortOptionsArea.x = 2;
         
     sortOptionsName.width = Math.ceil((2/3) * sortOptionsArea.width);
+    if (scrollbar.visible && sortOptionsDate.width < UI.MIN_DATE_WIDTH) {
+      sortOptionsName.width = sortOptionsArea.width - UI.MIN_DATE_WIDTH;
+      sortOptionsDate.width = UI.MIN_DATE_WIDTH;
+    }
     sortOptionsNameDateDivider.x = sortOptionsName.width;
     sortOptionsDateNameDivider.x = sortOptionsName.width;
     

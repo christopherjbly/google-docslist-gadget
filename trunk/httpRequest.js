@@ -136,7 +136,7 @@ HTTPRequest.prototype.onFailure = function() {
     var status = this.packet.readyState == 4 ? this.packet.status : 0;
     this.failedHandler(status, this.packet.responseText);
   } else {
-    errorMessage.display(SERVER_OR_NETWORK_ERROR);
+    errorMessage.display(ERROR_SERVER_OR_NETWORK);
   }
 };
 

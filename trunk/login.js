@@ -85,7 +85,7 @@ LoginSession.prototype.loginError = function(status, responseText) {
     var error = this.getCookie('Error', responseText) || 'Unknown';
   }
   
-  errorMessage.display(LOGIN_ERRORS[error] || SERVER_OR_NETWORK_ERROR);
+  errorMessage.display(LOGIN_ERRORS[error] || ERROR_SERVER_OR_NETWORK);
 };
 
 /**
