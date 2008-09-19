@@ -3,7 +3,7 @@
 
 // @fileoverview Constants used throughout the plugin
 
-var REPORTED_CLIENT_NAME = 'gd-gmail-gadget-' + VERSION_STRING;
+var REPORTED_CLIENT_NAME = 'gd-docslist-gadget-' + VERSION_STRING;
 
 var CONNECTION = {
   TIME_BETWEEN_REQUESTS: 1000,
@@ -14,7 +14,9 @@ var CONNECTION = {
   AUTH_HOST: 'www.google.com',    
   AUTH_URL: 'https://www.google.com/accounts/ClientLogin',
   AUTH_SERVICE: 'writely',
-  AUTH_TYPE: 'HOSTED_OR_GOOGLE' 
+  AUTH_TYPE: 'HOSTED_OR_GOOGLE',  
+  DOCS_HOST: 'docs.google.com',  
+  DOCS_URL: 'http://docs.google.com/feeds/documents/private/full'
 };
 
 var UI = {
@@ -42,10 +44,8 @@ var LOGIN_ERRORS = {
 
 var KEYS = {
   TAB: 9, ENTER: 13, SHIFT: 16, ESCAPE: 27, SPACE: 32,
-  HOME: 36, END: 35,
-  LEFT: 37, UP: 38, RIGHT: 39, DOWN: 40,
-  MENU: 93, SLASH: 191,
-  EXCLAMATION_MARK: 33, POUND_SIGN: 35,
+  HOME: 36, END: 35, LEFT: 37, UP: 38, RIGHT: 39, DOWN: 40,
+  MENU: 93, SLASH: 191, EXCLAMATION_MARK: 33, POUND_SIGN: 35,
   A: 65, C: 67, D: 68, F: 70, G: 71, I: 73, J: 74,
   K: 75, N: 78, O: 79, P: 80, R: 82, S: 83, U: 85, Y: 89,
   PAGE_UP: 33, PAGE_DOWN: 34, F5: 116 

@@ -57,15 +57,15 @@ Main.prototype.draw = function() {
     mainDiv.height = window.height - 46;    
     
     searchStatus.width = mainDiv.width;
-    sortOptions.width = mainDiv.width - 6;
-    sortOptions.x = 2;
+    sortOptionsArea.width = mainDiv.width - 6;
+    sortOptionsArea.x = 2;
         
-    sortOptionsName.width = Math.ceil((2/3) * sortOptions.width);
+    sortOptionsName.width = Math.ceil((2/3) * sortOptionsArea.width);
     sortOptionsNameDateDivider.x = sortOptionsName.width;
     sortOptionsDateNameDivider.x = sortOptionsName.width;
     
     sortOptionsDate.x = sortOptionsNameDateDivider.width + sortOptionsNameDateDivider.x;
-    sortOptionsDate.width = sortOptions.width - (sortOptionsName.width + sortOptionsNameDateDivider.width);
+    sortOptionsDate.width = sortOptionsArea.width - (sortOptionsName.width + sortOptionsNameDateDivider.width);
     
     sortOptionsNameArrow.x = sortOptionsName.width - (sortOptionsNameArrow.width + 5);    
     sortOptionsDateArrow.x = sortOptionsDate.width - (sortOptionsDateArrow.width + 5);
