@@ -17,8 +17,6 @@ function createXhr() {
 
 var httpRequest = new HTTPRequest();
 
-
-
 function HTTPRequest() {
   this.packet = new createXhr();
   this.handler = null;
@@ -27,11 +25,8 @@ function HTTPRequest() {
   this.timeoutTimer = null;
 }
 
-
-
 HTTPRequest.available = true;
 HTTPRequest.queue = [];
-
 
 /**
  * Function used to allow a time between httpRequests, so as not to clutter
@@ -45,8 +40,6 @@ HTTPRequest.finishedGracePeriod = function() {
     request.requestObject.connect(request.data, request.handler, request.failedHandler);
   }
 };
-
-
 
 /**
  * Sends out a request using XMLHttpRequest
@@ -89,20 +82,25 @@ HTTPRequest.prototype.connect = function (data, handler, failedHandler) {
   this.failedHandler = failedHandler;
   this.packet.abort();
   this.packet.onreadystatechange = this.receivedData.bind(this);
-  this.packet.open('POST', this.url, true);
+  if (data) {
+    this.packet.open('POST', this.url, true);
+    this.packet.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');    
+  } else {
+    this.packet.open('GET', this.url, true);    
+  }
+
+  // add auth token if one exists
+  try {
+    if (loginSession.token) {
+      this.packet.setRequestHeader('Authorization', 'GoogleLogin auth='+loginSession.token);    
+    }
+  } catch(e) {}
+
   this.packet.setRequestHeader('cookie', 'none');
-  this.packet.setRequestHeader('X-Wap-Proxy-Cookie', 'none');
   this.packet.setRequestHeader('Cache-Control', 'no-cache, no-transform');
-  this.packet.setRequestHeader('Content-Type',
-                               'application/x-www-form-urlencoded');
-  // Impersonate J2ME midlets, which send this user agent
-  // for untrusted (unsigned) midlets.
-  // This ensures MILU properly serves mobile-friendly content.
-  this.packet.setRequestHeader('User-agent', 'UNTRUSTED/1.0');
   this.packet.setRequestHeader('Host', this.host);
   this.packet.send(data);
 
-  // Set timeout timer.
   this.clearTimeout();  
   this.timeoutTimer = view.setTimeout(this.onTimeout.bind(this), CONNECTION.TIMEOUT);
 

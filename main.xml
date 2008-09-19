@@ -4,7 +4,10 @@
   <script src="util.js" />    
   <script src="httpRequest.js" />  
   <script src="errorMessage.js" />  
-  <script src="elements.js" />
+  <script src="search.js" />
+  <script src="sort.js" />
+  <script src="scrollbar.js" />  
+  <script src="menu.js" />
   <script src="doclist.js" />  
   <script src="login.js" />
   <script src="main.js" />
@@ -88,7 +91,7 @@
         <div name="searchStatusRight" width="6" height="64"
           background="images/blue-area-right.gif" />    
         
-        <div name="sortOptions" y="46" height="18">
+        <div name="sortOptionsArea" y="46" height="18">
           <div name="sortOptionsName" height="18"
             background="images/inactive-bg.gif" cursor="hand" enabled="true">
               <label x="6" y="1" font="helvetica" size="8" color="#000000">Name</label>
@@ -108,140 +111,7 @@
         
       <div name="contentArea" y="64">
         <div name="contentContainer" background="#FFFFFF">
-          <div x="4" y="0" name="doclistContent" background="#FFFFFF">
-            <div height="20" cursor="hand" enabled="true"
-              onmouseover="event.srcElement.background='#e0ecf7'" 
-              onmouseout="event.srcElement.background=''">
-              <div x="2" y="2" width="16" height="16" background="images/icon-document.gif" />
-              <label x="26" y="2" font="helvetica" size="8" color="#000000" trimming="character-ellipsis">Network Solutions</label>
-              <label y="2" font="helvetica" size="8" color="#66b3ff" align="right">7:30pm</label>                                                                                                          
-            </div>
-            <div height="1" background="#dddddd" />
-            <div height="20" cursor="hand" enabled="true"
-              onmouseover="event.srcElement.background='#e0ecf7'" 
-              onmouseout="event.srcElement.background=''">
-              <div x="2" y="2" width="16" height="16" background="images/icon-form.gif" />      
-              <label x="26" y="2" font="helvetica" size="8" color="#000000" trimming="character-ellipsis">Chicken Town</label>
-              <label y="2" font="helvetica" size="8" color="#66b3ff" align="right">Yesterday</label>                                                                                                                                              
-            </div>
-            <div height="1" background="#dddddd" />
-            <div height="20" cursor="hand" enabled="true"
-              onmouseover="event.srcElement.background='#e0ecf7'" 
-              onmouseout="event.srcElement.background=''">
-              <div x="2" y="2" width="16" height="16" background="images/icon-presentation.gif" />   
-              <label x="26" y="2" font="helvetica" size="8" color="#000000" trimming="character-ellipsis">Lolcat Fever Revision 01</label>
-              <label y="2" font="helvetica" size="8" color="#66b3ff" align="right">Aug 12</label>                                                                                            
-            </div>
-            <div height="1" background="#dddddd" />
-            <div height="20" cursor="hand" enabled="true"
-              onmouseover="event.srcElement.background='#e0ecf7'" 
-              onmouseout="event.srcElement.background=''">
-              <div x="2" y="2" width="16" height="16" background="images/icon-spreadsheet.gif" />      
-              <label x="26" y="2" font="helvetica" size="8" color="#000000" trimming="character-ellipsis">Bridge to Nowhere Budget</label>      
-              <div y="4" width="12" height="12" background="images/icon-star.gif" />
-              <label y="2" font="helvetica" size="8" color="#66b3ff" align="right">Oct 28</label>                                                                                                                                                                    
-            </div>
-            <div height="1" background="#dddddd" />
-            <div height="20" cursor="hand" enabled="true"
-              onmouseover="event.srcElement.background='#e0ecf7'" 
-              onmouseout="event.srcElement.background=''">
-              <div x="2" y="2" width="16" height="16" background="images/icon-document.gif" />
-              <label x="26" y="2" font="helvetica" size="8" color="#000000" trimming="character-ellipsis">Network Solutions</label>
-              <label y="2" font="helvetica" size="8" color="#66b3ff" align="right">7:30pm</label>                                                                                                          
-            </div>
-            <div height="1" background="#dddddd" />
-            <div height="20" cursor="hand" enabled="true"
-              onmouseover="event.srcElement.background='#e0ecf7'" 
-              onmouseout="event.srcElement.background=''">
-              <div x="2" y="2" width="16" height="16" background="images/icon-form.gif" />      
-              <label x="26" y="2" font="helvetica" size="8" color="#000000" trimming="character-ellipsis">Chicken Town</label>
-              <label y="2" font="helvetica" size="8" color="#66b3ff" align="right">Yesterday</label>                                                                                                                                              
-            </div>
-            <div height="1" background="#dddddd" />
-            <div height="20" cursor="hand" enabled="true"
-              onmouseover="event.srcElement.background='#e0ecf7'" 
-              onmouseout="event.srcElement.background=''">
-              <div x="2" y="2" width="16" height="16" background="images/icon-presentation.gif" />   
-              <label x="26" y="2" font="helvetica" size="8" color="#000000" trimming="character-ellipsis">Lolcat Fever Revision 01</label>
-              <label y="2" font="helvetica" size="8" color="#66b3ff" align="right">Aug 12</label>                                                                                            
-            </div>
-            <div height="1" background="#dddddd" />
-            <div height="20" cursor="hand" enabled="true"
-              onmouseover="event.srcElement.background='#e0ecf7'" 
-              onmouseout="event.srcElement.background=''">
-              <div x="2" y="2" width="16" height="16" background="images/icon-spreadsheet.gif" />      
-              <label x="26" y="2" font="helvetica" size="8" color="#000000" trimming="character-ellipsis">Bridge to Nowhere Budget</label>      
-              <div y="4" width="12" height="12" background="images/icon-star.gif" />
-              <label y="2" font="helvetica" size="8" color="#66b3ff" align="right">Oct 28</label>                                                                                                                                                                    
-            </div>
-            <div height="1" background="#dddddd" />            
-            <div height="20" cursor="hand" enabled="true"
-              onmouseover="event.srcElement.background='#e0ecf7'" 
-              onmouseout="event.srcElement.background=''">
-              <div x="2" y="2" width="16" height="16" background="images/icon-document.gif" />
-              <label x="26" y="2" font="helvetica" size="8" color="#000000" trimming="character-ellipsis">Network Solutions</label>
-              <label y="2" font="helvetica" size="8" color="#66b3ff" align="right">7:30pm</label>                                                                                                          
-            </div>
-            <div height="1" background="#dddddd" />
-            <div height="20" cursor="hand" enabled="true"
-              onmouseover="event.srcElement.background='#e0ecf7'" 
-              onmouseout="event.srcElement.background=''">
-              <div x="2" y="2" width="16" height="16" background="images/icon-form.gif" />      
-              <label x="26" y="2" font="helvetica" size="8" color="#000000" trimming="character-ellipsis">Chicken Town</label>
-              <label y="2" font="helvetica" size="8" color="#66b3ff" align="right">Yesterday</label>                                                                                                                                              
-            </div>
-            <div height="1" background="#dddddd" />
-            <div height="20" cursor="hand" enabled="true"
-              onmouseover="event.srcElement.background='#e0ecf7'" 
-              onmouseout="event.srcElement.background=''">
-              <div x="2" y="2" width="16" height="16" background="images/icon-presentation.gif" />   
-              <label x="26" y="2" font="helvetica" size="8" color="#000000" trimming="character-ellipsis">Lolcat Fever Revision 01</label>
-              <label y="2" font="helvetica" size="8" color="#66b3ff" align="right">Aug 12</label>                                                                                            
-            </div>
-            <div height="1" background="#dddddd" />
-            <div height="20" cursor="hand" enabled="true"
-              onmouseover="event.srcElement.background='#e0ecf7'" 
-              onmouseout="event.srcElement.background=''">
-              <div x="2" y="2" width="16" height="16" background="images/icon-spreadsheet.gif" />      
-              <label x="26" y="2" font="helvetica" size="8" color="#000000" trimming="character-ellipsis">Bridge to Nowhere Budget</label>      
-              <div y="4" width="12" height="12" background="images/icon-star.gif" />
-              <label y="2" font="helvetica" size="8" color="#66b3ff" align="right">Oct 28</label>                                                                                                                                                                    
-            </div>
-            <div height="1" background="#dddddd" />            
-            <div height="20" cursor="hand" enabled="true"
-              onmouseover="event.srcElement.background='#e0ecf7'" 
-              onmouseout="event.srcElement.background=''">
-              <div x="2" y="2" width="16" height="16" background="images/icon-document.gif" />
-              <label x="26" y="2" font="helvetica" size="8" color="#000000" trimming="character-ellipsis">Network Solutions</label>
-              <label y="2" font="helvetica" size="8" color="#66b3ff" align="right">7:30pm</label>                                                                                                          
-            </div>
-            <div height="1" background="#dddddd" />
-            <div height="20" cursor="hand" enabled="true"
-              onmouseover="event.srcElement.background='#e0ecf7'" 
-              onmouseout="event.srcElement.background=''">
-              <div x="2" y="2" width="16" height="16" background="images/icon-form.gif" />      
-              <label x="26" y="2" font="helvetica" size="8" color="#000000" trimming="character-ellipsis">Chicken Town</label>
-              <label y="2" font="helvetica" size="8" color="#66b3ff" align="right">Yesterday</label>                                                                                                                                              
-            </div>
-            <div height="1" background="#dddddd" />
-            <div height="20" cursor="hand" enabled="true"
-              onmouseover="event.srcElement.background='#e0ecf7'" 
-              onmouseout="event.srcElement.background=''">
-              <div x="2" y="2" width="16" height="16" background="images/icon-presentation.gif" />   
-              <label x="26" y="2" font="helvetica" size="8" color="#000000" trimming="character-ellipsis">Lolcat Fever Revision 01</label>
-              <label y="2" font="helvetica" size="8" color="#66b3ff" align="right">Aug 12</label>                                                                                            
-            </div>
-            <div height="1" background="#dddddd" />
-            <div height="20" cursor="hand" enabled="true"
-              onmouseover="event.srcElement.background='#e0ecf7'" 
-              onmouseout="event.srcElement.background=''">
-              <div x="2" y="2" width="16" height="16" background="images/icon-spreadsheet.gif" />      
-              <label x="26" y="2" font="helvetica" size="8" color="#000000" trimming="character-ellipsis">Bridge to Nowhere Budget</label>      
-              <div y="4" width="12" height="12" background="images/icon-star.gif" />
-              <label y="2" font="helvetica" size="8" color="#66b3ff" align="right">Oct 28</label>                                                                                                                                                                    
-            </div>
-            <div height="1" background="#dddddd" />            
-          </div>
+          <div x="4" y="0" name="doclistContent" background="#FFFFFF" />
           <div x="4" y="0" name="uploaderContent" background="#FFFFFF" visible="false">
             <div height="20">
               <div x="2" y="2" width="16" height="16" background="images/icon-upload-success.gif" />              

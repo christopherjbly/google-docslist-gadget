@@ -69,7 +69,7 @@ LoginSession.prototype.loginSuccess = function(responseText) {
   this.token = this.getCookie('Auth', responseText);
   
   if (this.token) {
-    username.innerText = this.username;
+    username.innerText = this.username.toLowerCase();
     username.visible = true;
     doclist.login();
   } else {
@@ -81,7 +81,6 @@ LoginSession.prototype.loginSuccess = function(responseText) {
  * Display login error
  */
 LoginSession.prototype.loginError = function(status, responseText) {
-
   if (status == 403) {
     var error = this.getCookie('Error', responseText) || 'Unknown';
   }
@@ -120,8 +119,6 @@ LoginSession.prototype.onUsernameKeyPress = function() {
   }
 };
 
-
-
 /**
  * This function is called onkeydown of the password editbox. accepts enter key.
  */
@@ -136,8 +133,6 @@ LoginSession.prototype.onPasswordKeyPress = function() {
   }
 };
 
-
-
 /**
  * This function is called onkeydown of the remember checkbox.
  */
@@ -148,8 +143,6 @@ LoginSession.prototype.onRememberKeyPress = function() {
     this.onRememberFocus(true);
   }
 };
-
-
 
 LoginSession.prototype.onLoginKeyPress = function() {
   if (event.keycode == KEYS.ENTER ||
@@ -163,16 +156,12 @@ LoginSession.prototype.onLoginKeyPress = function() {
   }
 };
 
-
-
 /*
  * This function is called when the remember checkbox gets or looses focus
  */
 LoginSession.prototype.onRememberFocus = function(got) {
   rememberFocus.visible = got;
 };
-
-
 
 /*
  * This function is called when the action combo gets or looses focus
