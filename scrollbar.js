@@ -5,7 +5,7 @@ function CustomScrollbar() {
   this.halt = {}; 
 
   scrollbarBar.onmousedown = this.startBar.bind(this);
-  scrollbarBar.onmousemove = this.moveBar.bind(this);
+  scrollbarBar.onmousemove = this.dragBar.bind(this);
   scrollbarBar.onmouseup = this.endBar.bind(this);
   scrollbarTrack.onclick = this.track.bind(this);
   
@@ -14,9 +14,43 @@ function CustomScrollbar() {
   scrollbarUp.onmouseup = this.endUp.bind(this);
   scrollbarDown.onmouseup = this.endDown.bind(this);
   
-  scrollbarTrack.onmousewheel = scrollbarBar.onmousewheel = window.onmousewheel
-    = this.wheel.bind(this);
+  view.onmousewheel = this.wheel.bind(this);
+  view.onkeydown = this.keydown.bind(this);
+  view.onkeyup = this.keyup.bind(this);  
 }
+
+/**
+ * Keyboard controls on keydown
+ */
+CustomScrollbar.prototype.keydown = function() {    
+  if (event.keycode == KEYS.UP) {
+    this.startUp();
+  } else if (event.keycode == KEYS.DOWN) {
+    this.startDown();
+  } else if (event.keycode == KEYS.PAGE_UP) {
+    this.moveBar(-scrollbarBar.height);
+  } else if (event.keycode == KEYS.PAGE_DOWN) {
+    this.moveBar(scrollbarBar.height);
+  } else if (event.keycode == KEYS.HOME) {
+    scrollbarBar.y = this.min();
+    this.scroll();
+  } else if (event.keycode == KEYS.END) {
+    scrollbarBar.y = this.max();
+    this.scroll();    
+  }
+}
+
+/**
+ * Keyboard controls on keyup
+ */
+CustomScrollbar.prototype.keyup = function() {    
+  if (event.keycode == KEYS.UP) {
+    this.endUp();
+  } else if (event.keycode == KEYS.DOWN) {
+    this.endDown();
+  }
+}
+
 
 /**
  * Mouse wheel
@@ -152,11 +186,8 @@ CustomScrollbar.prototype.track = function() {
 /**
  * Move scrollbar
  */
-CustomScrollbar.prototype.moveBar = function() {    
-  if (!this.halt.drag) return;  
-  this.halt.drag = false;
-
-  var y = event.y - this.start;
+CustomScrollbar.prototype.moveBar = function(moveY) {    
+  var y = moveY;
 
   var min = this.min();
   var max = this.max();
@@ -165,12 +196,23 @@ CustomScrollbar.prototype.moveBar = function() {
     if (scrollbarBar.y > min)
         scrollbarBar.y = (scrollbarBar.y + y > min) ? scrollbarBar.y + y : min;
   }
-  else if (event.y > 0) {
+  else if (y > 0) {
     if (scrollbarBar.y < max)   
         scrollbarBar.y = (scrollbarBar.y + y > max) ? max : scrollbarBar.y + y;
   }
 
   this.scroll();    
+}
+
+/**
+ * Drag scrollbar
+ */
+CustomScrollbar.prototype.dragBar = function() {    
+  if (!this.halt.drag) return;  
+  this.halt.drag = false;
+
+  this.moveBar(event.y - this.start);
+
   this.halt.drag = true;
 }
 

@@ -38,7 +38,7 @@ DocumentMenu.prototype.close = function() {
 DocumentMenu.prototype.newDocument = function() {
   newDocumentMenu.close();
   if (!framework.system.network.online) {
-    errorMessage.display(SERVER_OR_NETWORK_ERROR);
+    errorMessage.display(ERROR_SERVER_OR_NETWORK);
     return;
   }
   if (NEW_DOC[event.srcElement.name]) {

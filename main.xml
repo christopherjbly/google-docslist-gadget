@@ -28,26 +28,26 @@
     <label name="username" x="35" y="6" size="10" font="helvetica" color="#0070bf" visible="false"></label>
 
     <div name="loginDiv" x="10" y="40" height="180" visible="true">      
-      <label width="100%" height="16" font="helvetica" size="9">&SIGN_IN_TO_DOCLIST;</label>
-      <label width="100%" y="18" height="16" font="helvetica" size="9">&YOUR;</label>
+      <label width="100%" height="16" font="helvetica" size="9">&LOGIN_SIGN_IN_TO_DOCLIST;</label>
+      <label width="100%" y="18" height="16" font="helvetica" size="9">&LOGIN_YOUR;</label>
       <img x="30" y="18" width="55" height="19" src="images/google_logo.png" />
-      <label width="100%" x="88" y="18" height="16" font="helvetica" size="9" bold="true">&ACCOUNT;</label>
+      <label width="100%" x="88" y="18" height="16" font="helvetica" size="9" bold="true">&LOGIN_ACCOUNT;</label>
 
       <div name="userBg" y="64" width="100%" height="19" background="#7f9db9"/>
       <div name="passBg" y="104" width="100%" height="18" background="#7f9db9"/>
 
-      <label name="userLabel" y="48" width="100%" height="16" font="helvetica" size="9" color="#0066cc">&USERNAME;</label>
+      <label name="userLabel" y="48" width="100%" height="16" font="helvetica" size="9" color="#0066cc">&LOGIN_USERNAME;</label>
       <edit name="user" x="1" y="65" height="17" font="helvetica"
         onkeypress="loginSession.onUsernameKeyPress()" />
 
-      <label name="passLabel" y="88" height="16" font="helvetica" size="9" color="#0066cc">&PASSWORD;</label>
+      <label name="passLabel" y="88" height="16" font="helvetica" size="9" color="#0066cc">&LOGIN_PASSWORD;</label>
       <edit name="pass" x="1" y="105" height="16" font="helvetica" passwordChar="*"
         onkeypress="loginSession.onPasswordKeyPress()" />
 
       <img name="rememberFocus" visible="false" y="127" width="22" height="22" src="images/checkbox_focus.png" />
       <checkbox name="remember" x="3" y="130" width="100%" height="16"
         font="helvetica" size="9" trimming="word-ellipsis"
-        caption="&REMEMBER_ME;" value="false" cursor="hand"
+        caption="&LOGIN_REMEMBER_ME;" value="false" cursor="hand"
         onchange="loginSession.onRememberFocus(true)"
         onkeypress="loginSession.onRememberKeyPress()"
         onfocusin="loginSession.onRememberFocus(true)"
@@ -60,7 +60,7 @@
         checkedDownImage="images/checkbox_checked.png" />
 
       <button name="login" y="155" width="84" height="24"
-        font="helvetica" size="8" caption="&LOGIN;" cursor="hand"
+        font="helvetica" size="8" caption="&LOGIN_SIGN_IN;" cursor="hand"
         onkeypress="loginSession.onLoginKeyPress()"
         onfocusin="loginSession.onLoginFocus(true)"
         onfocusout="loginSession.onLoginFocus(false)"
@@ -84,9 +84,9 @@
               </div>
             </div>
             <div name="uploadStatus" x="9" y="7" height="50" visible="false">
-              <label name="uploadStatusLine1" size="11" width="100%" height="18" font="helvetica" color="#ffffff">&NOW_UPLOADING;</label>
-              <label y="18" name="uploadStatusLine2" size="11" width="100%" height="18" font="helvetica" color="#ffffff">2 &OF; 5</label>              
-              <a y="35" name="uploadOption" size="8" font="helvetica" color="#ffffff" underline="true">&CANCEL;</a>                            
+              <label name="uploadStatusLine1" size="11" width="100%" height="18" font="helvetica" color="#ffffff">&UPLOAD_UPLOADING;</label>
+              <label y="18" name="uploadStatusLine2" size="11" width="100%" height="18" font="helvetica" color="#ffffff">2 &UPLOAD_OF; 5</label>              
+              <a y="35" name="uploadOption" size="8" font="helvetica" color="#ffffff" underline="true">&UPLOAD_CANCEL;</a>                            
             </div>
         </div>
         <div name="searchStatusRight" width="6" height="64"

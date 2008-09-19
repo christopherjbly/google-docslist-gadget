@@ -52,19 +52,19 @@
   <DATE_DECEMBER_SHORT>Dec</DATE_DECEMBER_SHORT>  	
   
   <!-- Login view -->
-  <LOGIN>Sign in</LOGIN>
-  <SIGN_IN_TO_DOCLIST>Sign in to Doclist with</SIGN_IN_TO_DOCLIST>
-  <YOUR>your</YOUR>
-  <ACCOUNT>Account</ACCOUNT>
-  <USERNAME>Username</USERNAME>
-  <PASSWORD>Password</PASSWORD>
-  <REMEMBER_ME>Remember me</REMEMBER_ME>
+  <LOGIN_SIGN_IN>Sign in</LOGIN_SIGN_IN>
+  <LOGIN_SIGN_IN_TO_DOCLIST>Sign in to Doclist with</LOGIN_SIGN_IN_TO_DOCLIST>
+  <LOGIN_YOUR>your</LOGIN_YOUR>
+  <LOGIN_ACCOUNT>Account</LOGIN_ACCOUNT>
+  <LOGIN_USERNAME>Username</LOGIN_USERNAME>
+  <LOGIN_PASSWORD>Password</LOGIN_PASSWORD>
+  <LOGIN_REMEMBER_ME>Remember me</LOGIN_REMEMBER_ME>
 
   <!-- Error Messages -->
-  <SERVER_OR_NETWORK_ERROR>
+  <ERROR_SERVER_OR_NETWORK>
     Oops.. Network/Server error.
     Please try again later.
-  </SERVER_OR_NETWORK_ERROR>
+  </ERROR_SERVER_OR_NETWORK>
 
   <!-- Login error messages -->
   <ERROR_BAD_AUTH>
@@ -96,10 +96,10 @@
   </ERROR_SERVICE_UNAVAILABLE>
   
   <!-- Main view -->
-  <NOW_UPLOADING>Now uploading...</NOW_UPLOADING>
-  <OF>of</OF>
-  <CANCEL>Cancel</CANCEL>
-  <DONE>Done</DONE>    
+  <UPLOAD_UPLOADING>Now uploading...</UPLOAD_UPLOADING>
+  <UPLOAD_OF>of</UPLOAD_OF>
+  <UPLOAD_CANCEL>Cancel</UPLOAD_CANCEL>
+  <UPLOAD_DONE>Done</UPLOAD_DONE>    
   <SORT_NAME>Name</SORT_NAME>
   <SORT_DATE>Date</SORT_DATE>
   <COMMAND_NEW>New</COMMAND_NEW>
