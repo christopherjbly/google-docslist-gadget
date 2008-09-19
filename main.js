@@ -18,15 +18,17 @@ function Main() {
  * Draw the gadget when the view opens.
  */
 Main.prototype.onOpen = function() {
-  view.onsize = this.draw.bind(this); 
+  view.onsize = this.draw.bind(this);   
   this.draw();  
 }
-
 
 /**
  * Resize the gadget.
  */
 Main.prototype.draw = function() {
+  
+  if (view.width < UI.MIN_WIDTH) view.width = UI.MIN_WIDTH;  
+  if (view.height < UI.MIN_HEIGHT) view.height = UI.MIN_HEIGHT;
   
   window.width = view.width - 2;
   window.height = view.height - 9;

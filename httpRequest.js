@@ -105,7 +105,6 @@ HTTPRequest.prototype.connect = function (data, handler, failedHandler) {
   this.timeoutTimer = view.setTimeout(this.onTimeout.bind(this), CONNECTION.TIMEOUT);
 
   HTTPRequest.available = false;
-  debug.trace('Request sent to server : ' + data);
 };
 
 HTTPRequest.prototype.clearTimeout = function() {
@@ -148,7 +147,6 @@ HTTPRequest.prototype.receivedData = function() {
   if (this.packet.readyState != 4) {
     return;
   }
-  debug.trace('All data received here...');
   this.hideLoading();  
   this.clearTimeout();  
   setTimeout(HTTPRequest.finishedGracePeriod, CONNECTION.TIME_BETWEEN_REQUESTS);

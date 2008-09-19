@@ -8,12 +8,7 @@ function Doclist() {
   this.content = doclistContent;    
   
   commandUpload.onclick = this.openUploader.bind(this);
-  uploadOption.onclick = this.closeUploader.bind(this);  
-   
-  newDocumentForm.onclick = this.newDocument.bind(this);
-  newDocumentPresentation.onclick = this.newDocument.bind(this);
-  newDocumentSpreadsheet.onclick = this.newDocument.bind(this);
-  newDocumentDocument.onclick = this.newDocument.bind(this);  
+  uploadOption.onclick = this.closeUploader.bind(this);     
 }
 
 /**
@@ -24,6 +19,9 @@ Doclist.prototype.login = function() {
   mainDiv.visible = true;  
   gadget.draw();
   this.get();
+
+  this.clearTimeout();
+  this.timer = view.setTimeout(this.get.bind(this), CONNECTION.REFRESH_INTERVAL);
 }
 
 /**
@@ -33,7 +31,19 @@ Doclist.prototype.logout = function() {
   loginDiv.visible = true;
   mainDiv.visible = false;  
   gadget.draw();  
+  
+  this.clearTimeout();  
 }
+
+/**
+* Clear refresh timer
+*/
+Doclist.prototype.clearTimeout = function() {
+  if (this.timer) {
+    view.clearTimeout(this.timer);
+    this.timer = null;
+  }
+};
 
 /**
  * Get doclist 
@@ -56,6 +66,7 @@ Doclist.prototype.getSuccess = function(responseText) {
 	  if (rootTagName != 'feed') throw "";
   } catch(e) {
     debug.error('Could not load XML.');
+    this.getError();    
     return false;
   }
   
@@ -72,7 +83,21 @@ Doclist.prototype.getSuccess = function(responseText) {
       if (entry.getElementsByTagName('link').length <= 0) continue;
       
       document.title = entry.getElementsByTagName('title')[0].text;
-      document.updated = parseRFC3339(entry.getElementsByTagName('updated')[0].text);
+      var date = parseRFC3339(entry.getElementsByTagName('updated')[0].text);
+      document.updated = date;
+      
+      // format date
+      var now = new Date();
+      var yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1);
+      
+      if (date.formatDate('n j Y') == now.formatDate('n j Y')) {
+        document.date = date.formatDate('g:ia');
+      } else if (date.formatDate('n j Y') == yesterday.formatDate('n j Y')) {
+        document.date = DATE_YESTERDAY;
+      } else {
+        document.date = date.formatDate('M j');        
+      }
 
       var links = entry.getElementsByTagName('link');
       
@@ -101,7 +126,8 @@ Doclist.prototype.getSuccess = function(responseText) {
     }   
   } catch(e) {
     debug.error('Could not parse XML.');
-    return false;      
+    this.getError();
+    return;
   }
 
   this.sort();
@@ -111,7 +137,10 @@ Doclist.prototype.getSuccess = function(responseText) {
  * Get doclist 
  */
 Doclist.prototype.getError = function(status, responseText) {
-  debug.error(status+' '+responseText);  
+  if (doclistContent.children.count == 0) {
+    errorMessage.display(SERVER_OR_NETWORK_ERROR);
+    this.clearTimeout();
+  }
 }
 
 /**
@@ -158,7 +187,7 @@ Doclist.prototype.refresh = function() {
     var file = doclistContent.appendElement('<div height="20" cursor="hand" enabled="true" />');
     file.appendElement('<div x="2" y="2" width="16" height="16" background="images/icon-'+document.type+'.gif" />');
     file.appendElement('<label x="26" y="2" font="helvetica" size="8" color="#000000" trimming="character-ellipsis">'+document.title+'</label>');
-    file.appendElement('<label y="2" font="helvetica" size="8" color="#66b3ff" align="right">'+document.updated+'</label>');
+    file.appendElement('<label y="2" font="helvetica" size="8" color="#66b3ff" align="right">'+document.date+'</label>');
 
     file.onmouseover = function() { event.srcElement.background='#e0ecf7'; }
     file.onmouseout = function() { event.srcElement.background=''; }
@@ -169,20 +198,6 @@ Doclist.prototype.refresh = function() {
 
   this.draw();
 }
-
-/**
- * Launch new document
- */
-Doclist.prototype.newDocument = function() {
-  newDocumentMenu.close();
-  if (!framework.system.network.online) {
-    errorMessage.display(SERVER_OR_NETWORK_ERROR);
-    return;
-  }
-  if (NEW_DOC[event.srcElement.name]) {
-    framework.openUrl(NEW_DOC[event.srcElement.name]);
-  }
-};
 
 /**
  * Open uploader
