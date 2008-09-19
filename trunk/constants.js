@@ -8,7 +8,7 @@ var REPORTED_CLIENT_NAME = 'gd-docslist-gadget-' + VERSION_STRING;
 var CONNECTION = {
   TIME_BETWEEN_REQUESTS: 1000,
   TIMEOUT: 10000,
-  REFRESH_INTERVAL: 300000,
+  REFRESH_INTERVAL: 60000, // 60 seconds
 
   DEFAULT_DOMAIN: 'gmail.com',
   AUTH_HOST: 'www.google.com',    
@@ -20,6 +20,8 @@ var CONNECTION = {
 };
 
 var UI = {
+  MIN_WIDTH: 210,
+  MIN_HEIGHT: 200,  
   ERROR_MESSAGE_TIMEOUT: 3000
 };
 

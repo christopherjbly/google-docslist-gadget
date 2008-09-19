@@ -1,7 +1,8 @@
-<view width="165" height="235" resizable="true" resizeBorder="10 15 15 15" onopen="gadget.onOpen()">
+<view width="260" height="340" resizable="true" resizeBorder="10 15 15 15" onopen="gadget.onOpen()">
 
   <script src="constants.js" />
   <script src="util.js" />    
+  <script src="date.js" />      
   <script src="httpRequest.js" />  
   <script src="errorMessage.js" />  
   <script src="search.js" />
@@ -27,7 +28,7 @@
     <label name="username" x="35" y="6" size="10" font="helvetica" color="#0070bf" visible="false"></label>
 
     <div name="loginDiv" x="10" y="40" height="180" visible="true">      
-      <label width="100%" height="16" font="helvetica" size="9">&SIGN_IN_TO_GMAIL;</label>
+      <label width="100%" height="16" font="helvetica" size="9">&SIGN_IN_TO_DOCLIST;</label>
       <label width="100%" y="18" height="16" font="helvetica" size="9">&YOUR;</label>
       <img x="30" y="18" width="55" height="19" src="images/google_logo.png" />
       <label width="100%" x="88" y="18" height="16" font="helvetica" size="9" bold="true">&ACCOUNT;</label>
@@ -77,15 +78,15 @@
             <div name="searchArea" x="7" y="12" height="25" background="#5697de">
               <div name="searchContainer" x="1" y="1" height="23" background="#ffffff">
                 <edit name="search" y="3" size="11" height="17" font="helvetica" 
-                  background="#ffffff" color="#999999" value="search docs" enabled="true" />              
+                  background="#ffffff" color="#999999" value="&SEARCH_DOCS;" enabled="true" />              
                 <div name="searchClear" y="2" width="19" height="19" 
                   background="images/textbox-close.gif" cursor="hand" visible="false" enabled="true" />              
               </div>
             </div>
             <div name="uploadStatus" x="9" y="7" height="50" visible="false">
-              <label name="uploadStatusLine1" size="11" width="100%" height="18" font="helvetica" color="#ffffff">Now uploading...</label>
-              <label y="18" name="uploadStatusLine2" size="11" width="100%" height="18" font="helvetica" color="#ffffff">2 of 5</label>              
-              <a y="35" name="uploadOption" size="8" font="helvetica" color="#ffffff" underline="true">Cancel</a>                            
+              <label name="uploadStatusLine1" size="11" width="100%" height="18" font="helvetica" color="#ffffff">&NOW_UPLOADING;</label>
+              <label y="18" name="uploadStatusLine2" size="11" width="100%" height="18" font="helvetica" color="#ffffff">2 &OF; 5</label>              
+              <a y="35" name="uploadOption" size="8" font="helvetica" color="#ffffff" underline="true">&CANCEL;</a>                            
             </div>
         </div>
         <div name="searchStatusRight" width="6" height="64"
@@ -94,7 +95,7 @@
         <div name="sortOptionsArea" y="46" height="18">
           <div name="sortOptionsName" height="18"
             background="images/inactive-bg.gif" cursor="hand" enabled="true">
-              <label x="6" y="1" font="helvetica" size="8" color="#000000">Name</label>
+              <label x="6" y="1" font="helvetica" size="8" color="#000000">&SORT_NAME;</label>
               <div name="sortOptionsNameArrow" y="7" width="9" height="6" background="images/name-date-arrow.gif" visible="false" />              
           </div>
           <div name="sortOptionsNameDateDivider" width="2" height="18"
@@ -103,7 +104,7 @@
             background="images/date-name-divider.gif" visible="false" />                  
           <div name="sortOptionsDate" height="18"
             background="images/active-bg.gif" enabled="true">
-              <label x="5" y="1" font="helvetica" size="8" color="#000000">Date</label>
+              <label x="5" y="1" font="helvetica" size="8" color="#000000">&SORT_DATE;</label>
               <div name="sortOptionsDateArrow" y="7" width="9" height="6" background="images/name-date-arrow.gif" />
           </div>
         </div>
@@ -159,10 +160,10 @@
       </div>
 
       <div name="commands" height="23">
-        <a name="commandsNew" x="3" height="14" font="helvetica" size="8" color="#0065cd" underline="true">New</a>
+        <a name="commandsNew" x="3" height="14" font="helvetica" size="8" color="#0065cd" underline="true">&COMMAND_NEW;</a>
         <div name="commandsNewArrow" cursor="hand" width="7" height="4" background="images/down-arrow.gif" enabled="true" />
-        <a name="commandUpload" font="helvetica" size="8" color="#0065cd" underline="true">Upload</a>
-        <a name="commandSignout" font="helvetica" size="8" color="#0065cd" underline="true">Sign out</a>
+        <a name="commandUpload" font="helvetica" size="8" color="#0065cd" underline="true">&COMMAND_UPLOAD;</a>
+        <a name="commandSignout" font="helvetica" size="8" color="#0065cd" underline="true">&COMMAND_SIGN_OUT;</a>
       </div>
       
     </div>
@@ -240,28 +241,28 @@
         <div name="newDocumentForm" width="92" height="20" enabled="true" cursor="hand"
           onmouseover="event.srcElement.background='#e0ecf7'" 
           onmouseout="event.srcElement.background=''">
-            <label x="6" y="2" font="helvetica" size="8" color="#000000">Form</label>
+            <label x="6" y="2" font="helvetica" size="8" color="#000000">&DOCUMENT_FORM;</label>
         </div>
         <div name="newDocumentPresentation" y="20" width="92" height="20" enabled="true" cursor="hand"
           onmouseover="event.srcElement.background='#e0ecf7'"
           onmouseout="event.srcElement.background=''">
-            <label x="6" y="2" font="helvetica" size="8" color="#000000">Presentation</label>
+            <label x="6" y="2" font="helvetica" size="8" color="#000000">&DOCUMENT_PRESENTATION;</label>
         </div>
         <div name="newDocumentSpreadsheet" y="40" width="92" height="20" enabled="true" cursor="hand"
           onmouseover="event.srcElement.background='#e0ecf7'" 
           onmouseout="event.srcElement.background=''">
-            <label x="6" y="2" font="helvetica" size="8" color="#000000">Spreadsheet</label>
+            <label x="6" y="2" font="helvetica" size="8" color="#000000">&DOCUMENT_SPREADSHEET;</label>
         </div>
         <div name="newDocumentDocument" y="60" width="92" height="20" enabled="true" cursor="hand"
           onmouseover="event.srcElement.background='#e0ecf7'" 
           onmouseout="event.srcElement.background=''">
-            <label x="6" y="2" font="helvetica" size="8" color="#000000">Document</label>
+            <label x="6" y="2" font="helvetica" size="8" color="#000000">&DOCUMENT_DOCUMENT;</label>
         </div>   
       </div>
       
     </div>
 
-    <img name="loading" visible="false" y="6" src="images/loading.png" />
+    <img name="loading" visible="false" y="6" src="loading.png" />
   </div>
   
   <div width="33" height="34" background="images/logo.png" />
