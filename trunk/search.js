@@ -2,6 +2,7 @@
  * Constructor for SearchField class.
  */
 function SearchField() {
+  this.active = false;
   this.defaultValue = search.value;
   this.defaultColor = search.color;
   
@@ -10,6 +11,8 @@ function SearchField() {
 
   search.onfocusout = this.blur.bind(this);
   search.onchange = this.autofill.bind(this);
+  search.onkeydown = this.keydown.bind(this);
+  
   searchClear.onclick = this.reset.bind(this);
 }
 
@@ -37,6 +40,14 @@ SearchField.prototype.draw = function() {
       div.children.item(1).width = autoFillOptions.width - div.children.item(1).x - 5;
     }
   }
+  
+  autoFillOptions.height = y;
+  autoFill.height = autoFillOptions.height + autoFillTopCenter.height + autoFillBottomCenter.height;
+  autoFillBottomLeft.y = y + autoFillTopLeft.height;
+  autoFillBottomCenter.y = y + autoFillTopCenter.height;
+  autoFillBottomRight.y = y + autoFillTopRight.height;  
+  autoFillMiddleLeft.height = y;
+  autoFillMiddleRight.height = y;  
 }
 
 /**
@@ -44,6 +55,7 @@ SearchField.prototype.draw = function() {
  */
 SearchField.prototype.activate = function() {
   if (search.value != this.defaultValue) return;
+  this.active = true;
   search.value = '';
   search.color = '#000000';
   searchClear.visible = true;
@@ -62,10 +74,40 @@ SearchField.prototype.blur = function() {
  * Reset search field
  */
 SearchField.prototype.reset = function() {
+  var refresh = this.active;
+  this.active = false;
+  if (refresh) doclist.refresh();
+  
   search.value = this.defaultValue;
   search.color = this.defaultColor;
   searchClear.visible = false;
   autoFill.visible = false;
+  window.focus();
+}
+
+/**
+ * Keyboard controls
+ */
+SearchField.prototype.keydown = function() {
+  switch(event.keycode) {    
+
+    case KEYS.ESCAPE:
+      this.reset();
+      break;
+      
+    case KEYS.ENTER:
+      this.display();
+      break;
+  }
+}
+
+/**
+ * Display search results
+ */
+SearchField.prototype.display = function() {
+  if (!search.value.trim()) return;
+  autoFill.visible = false;
+  doclist.refresh();
 }
 
 /**
@@ -77,8 +119,8 @@ SearchField.prototype.autofill = function() {
     return;
   }
   
-  this.draw();
-  autoFill.visible = true;
+  autoFill.visible = doclist.search();
+  this.draw();  
 }
 
 // instantiate object in the global scope

@@ -5,7 +5,7 @@
 
 function createXhr() {
   var xhr;
-
+  
   try {
     xhr = framework.google.betaXmlHttpRequest();
   } catch (e) {
@@ -23,10 +23,30 @@ function HTTPRequest() {
   this.failedHandler = null;
   // Token for timeout timer.
   this.timeoutTimer = null;
+  this.headers = {};
 }
 
 HTTPRequest.available = true;
 HTTPRequest.queue = [];
+
+/**
+ * Add a new custom header
+ */
+HTTPRequest.prototype.addHeader = function(key, value) {
+  var type = typeof value;
+  if (type == 'boolean' || type == 'number' || type == 'string') {
+    this.headers[key] = value.toString();
+  }
+};
+
+/**
+ * Remove custom header
+ */
+HTTPRequest.prototype.removeHeader = function(key) {
+  try {
+    if (this.headers[key]) delete this.headers[key];
+  } catch(e) {}
+};
 
 /**
  * Function used to allow a time between httpRequests, so as not to clutter
@@ -37,7 +57,7 @@ HTTPRequest.finishedGracePeriod = function() {
   HTTPRequest.available = true;
   if (HTTPRequest.queue.length > 0) {
     var request = HTTPRequest.queue.shift();
-    request.requestObject.connect(request.data, request.handler, request.failedHandler);
+    request.requestObject.connect(request.data, request.handler, request.failedHandler, request.headers);
   }
 };
 
@@ -45,24 +65,13 @@ HTTPRequest.finishedGracePeriod = function() {
  * Sends out a request using XMLHttpRequest
  * @param {String} data The data to be packed
  */
-HTTPRequest.prototype.connect = function (data, handler, failedHandler) {
-  
+HTTPRequest.prototype.connect = function (data, handler, failedHandler, headers) {
+  headers = headers || {};
+
   if (!HTTPRequest.available) {
     // The server fails to handle too many requests at a time so we need to
     // queue them.
-    if (HTTPRequest.queue.length > 0 && data.indexOf(URL.OFFSET_PARAM) > -1) {
-      // We check to see if the user requested the next/previews page twice
-      // this is the only case we need to check as we check it before adding
-      // every request so if 3 or more consecutive calls are made only the
-      // latest is kept. There is no need for further checking, as other types
-      // of request are more naturally stoped from queueing elsewhere.
-      if (HTTPRequest.queue[HTTPRequest.queue.length - 1].data.indexOf(
-          URL.OFFSET_PARAM) > -1) {
-        // if this happens, we only keep the latest request arround
-        HTTPRequest.queue.pop();
-      }
-    }
-    HTTPRequest.queue.push({ requestObject: this, data: data, handler: handler, failedHandler: failedHandler} );
+    HTTPRequest.queue.push({ requestObject: this, data: data, handler: handler, failedHandler: failedHandler, headers: headers });
     return;
   }
   try {
@@ -82,19 +91,26 @@ HTTPRequest.prototype.connect = function (data, handler, failedHandler) {
   this.failedHandler = failedHandler;
   this.packet.abort();
   this.packet.onreadystatechange = this.receivedData.bind(this);
-  if (data) {
+  if (data || headers['Content-Length']) {
     this.packet.open('POST', this.url, true);
-    this.packet.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');    
+    if (!this.headers['Content-Type'] && !headers['Content-Type']) {
+      this.packet.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');    
+    }
   } else {
     this.packet.open('GET', this.url, true);    
   }
 
-  // add auth token if one exists
-  try {
-    if (loginSession.token) {
-      this.packet.setRequestHeader('Authorization', 'GoogleLogin auth='+loginSession.token);    
+  // custom headers
+  for (var key in this.headers) {
+    if (typeof this.headers[key] == 'string') {
+      this.packet.setRequestHeader(key, this.headers[key]);    
     }
-  } catch(e) {}
+  }
+  for (var key in headers) {
+    if (typeof headers[key] == 'string') {
+      this.packet.setRequestHeader(key, headers[key]);    
+    }
+  }
 
   this.packet.setRequestHeader('cookie', 'none');
   this.packet.setRequestHeader('Cache-Control', 'no-cache, no-transform');

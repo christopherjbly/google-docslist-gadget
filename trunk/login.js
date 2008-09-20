@@ -6,7 +6,7 @@
 function LoginSession() {
   
   login.onclick = this.login.bind(this);
-  commandSignout.onclick = this.logout.bind(this);  
+  commandsSignout.onclick = this.logout.bind(this);  
   
   this.setup();
     

@@ -58,24 +58,7 @@ Main.prototype.draw = function() {
     mainDiv.width = window.width - 16; 
     mainDiv.height = window.height - 46;    
     
-    searchStatus.width = mainDiv.width;
-    sortOptionsArea.width = mainDiv.width - 6;
-    sortOptionsArea.x = 2;
-        
-    sortOptionsName.width = Math.ceil((2/3) * sortOptionsArea.width);
-    if (scrollbar.visible && sortOptionsDate.width < UI.MIN_DATE_WIDTH) {
-      sortOptionsName.width = sortOptionsArea.width - UI.MIN_DATE_WIDTH;
-      sortOptionsDate.width = UI.MIN_DATE_WIDTH;
-    }
-    sortOptionsNameDateDivider.x = sortOptionsName.width;
-    sortOptionsDateNameDivider.x = sortOptionsName.width;
-    
-    sortOptionsDate.x = sortOptionsNameDateDivider.width + sortOptionsNameDateDivider.x;
-    sortOptionsDate.width = sortOptionsArea.width - (sortOptionsName.width + sortOptionsNameDateDivider.width);
-    
-    sortOptionsNameArrow.x = sortOptionsName.width - (sortOptionsNameArrow.width + 5);    
-    sortOptionsDateArrow.x = sortOptionsDate.width - (sortOptionsDateArrow.width + 5);
-    
+    searchStatus.width = mainDiv.width;    
     searchStatusContent.width = mainDiv.width - (searchStatusLeft.width + searchStatusRight.width);
     searchStatusRight.x = searchStatusContent.width + searchStatusContent.x;
     
@@ -96,7 +79,6 @@ Main.prototype.draw = function() {
     contentContainer.height = contentArea.height - contentShadowBottom.height;
 
     doclist.draw();
-    customScrollbar.draw();
 
     contentShadowBottom.width = contentContainer.width - contentShadowBottomLeft.width;
     contentShadowRight.height = contentArea.height - contentShadowBottomRight.height;
@@ -112,8 +94,8 @@ Main.prototype.draw = function() {
     commandsNewArrow.x = labelCalcWidth(commandsNew) + 2;
     commandsNewArrow.y = commandsNewArrow.height + 3;
     
-    commandUpload.x = commandsNewArrow.x + commandsNewArrow.width + 7;
-    commandSignout.x = commands.width - (labelCalcWidth(commandSignout) + 4);
+    commandsUpload.x = commandsNewArrow.x + commandsNewArrow.width + 7;
+    commandsSignout.x = commands.width - (labelCalcWidth(commandsSignout) + 4);
   
     newDocument.y = mainDiv.height - (newDocument.height - commands.height - 13);
   }

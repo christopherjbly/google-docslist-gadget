@@ -9,6 +9,7 @@
   <script src="sort.js" />
   <script src="scrollbar.js" />  
   <script src="menu.js" />
+  <script src="uploader.js" />
   <script src="doclist.js" />  
   <script src="login.js" />
   <script src="main.js" />
@@ -85,7 +86,7 @@
             </div>
             <div name="uploadStatus" x="9" y="7" height="50" visible="false">
               <label name="uploadStatusLine1" size="11" width="100%" height="18" font="helvetica" color="#ffffff">&UPLOAD_UPLOADING;</label>
-              <label y="18" name="uploadStatusLine2" size="11" width="100%" height="18" font="helvetica" color="#ffffff">2 &UPLOAD_OF; 5</label>              
+              <label y="18" name="uploadStatusLine2" size="11" width="100%" height="18" font="helvetica" color="#ffffff">0 &UPLOAD_OF; 0</label>              
               <a y="35" name="uploadOption" size="8" font="helvetica" color="#ffffff" underline="true">&UPLOAD_CANCEL;</a>                            
             </div>
         </div>
@@ -113,34 +114,7 @@
       <div name="contentArea" y="64">
         <div name="contentContainer" background="#FFFFFF">
           <div x="4" y="0" name="doclistContent" background="#FFFFFF" />
-          <div x="4" y="0" name="uploaderContent" background="#FFFFFF" visible="false">
-            <div height="20">
-              <div x="2" y="2" width="16" height="16" background="images/icon-upload-success.gif" />              
-              <div x="22" y="2" width="16" height="16" background="images/icon-document.gif" />
-              <label x="46" y="2" font="helvetica" size="8" color="#000000" trimming="character-ellipsis">Network Solutions</label>
-            </div>
-            <div height="1" background="#dddddd" />
-            <div height="20">
-              <div x="2" y="2" width="16" height="16" background="images/icon-upload-loading.gif" />                            
-              <div x="22" y="2" width="16" height="16" background="images/icon-form.gif" />      
-              <label x="46" y="2" font="helvetica" size="8" color="#000000" trimming="character-ellipsis">Chicken Town</label>
-            </div>
-            <div height="1" background="#dddddd" />
-            <div height="33">
-              <div x="2" y="2" width="16" height="16" background="images/icon-upload-error.gif" />                                          
-              <div x="22" y="2" width="16" height="16" background="images/icon-presentation.gif" />   
-              <label x="46" y="2" font="helvetica" size="8" color="#000000" trimming="character-ellipsis">Lolcat Fever Revision 01</label>
-              <label x="46" y="15" height="15" font="helvetica" size="8" color="#ff0000" trimming="character-ellipsis">file is corrupt</label>              
-            </div>
-            <div height="1" background="#dddddd" />
-            <div height="20">
-              <div x="2" y="2" width="16" height="16" />                                                        
-              <div x="22" y="2" width="16" height="16" background="images/icon-spreadsheet.gif" />      
-              <label x="46" y="2" font="helvetica" size="8" color="#999999" trimming="character-ellipsis">Bridge to Nowhere Budget</label>      
-            </div>
-            <div height="1" background="#dddddd" />
-            
-          </div>
+          <div x="4" y="0" name="uploaderContent" background="#FFFFFF" visible="false" />
           <div y="3" width="14" name="scrollbar" background="#FFFFFF">
             <div width="14" height="12" name="scrollbarUp" background="images/scroll-up.gif" enabled="true"/>
             <div width="14" y="12" name="scrollbarTrack" background="images/scroll-track.gif" enabled="true" />        
@@ -162,13 +136,13 @@
       <div name="commands" height="23">
         <a name="commandsNew" x="3" height="14" font="helvetica" size="8" color="#0065cd" underline="true">&COMMAND_NEW;</a>
         <div name="commandsNewArrow" cursor="hand" width="7" height="4" background="images/down-arrow.gif" enabled="true" />
-        <a name="commandUpload" font="helvetica" size="8" color="#0065cd" underline="true">&COMMAND_UPLOAD;</a>
-        <a name="commandSignout" font="helvetica" size="8" color="#0065cd" underline="true">&COMMAND_SIGN_OUT;</a>
+        <a name="commandsUpload" font="helvetica" size="8" color="#0065cd" underline="true">&COMMAND_UPLOAD;</a>
+        <a name="commandsSignout" font="helvetica" size="8" color="#0065cd" underline="true">&COMMAND_SIGN_OUT;</a>
       </div>
       
     </div>
 
-    <div name="autoFill" x="16" y="60" height="88" visible="false">
+    <div name="autoFill" x="16" y="60" visible="false">
       <div name="autoFillTopLeft" width="3" height="3"
            background="images/dropdown-top-left.png" />             
       <div name="autoFillTopCenter" x="3" height="3"
@@ -176,44 +150,19 @@
       <div name="autoFillTopRight" width="5" height="3"
            background="images/dropdown-top-right.png" />
 
-      <div name="autoFillMiddleLeft" y="3" width="3" height="80"
+      <div name="autoFillMiddleLeft" y="3" width="3" 
            background="images/dropdown-left.png" />        
-      <div name="autoFillMiddleRight" y="3" width="5" height="80"
+      <div name="autoFillMiddleRight" y="3" width="5"
            background="images/dropdown-right.png" />
 
-      <div name="autoFillBottomLeft" y="83" width="3" height="5"
+      <div name="autoFillBottomLeft" width="3" height="5"
            background="images/dropdown-bottom-left.png" />           
-      <div name="autoFillBottomCenter" x="3" y="83" height="5"
+      <div name="autoFillBottomCenter" x="3" height="5"
            background="images/dropdown-bottom.png" />
-      <div name="autoFillBottomRight" y="83" width="5" height="5"
+      <div name="autoFillBottomRight" width="5" height="5"
          background="images/dropdown-bottom-right.png" />
 
-      <div name="autoFillOptions" x="3" y="3" height="80" background="#ffffff">
-        <div height="20" enabled="true" cursor="hand"
-          onmouseover="event.srcElement.background='#e0ecf7'" 
-          onmouseout="event.srcElement.background=''">
-            <div x="5" y="2" width="16" height="16" background="images/icon-document.gif" />
-            <label x="28" y="2" font="helvetica" size="8" color="#000000" trimming="character-ellipsis">Secret Documents to Shred</label>
-        </div>
-        <div height="20" enabled="true" cursor="hand"
-          onmouseover="event.srcElement.background='#e0ecf7'"
-          onmouseout="event.srcElement.background=''">
-            <div x="5" y="2" width="16" height="16" background="images/icon-document.gif" />          
-            <label x="28" y="2" font="helvetica" size="8" color="#000000" trimming="character-ellipsis">Bridge to Nowhere Budget FY2008</label>
-        </div>
-        <div height="20" enabled="true" cursor="hand"
-          onmouseover="event.srcElement.background='#e0ecf7'" 
-          onmouseout="event.srcElement.background=''">
-            <div x="5" y="2" width="16" height="16" background="images/icon-document.gif" />          
-            <label x="28" y="2" font="helvetica" size="8" color="#000000" trimming="character-ellipsis">Directions to Dick Cheney's Undisclosed Location</label>
-        </div>
-        <div height="20" enabled="true" cursor="hand"
-          onmouseover="event.srcElement.background='#e0ecf7'" 
-          onmouseout="event.srcElement.background=''">
-            <div x="5" y="2" width="16" height="16" background="images/icon-document.gif" />          
-            <label x="28" y="2" font="helvetica" size="8" color="#000000" trimming="character-ellipsis">Tina Fey as Sarah Palin Transcript</label>
-        </div>   
-      </div>
+      <div name="autoFillOptions" x="3" y="3" background="#ffffff" />
 
     </div>
 
