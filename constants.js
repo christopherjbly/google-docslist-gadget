@@ -23,7 +23,32 @@ var UI = {
   MIN_WIDTH: 210,
   MIN_HEIGHT: 200,  
   MIN_DATE_WIDTH: 85,
+  MAX_AUTOFILL: 5,
   ERROR_MESSAGE_TIMEOUT: 3000
+};
+
+var UPLOAD_STATUS = {
+  WAITING: false,
+  LOADING: 'loading',
+  SUCCESS: 'success',
+  ERROR: 'error'
+};
+
+var MIME_TYPES = {
+  'doc': 'application/msword',
+  'dot': 'application/msword',
+  'pdf': 'application/pdf',
+  'xls': 'application/vnd.ms-excel',
+  'xlb': 'application/vnd.ms-excel',
+  'xlt': 'application/vnd.ms-excel',
+  'csv': 'text/csv',
+  'wks': 'application/vnd.ms-excel',
+  '123': 'application/vnd.ms-excel',
+  'ppt': 'application/vnd.ms-powerpoint',
+  'pps': 'application/vnd.ms-powerpoint',
+  'htm': 'text/html',
+  'html': 'text/html',
+  'rtf': 'text/rtf'
 };
 
 var NEW_DOC = {
@@ -47,6 +72,7 @@ var LOGIN_ERRORS = {
 
 var KEYS = {
   ENTER: 13, 
+  ESCAPE: 27,
   SPACE: 32,
   UP: 38, 
   DOWN: 40, 

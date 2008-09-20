@@ -4,11 +4,10 @@
  */
 function Doclist() {
   this.documents = [];  
-  this.isUploaderOpen = false;  
-  this.content = doclistContent;    
+  this.autofill = [];  
+  this.results = [];  
   
-  commandUpload.onclick = this.openUploader.bind(this);
-  uploadOption.onclick = this.closeUploader.bind(this);     
+  this.content = doclistContent;    
 }
 
 /**
@@ -18,22 +17,42 @@ Doclist.prototype.login = function() {
   loginDiv.visible = false;
   mainDiv.visible = true;  
   gadget.draw();
-  this.get();
-
-  this.clearTimeout();
-  this.timer = view.setTimeout(this.get.bind(this), CONNECTION.REFRESH_INTERVAL);
+  this.startTimeout();
 }
 
 /**
 * Close doclist after logout
 */
 Doclist.prototype.logout = function() {
+  this.reset();
+  
   loginDiv.visible = true;
   mainDiv.visible = false;  
   gadget.draw();  
   
   this.clearTimeout();  
 }
+
+/**
+* Reset doclist
+*/
+Doclist.prototype.reset = function() {
+  this.documents = [];  
+  this.autofill = [];  
+  this.results = [];  
+  doclistContent.removeAllElements();
+  uploader.close();
+}
+
+
+/**
+* Start refresh timer
+*/
+Doclist.prototype.startTimeout = function() {
+  this.clearTimeout();
+  this.get();  
+  this.timer = view.setTimeout(this.get.bind(this), CONNECTION.REFRESH_INTERVAL);
+};
 
 /**
 * Clear refresh timer
@@ -51,6 +70,7 @@ Doclist.prototype.clearTimeout = function() {
 Doclist.prototype.get = function() {
   httpRequest.host = CONNECTION.DOCS_HOST;
   httpRequest.url = CONNECTION.DOCS_URL;    
+  httpRequest.addHeader('Authorization', 'GoogleLogin auth='+loginSession.token);
   httpRequest.connect('', this.getSuccess.bind(this), this.getError.bind(this));      
 }
 
@@ -81,10 +101,12 @@ Doclist.prototype.getSuccess = function(responseText) {
       if (entry.getElementsByTagName('title').length <= 0) continue;
       if (entry.getElementsByTagName('updated').length <= 0) continue;
       if (entry.getElementsByTagName('link').length <= 0) continue;
+      if (entry.getElementsByTagName('category').length <= 0) continue;
       
       document.title = entry.getElementsByTagName('title')[0].text;
       var date = parseRFC3339(entry.getElementsByTagName('updated')[0].text);
       document.updated = date;
+      document.starred = false;
       
       // format date
       var now = new Date();
@@ -115,6 +137,9 @@ Doclist.prototype.getSuccess = function(responseText) {
         if (category.getAttribute('scheme') == 'http://schemas.google.com/g/2005#kind') {
           document.type = category.getAttribute('label');
         }
+        if (category.getAttribute('term') == 'http://schemas.google.com/g/2005/labels#starred') {
+          document.starred = true;
+        }
       }      
       
       switch(document.type) {
@@ -134,13 +159,55 @@ Doclist.prototype.getSuccess = function(responseText) {
 }
 
 /**
- * Get doclist 
+ * Display error unless it's a refresh 
  */
 Doclist.prototype.getError = function(status, responseText) {
   if (doclistContent.children.count == 0) {
     errorMessage.display(ERROR_SERVER_OR_NETWORK);
-    this.clearTimeout();
   }
+}
+
+/**
+ * Search doclist 
+ */
+Doclist.prototype.search = function() {
+  var value = search.value.trim();
+  if (!value) return;
+  
+  this.autofill = [];
+  this.results = [];
+
+  for (var i=0; i<this.documents.length; i++) {
+    var document = this.documents[i];
+    if (document.title.match(new RegExp('^'+value, 'i'))) {
+      this.autofill.push(document);
+    }
+    if (document.title.match(new RegExp(value, 'i'))) {
+      this.results.push(document);
+    }    
+  }
+
+  if (!this.autofill.length) return false;
+  this.autofill.sort(this.sortByName);
+  
+  autoFillOptions.removeAllElements();
+  
+  for (var i=0; i<this.autofill.length && i<UI.MAX_AUTOFILL; i++) {    
+    var document = this.autofill[i];
+    
+    var item = autoFillOptions.appendElement('<div height="20" enabled="true" cursor="hand" />');    
+    item.appendElement('<div x="5" y="2" width="16" height="16" background="images/icon-'+document.type+'.gif" />');
+    item.appendElement('<label x="28" y="2" font="helvetica" size="8" color="#000000" trimming="character-ellipsis">'+document.title+'</label>');
+        
+    item.onmouseover = function() { event.srcElement.background='#e0ecf7'; }
+    item.onmouseout = function() { event.srcElement.background=''; }    
+    item.onclick = function() { 
+      searchField.reset();      
+      framework.openUrl(this.link); 
+    }.bind(document)
+  }
+  
+  return true;
 }
 
 /**
@@ -149,49 +216,64 @@ Doclist.prototype.getError = function(status, responseText) {
 Doclist.prototype.sort = function() {
   switch(sortOptions.active) {
     case 'name':
-      var fn = function(a, b) {
-        var A = a.title.toLowerCase();
-        var B = b.title.toLowerCase();
-        if (A < B) return -1;
-        if (A > B) return 1;
-        return 0;
-      }
+      this.documents.sort(this.sortByName);
+      this.refresh();
       break;
+      
     case 'date':
-      var fn = function(a, b) {
-        var A = a.updated.getTime();
-        var B = b.updated.getTime();
-        if (A > B) return -1;
-        if (A < B) return 1;
-        return 0;      
-      }    
+      this.documents.sort(this.sortByDate);
+      this.refresh();
       break;
+      
     default:
       return;
   }
-
-  this.documents.sort(fn);
-  this.refresh();
 }
 
 /**
- * Refresh doclist contentes
+ * Sort functions - by name
+ */
+Doclist.prototype.sortByName = function(a, b) {
+  var A = a.title.toLowerCase();
+  var B = b.title.toLowerCase();
+  if (A < B) return -1;
+  if (A > B) return 1;
+  return 0;  
+}
+
+/**
+ * Sort functions - by date
+ */
+Doclist.prototype.sortByDate = function(a, b) {
+  var A = a.updated.getTime();
+  var B = b.updated.getTime();
+  if (A > B) return -1;
+  if (A < B) return 1;
+  return 0;      
+}
+
+/**
+ * Refresh doclist contents
  */
 Doclist.prototype.refresh = function() {
   doclistContent.removeAllElements();
 
-  for (var i=0; i<this.documents.length; i++) {
+  var documents = searchField.active ? this.results : this.documents;
 
-    var document = this.documents[i];
+  for (var i=0; i < documents.length; i++) {
+    var document = documents[i];
 
-    var file = doclistContent.appendElement('<div height="20" cursor="hand" enabled="true" />');
-    file.appendElement('<div x="2" y="2" width="16" height="16" background="images/icon-'+document.type+'.gif" />');
-    file.appendElement('<label x="26" y="2" font="helvetica" size="8" color="#000000" trimming="character-ellipsis">'+document.title+'</label>');
-    file.appendElement('<label y="2" font="helvetica" size="8" color="#66b3ff" align="right">'+document.date+'</label>');
+    var item = doclistContent.appendElement('<div height="20" cursor="hand" enabled="true" />');
+    item.appendElement('<div x="2" y="2" width="16" height="16" background="images/icon-'+document.type+'.gif" />');
+    item.appendElement('<label x="26" y="2" font="helvetica" size="8" color="#000000" trimming="character-ellipsis">'+document.title+'</label>');
+    if (document.starred) {
+      item.appendElement('<div y="4" width="12" height="12" background="images/icon-star.gif" />');
+    }
+    item.appendElement('<label y="2" font="helvetica" size="8" color="#66b3ff" align="right">'+document.date+'</label>');
 
-    file.onmouseover = function() { event.srcElement.background='#e0ecf7'; }
-    file.onmouseout = function() { event.srcElement.background=''; }
-    file.onclick = function() { framework.openUrl(this.link); }.bind(document)
+    item.onmouseover = function() { event.srcElement.background='#e0ecf7'; }
+    item.onmouseout = function() { event.srcElement.background=''; }
+    item.onclick = function() { framework.openUrl(this.link); }.bind(document)
   
     doclistContent.appendElement('<div height="1" background="#dddddd" />');
   }
@@ -202,34 +284,19 @@ Doclist.prototype.refresh = function() {
 /**
  * Open uploader
  */
-Doclist.prototype.openUploader = function() {
-  this.isUploaderOpen = true;
+Doclist.prototype.onOpenUploader = function() {
   this.content = uploaderContent;
-  
-  sortOptionsArea.visible = false;
-  searchArea.visible = false; 
-  uploadStatus.visible = true;
-  uploaderContent.visible = true;
-  doclistContent.visible = false;
-  
+  this.clearTimeout();
   this.draw();
 }
 
 /**
  * Close uploader
  */
-Doclist.prototype.closeUploader = function() {
-  if (!this.isUploaderOpen) return;
-  this.isUploaderOpen = false;
+Doclist.prototype.onCloseUploader = function() {
   this.content = doclistContent;  
-  
-  sortOptionsArea.visible = true;
-  searchArea.visible = true;
-  uploadStatus.visible = false; 
-  uploaderContent.visible = false;
-  doclistContent.visible = true;
-  
   this.draw(); 
+  this.startTimeout();  
 }
 
 /**
@@ -261,12 +328,14 @@ Doclist.prototype.draw = function() {
 	
 	// width and horizontal position
 	
+	sortOptions.draw();
+	
 	for (var i=0; i<this.content.children.count; i++) {
 		var div = this.content.children.item(i);
 		div.width = contentContainer.width - (scrollbar.visible ? 0 : 8);			
-				
+		
 		if (div.children.count > 0) {
-			if (this.isUploaderOpen) {
+			if (uploader.isOpen) {
 				this.drawUploader(div);				
 			} else {
 				this.drawFiles(div);

@@ -23,20 +23,33 @@ function CustomScrollbar() {
  * Keyboard controls on keydown
  */
 CustomScrollbar.prototype.keydown = function() {    
-  if (event.keycode == KEYS.UP) {
-    this.startUp();
-  } else if (event.keycode == KEYS.DOWN) {
-    this.startDown();
-  } else if (event.keycode == KEYS.PAGE_UP) {
-    this.moveBar(-scrollbarBar.height);
-  } else if (event.keycode == KEYS.PAGE_DOWN) {
-    this.moveBar(scrollbarBar.height);
-  } else if (event.keycode == KEYS.HOME) {
-    scrollbarBar.y = this.min();
-    this.scroll();
-  } else if (event.keycode == KEYS.END) {
-    scrollbarBar.y = this.max();
-    this.scroll();    
+  switch(event.keycode) {    
+
+    case KEYS.UP:
+      this.startUp();
+      break;
+      
+    case KEYS.DOWN:
+      this.startDown();
+      break;
+      
+    case KEYS.PAGE_UP:
+      this.moveBar(-scrollbarBar.height);
+      break;
+      
+    case KEYS.PAGE_DOWN:
+      this.moveBar(scrollbarBar.height);
+      break;
+      
+    case KEYS.HOME:
+      scrollbarBar.y = this.min();
+      this.scroll();
+      break;
+      
+    case KEYS.END:
+      scrollbarBar.y = this.max();
+      this.scroll();    
+      break;
   }
 }
 
@@ -44,10 +57,15 @@ CustomScrollbar.prototype.keydown = function() {
  * Keyboard controls on keyup
  */
 CustomScrollbar.prototype.keyup = function() {    
-  if (event.keycode == KEYS.UP) {
-    this.endUp();
-  } else if (event.keycode == KEYS.DOWN) {
-    this.endDown();
+  switch(event.keycode) {      
+
+    case KEYS.UP:
+      this.endUp();
+      break;
+      
+    case KEYS.DOWN:
+      this.endDown();
+      break;
   }
 }
 
