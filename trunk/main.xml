@@ -1,6 +1,6 @@
 <view width="260" height="340" resizable="true" resizeBorder="10 15 15 15" onopen="gadget.onOpen()">
 
-  <script src="constants.js" />
+  <script src="constants.js" />  
   <script src="util.js" />    
   <script src="date.js" />      
   <script src="httpRequest.js" />  

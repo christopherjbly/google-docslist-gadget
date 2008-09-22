@@ -34,22 +34,49 @@ CustomScrollbar.prototype.keydown = function() {
       break;
       
     case KEYS.PAGE_UP:
-      this.moveBar(-scrollbarBar.height);
+      this.scrollPageUp();
       break;
       
     case KEYS.PAGE_DOWN:
-      this.moveBar(scrollbarBar.height);
+      this.scrollPageDown();
       break;
       
     case KEYS.HOME:
-      scrollbarBar.y = this.min();
-      this.scroll();
+      this.scrollTop();    
       break;
       
     case KEYS.END:
-      scrollbarBar.y = this.max();
-      this.scroll();    
+      this.scrollBottom();
       break;
+  }
+}
+
+/**
+ * Shortcut functions
+ */
+CustomScrollbar.prototype.scrollBottom = function() {  
+  if (scrollbar.visible) {
+    scrollbarBar.y = this.max();
+    this.scroll();            
+  }
+}
+
+CustomScrollbar.prototype.scrollTop = function() {    
+  if (scrollbar.visible) {  
+    scrollbarBar.y = this.min();
+    this.scroll();  
+  }
+}
+
+CustomScrollbar.prototype.scrollPageDown = function() {  
+  if (scrollbar.visible) {    
+    this.moveBar(scrollbarBar.height);
+  }
+}
+
+CustomScrollbar.prototype.scrollPageUp = function() {    
+  if (scrollbar.visible) {    
+    this.moveBar(-scrollbarBar.height);
   }
 }
 

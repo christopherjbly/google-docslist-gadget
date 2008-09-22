@@ -4,15 +4,7 @@
 // @fileoverview Functions for server communications through XMLHttpRequest
 
 function createXhr() {
-  var xhr;
-  
-  try {
-    xhr = framework.google.betaXmlHttpRequest();
-  } catch (e) {
-    xhr = new XMLHttpRequest();
-  }
-
-  return xhr;
+  return new XMLHttpRequest();
 }
 
 var httpRequest = new HTTPRequest();
@@ -65,8 +57,9 @@ HTTPRequest.finishedGracePeriod = function() {
  * Sends out a request using XMLHttpRequest
  * @param {String} data The data to be packed
  */
-HTTPRequest.prototype.connect = function (data, handler, failedHandler, headers) {
+HTTPRequest.prototype.connect = function (data, handler, failedHandler, headers, isFile) {
   headers = headers || {};
+  this.isFile = isFile || false;
 
   if (!HTTPRequest.available) {
     // The server fails to handle too many requests at a time so we need to
@@ -87,11 +80,25 @@ HTTPRequest.prototype.connect = function (data, handler, failedHandler, headers)
     return;
   }
 
+  if (this.isFile) {
+    var filename = data;
+    
+    var stream = new ActiveXObject("ADODB.Stream");    
+    
+    stream.Type = 1;  // adTypeBinary 
+    stream.Open(); 
+    stream.LoadFromFile(filename);
+
+    data = stream.Read(-1); // adReadAll
+    stream.Close();
+    stream = null;
+  }
+
   this.handler = handler;
   this.failedHandler = failedHandler;
   this.packet.abort();
   this.packet.onreadystatechange = this.receivedData.bind(this);
-  if (data || headers['Content-Length']) {
+  if (data) {
     this.packet.open('POST', this.url, true);
     if (!this.headers['Content-Type'] && !headers['Content-Type']) {
       this.packet.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');    
@@ -114,13 +121,25 @@ HTTPRequest.prototype.connect = function (data, handler, failedHandler, headers)
 
   this.packet.setRequestHeader('cookie', 'none');
   this.packet.setRequestHeader('Cache-Control', 'no-cache, no-transform');
-  this.packet.setRequestHeader('Host', this.host);
+  this.packet.setRequestHeader('Connection', 'close');
+  this.packet.setRequestHeader('Host', this.host);  
   this.packet.send(data);
 
   this.clearTimeout();  
   this.timeoutTimer = view.setTimeout(this.onTimeout.bind(this), CONNECTION.TIMEOUT);
 
   HTTPRequest.available = false;
+};
+
+HTTPRequest.prototype.stop = function() {
+  if (!this.packet) {
+    return;
+  }
+  if (this.packet.readyState != 4) {
+    this.packet.abort();  
+  }  
+  this.clearTimeout();  
+  this.hideLoading();  
 };
 
 HTTPRequest.prototype.clearTimeout = function() {
@@ -131,6 +150,8 @@ HTTPRequest.prototype.clearTimeout = function() {
 };
 
 HTTPRequest.prototype.onTimeout = function() {
+  if (this.isFile) return;
+  
   debug.error('Request timed out.');
   this.packet.abort();  
   setTimeout(HTTPRequest.finishedGracePeriod, CONNECTION.TIME_BETWEEN_REQUESTS);
@@ -166,7 +187,7 @@ HTTPRequest.prototype.receivedData = function() {
   this.hideLoading();  
   this.clearTimeout();  
   setTimeout(HTTPRequest.finishedGracePeriod, CONNECTION.TIME_BETWEEN_REQUESTS);
-  if (this.packet.status != 200) {
+  if (this.packet.status < 200 || this.packet.status >= 300) {
     debug.error('A transfer error has occured !');
     this.onFailure();
     return;
