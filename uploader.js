@@ -3,13 +3,24 @@
  * Constructor for Uploader class.
  */
 function Uploader() {
-  this.isOpen = false;  
-  this.isUploading = false;
-  this.currentFile = -1;  
-  this.files = [];
+  this.setup();
   
   commandsUpload.onclick = this.browse.bind(this);
   uploadOption.onclick = this.close.bind(this);     
+}
+
+/**
+ * Setup uploader
+ */
+Uploader.prototype.setup = function() {
+  this.files = [];
+  this.currentFile = -1;  
+  
+  this.isUploading = false;
+  this.isOpen = false;
+
+  this.updateMessage(true);  
+  uploaderContent.removeAllElements();
 }
 
 /**
@@ -19,32 +30,18 @@ Uploader.prototype.browse = function() {
   var filename = framework.BrowseForFile('*.*');
   if (!filename) return;
   if (!this.isOpen) this.open();
-  
-  var stream = new ActiveXObject("ADODB.Stream"); 
-  stream.Type = 1;
-  stream.open();
-  stream.LoadFromFile(filename);
-  var contents = stream.Read();
 
   var file = {
     title: filename.replace(/(.*?)\\([^\\]+?)(\.(\w+))?$/, '$2'),
-    contents: contents,
-    length: stream.Size,
+    filename: filename,
     status: UPLOAD_STATUS.WAITING,
-    type: 'document',
     error: false
   };
   
-  var extension = filename.replace(/(.*?)\.(\w+)$/, '$2').toLowerCase();
-  
-  switch (extension) {
-    case 'ppt': case 'prc': case 'pps':
-      file.type = 'presentation';
-      break;
-    case 'csv': case 'xls': case 'wks': case '123':
-      file.type = 'spreadsheet';
-      break;
-  }  
+  var extension = filename.replace(/(.*?)\.(\w+)$/, '$2').toLowerCase();  
+
+  // make a guess about which icon to show. if we don't know, 'document' is fine.
+  file.type = FILE_TYPES[extension] || 'document';
   
   try {
     var winShell = new ActiveXObject("Wscript.Shell"); 
@@ -61,8 +58,7 @@ Uploader.prototype.browse = function() {
   }
 
   this.files.push(file);   
-  this.refresh();
-
+  this.refresh();  
   if (!this.isUploading) {    
     this.upload();
   }
@@ -89,33 +85,66 @@ Uploader.prototype._upload = function() {
 
     var headers = {
       'Content-Type': this.files[this.currentFile].mime,
-      'Content-Length': this.files[this.currentFile].length,
       'Slug': this.files[this.currentFile].title
     };
-    httpRequest.connect(this.files[this.currentFile].contents, this.uploadSuccess.bind(this), this.uploadError.bind(this), headers);    
+    
+    view.setTimeout(function() {
+      httpRequest.connect(this.files[this.currentFile].filename, this.uploadSuccess.bind(this), this.uploadError.bind(this), headers, true);    
+    }.bind(this), 2000); // needs the delay otherwise consecutive files sometimes return 400 error
     return;
   }
   
   this.currentFile = this.files.length - 1;   
   this.isUploading = false;
+  this.updateMessage();
+}
+
+/**
+ * Mark file as success and start again
+ */
+Uploader.prototype.updateMessage = function(init) {
+  if (init || this.isUploading) {
+    uploadStatusLine1.innerText = UPLOAD_UPLOADING;
+    uploadStatusLine2.innerText = (this.currentFile+1)+' '+UPLOAD_OF+' '+this.files.length;
+    uploadOption.innerText = UPLOAD_CANCEL;
+    return;
+  }
+  
+  uploadOption.innerText = UPLOAD_DONE;
+  var success = true;
+
+  for (var i=0; i<this.files.length; i++) {
+    if (this.files[i].status != UPLOAD_STATUS.SUCCESS) success = false;
+  }
+  
+  if (success) {
+    uploadStatusLine1.innerText = UPLOAD_SUCCESS_LINE1;
+    uploadStatusLine2.innerText = UPLOAD_SUCCESS_LINE2;
+  } else {
+    uploadStatusLine1.innerText = UPLOAD_ERROR_LINE1;
+    uploadStatusLine2.innerText = UPLOAD_ERROR_LINE2;    
+  }  
 }
 
 /**
  * Mark file as success and start again
  */
 Uploader.prototype.uploadSuccess = function() {
+  if (!this.isOpen) return;
+  
   this.files[this.currentFile].status = UPLOAD_STATUS.SUCCESS;  
   this.refresh();    
-  this._upload();  
+  this._upload();
 }
 
 /**
  * Mark file as error and start again
  */
 Uploader.prototype.uploadError = function(status, responseText) {
-  debug.error(status);
-  debug.error(responseText);
-  this.files[this.currentFile].status = UPLOAD_STATUS.ERROR;      
+  if (!this.isOpen) return;
+  debug.error("Couldn't upload "+this.files[this.currentFile].filename+": "+status+" "+responseText);  
+  this.files[this.currentFile].status = UPLOAD_STATUS.ERROR;     
+  this.files[this.currentFile].error = UPLOAD_ERRORS['STATUS_'+status] || UPLOAD_ERRORS.CORRUPT;
   this.refresh();  
   this._upload();  
 }
@@ -127,13 +156,13 @@ Uploader.prototype.uploadError = function(status, responseText) {
 Uploader.prototype.refresh = function() {
   uploaderContent.removeAllElements();
 
-  uploadStatusLine1.innerText = UPLOAD_UPLOADING;
-  uploadStatusLine2.innerText = (this.currentFile+1)+' '+UPLOAD_OF+' '+this.files.length;
+  this.updateMessage();
 
   for (var i=0; i < this.files.length; i++) {
     var file = this.files[i];
+    var height = (file.status == UPLOAD_STATUS.ERROR && file.error) ? 33 : 20;
     
-    var item = uploaderContent.appendElement('<div height="20" />');
+    var item = uploaderContent.appendElement('<div height="'+height+'" />');
     var background = file.status ? 'background="images/icon-upload-'+file.status+'.gif"' : '';
     var color = file.status ? '#000000' : '#999999';
     
@@ -178,20 +207,9 @@ Uploader.prototype.close = function() {
   uploaderContent.visible = false;
   doclistContent.visible = true;
   
-  this.reset();
+  httpRequest.stop();
+  this.setup();
   doclist.onCloseUploader();
-}
-
-/**
- * Reset uploader
- */
-Uploader.prototype.reset = function() {
-  this.files = [];
-  uploadStatusLine1.innerText = UPLOAD_UPLOADING;
-  uploadStatusLine2.innerText = '0 '+UPLOAD_OF+' 0'; 
-  
-  uploaderContent.removeAllElements();
-  httpRequest.removeHeader('Content-Type');
 }
 
 // instantiate object in the global scope

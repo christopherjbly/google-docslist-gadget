@@ -1,4 +1,4 @@
-// Copyright 2007 Google Inc.
+// Copyright 2008 Google Inc.
 // All Rights Reserved.
 
 // @fileoverview Constants used throughout the plugin
@@ -6,8 +6,8 @@
 var REPORTED_CLIENT_NAME = 'gd-docslist-gadget-' + VERSION_STRING;
 
 var CONNECTION = {
-  TIME_BETWEEN_REQUESTS: 1000,
-  TIMEOUT: 10000,
+  TIME_BETWEEN_REQUESTS: 1000, // 1 second
+  TIMEOUT: 15000, // 15 seconds
   REFRESH_INTERVAL: 60000, // 60 seconds
 
   DEFAULT_DOMAIN: 'gmail.com',
@@ -34,6 +34,24 @@ var UPLOAD_STATUS = {
   ERROR: 'error'
 };
 
+var FILE_TYPES = {
+  'doc': 'document',
+  'dot': 'document',
+  'pdf': 'document',
+  'xls': 'spreadsheet',
+  'xlb': 'spreadsheet',
+  'xlt': 'spreadsheet',
+  'csv': 'document',
+  'wks': 'spreadsheet',
+  '123': 'spreadsheet',
+  'ppt': 'presentation',
+  'pps': 'presentation',
+  'prc': 'presentation',  
+  'htm': 'document',
+  'html': 'document',
+  'rtf': 'document'
+};
+
 var MIME_TYPES = {
   'doc': 'application/msword',
   'dot': 'application/msword',
@@ -46,6 +64,7 @@ var MIME_TYPES = {
   '123': 'application/vnd.ms-excel',
   'ppt': 'application/vnd.ms-powerpoint',
   'pps': 'application/vnd.ms-powerpoint',
+  'prc': 'application/vnd.ms-powerpoint',
   'htm': 'text/html',
   'html': 'text/html',
   'rtf': 'text/rtf'
@@ -68,6 +87,13 @@ var LOGIN_ERRORS = {
   'AccountDisabled': ERROR_ACCOUNT_DISABLED,
   'ServiceDisabled': ERROR_SERVICE_DISABLED,
   'ServiceUnavailable': ERROR_SERVICE_UNAVAILABLE
+};
+
+var UPLOAD_ERRORS = {
+  STATUS_415: ERROR_UPLOAD_TYPE,
+  STATUS_401: ERROR_UPLOAD_EXPIRED,
+  STATUS_0: ERROR_UPLOAD_NETWORK,
+  CORRUPT: ERROR_UPLOAD_CORRUPT
 };
 
 var KEYS = {

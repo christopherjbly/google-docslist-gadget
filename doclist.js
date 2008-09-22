@@ -162,8 +162,12 @@ Doclist.prototype.getSuccess = function(responseText) {
  * Display error unless it's a refresh 
  */
 Doclist.prototype.getError = function(status, responseText) {
+  if (status == 401) {
+    loginSession.logout();
+    return;
+  }
   if (doclistContent.children.count == 0) {
-    errorMessage.display(ERROR_SERVER_OR_NETWORK);
+    errorMessage.display(ERROR_SERVER_OR_NETWORK);      
   }
 }
 

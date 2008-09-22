@@ -95,11 +95,29 @@
     This service is unavailable.
   </ERROR_SERVICE_UNAVAILABLE>
   
+  <!-- Upload error messages -->
+  <ERROR_UPLOAD_CORRUPT>
+    file is corrupt
+  </ERROR_UPLOAD_CORRUPT>
+  <ERROR_UPLOAD_TYPE>
+    unrecognized file type
+  </ERROR_UPLOAD_TYPE>
+  <ERROR_UPLOAD_EXPIRED>
+    login session expired
+  </ERROR_UPLOAD_EXPIRED>
+  <ERROR_UPLOAD_NETWORK>
+    a network error occurred
+  </ERROR_UPLOAD_NETWORK>
+  
   <!-- Main view -->
   <UPLOAD_UPLOADING>Now uploading...</UPLOAD_UPLOADING>
   <UPLOAD_OF>of</UPLOAD_OF>
   <UPLOAD_CANCEL>Cancel</UPLOAD_CANCEL>
   <UPLOAD_DONE>Done</UPLOAD_DONE>    
+  <UPLOAD_ERROR_LINE1>Errors were encountered</UPLOAD_ERROR_LINE1>  
+  <UPLOAD_ERROR_LINE2>while uploading:</UPLOAD_ERROR_LINE2>
+  <UPLOAD_SUCCESS_LINE1>Success!</UPLOAD_SUCCESS_LINE1>  
+  <UPLOAD_SUCCESS_LINE2>All files uploaded.</UPLOAD_SUCCESS_LINE2>    
   <SORT_NAME>Name</SORT_NAME>
   <SORT_DATE>Date</SORT_DATE>
   <COMMAND_NEW>New</COMMAND_NEW>
