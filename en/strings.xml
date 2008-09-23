@@ -65,6 +65,9 @@
     Oops.. Network/Server error.
     Please try again later.
   </ERROR_SERVER_OR_NETWORK>
+  <ERROR_SEARCH_NO_RESULTS>
+    Your search did not match any documents.
+  </ERROR_SEARCH_NO_RESULTS>
 
   <!-- Login error messages -->
   <ERROR_BAD_AUTH>
@@ -128,4 +131,6 @@
   <DOCUMENT_SPREADSHEET>Spreadsheet</DOCUMENT_SPREADSHEET>
   <DOCUMENT_DOCUMENT>Document</DOCUMENT_DOCUMENT>
   <SEARCH_DOCS>search docs</SEARCH_DOCS>
+  <LOADING>Loading...</LOADING>
+  <SEARCHING>Searching...</SEARCHING>  
 </strings>

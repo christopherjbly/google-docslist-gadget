@@ -54,7 +54,13 @@ Main.prototype.draw = function() {
   middleLeftMainBg.height = middleCenterMainBg.height =
       middleRightMainBg.height = bottomRightMainBg.y - middleLeftMainBg.y;
   // Adjust the positions of a images to move to the top right corner
-  loading.x = window.width - 60;
+  var loadingWidth = labelCalcWidth(loadingLabel);
+  loading.x = window.width - (loadingWidth + 12);  
+  loading.width = loadingWidth; 
+   
+  var searchingWidth = labelCalcWidth(searchingLabel);  
+  searching.x = window.width - (searchingWidth + 12);
+  searching.width = searchingWidth;
 
   if (loginDiv.visible) {
     loginDiv.width = window.width - 24;

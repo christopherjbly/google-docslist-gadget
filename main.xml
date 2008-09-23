@@ -166,52 +166,60 @@
 
     </div>
 
-    <div name="newDocument" x="2" width="100" height="88" visible="false">
+    <div name="newDocument" x="2" width="106" height="88" visible="false">
       <div name="newDocumentTopLeft" width="3" height="3"
            background="images/dropdown-top-left.png" />             
-      <div name="newDocumentTopCenter" x="3" width="92" height="3"
+      <div name="newDocumentTopCenter" x="3" width="98" height="3"
            background="images/dropdown-top.png" />
-      <div name="newDocumentTopRight" x="95" width="5" height="3"
+      <div name="newDocumentTopRight" x="101" width="5" height="3"
            background="images/dropdown-top-right.png" />
 
       <div name="newDocumentMiddleLeft" y="3" width="3" height="80"
            background="images/dropdown-left.png" />        
-      <div name="newDocumentMiddleRight" x="95 " y="3" width="5" height="80"
+      <div name="newDocumentMiddleRight" x="101 " y="3" width="5" height="80"
            background="images/dropdown-right.png" />
 
       <div name="newDocumentBottomLeft" y="83" width="3" height="5"
            background="images/dropdown-bottom-left.png" />           
-      <div name="newDocumentBottomCenter" x="3" y="83" width="92" height="5"
+      <div name="newDocumentBottomCenter" x="3" y="83" width="98" height="5"
            background="images/dropdown-bottom.png" />
-      <div name="newDocumentBottomRight" x="95" y="83" width="5" height="5"
+      <div name="newDocumentBottomRight" x="101" y="83" width="5" height="5"
          background="images/dropdown-bottom-right.png" />
 
-      <div name="newDocumentOptions" x="3" y="3" width="92" height="80" background="#ffffff">
-        <div name="newDocumentForm" width="92" height="20" enabled="true" cursor="hand"
+      <div name="newDocumentOptions" x="3" y="3" width="98" height="80" background="#ffffff">
+        <div name="newDocumentForm" width="98" height="20" enabled="true" cursor="hand"
           onmouseover="event.srcElement.background='#e0ecf7'" 
           onmouseout="event.srcElement.background=''">
-            <label x="6" y="2" font="helvetica" size="8" color="#000000">&DOCUMENT_FORM;</label>
+            <div x="6" y="2" width="16" height="16" background="images/icon-form.gif"/>
+            <label x="28" y="2" font="helvetica" size="8" color="#000000">&DOCUMENT_FORM;</label>
         </div>
-        <div name="newDocumentPresentation" y="20" width="92" height="20" enabled="true" cursor="hand"
+        <div name="newDocumentPresentation" y="20" width="98" height="20" enabled="true" cursor="hand"
           onmouseover="event.srcElement.background='#e0ecf7'"
           onmouseout="event.srcElement.background=''">
-            <label x="6" y="2" font="helvetica" size="8" color="#000000">&DOCUMENT_PRESENTATION;</label>
+            <div x="6" y="2" width="16" height="16" background="images/icon-presentation.gif"/>          
+            <label x="28" y="2" font="helvetica" size="8" color="#000000">&DOCUMENT_PRESENTATION;</label>
         </div>
-        <div name="newDocumentSpreadsheet" y="40" width="92" height="20" enabled="true" cursor="hand"
+        <div name="newDocumentSpreadsheet" y="40" width="98" height="20" enabled="true" cursor="hand"
           onmouseover="event.srcElement.background='#e0ecf7'" 
           onmouseout="event.srcElement.background=''">
-            <label x="6" y="2" font="helvetica" size="8" color="#000000">&DOCUMENT_SPREADSHEET;</label>
+            <div x="6" y="2" width="16" height="16" background="images/icon-spreadsheet.gif"/>          
+            <label x="28" y="2" font="helvetica" size="8" color="#000000">&DOCUMENT_SPREADSHEET;</label>
         </div>
-        <div name="newDocumentDocument" y="60" width="92" height="20" enabled="true" cursor="hand"
+        <div name="newDocumentDocument" y="60" width="98" height="20" enabled="true" cursor="hand"
           onmouseover="event.srcElement.background='#e0ecf7'" 
           onmouseout="event.srcElement.background=''">
-            <label x="6" y="2" font="helvetica" size="8" color="#000000">&DOCUMENT_DOCUMENT;</label>
+            <div x="6" y="2" width="16" height="16" background="images/icon-document.gif"/>          
+            <label x="28" y="2" font="helvetica" size="8" color="#000000">&DOCUMENT_DOCUMENT;</label>
         </div>   
       </div>
       
     </div>
-
-    <img name="loading" visible="false" y="6" src="loading.png" />
+    <div name="loading" background="#cc4444" y="6" height="16" visible="true" >
+      <label name="loadingLabel" font="arial" size="8" color="#ffffff">&LOADING;</label>
+    </div>
+    <div name="searching" background="#cc4444" y="6" height="16" visible="false">    
+      <label name="searchingLabel" font="arial" size="8" color="#ffffff">&SEARCHING;</label>
+    </div>
   </div>
   
   <div width="33" height="34" background="images/logo.png" />

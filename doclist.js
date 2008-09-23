@@ -78,9 +78,33 @@ Doclist.prototype.get = function() {
 }
 
 /**
+ * Search doclist 
+ */
+Doclist.prototype.search = function() {
+  if (!search.value.trim()) return;
+  autoFill.visible = false;
+  
+  httpRequest.loadingIndicator = searching;
+  httpRequest.host = CONNECTION.DOCS_HOST;
+  httpRequest.url = CONNECTION.DOCS_URL + CONNECTION.SEARCH_URL + encodeURIComponent(search.value.trim());    
+  httpRequest.addHeader('Authorization', 'GoogleLogin auth='+loginSession.token);
+  httpRequest.connect('', this.searchSuccess.bind(this), this.getError.bind(this));      
+}
+
+/**
+ * Search doclist 
+ */
+Doclist.prototype.searchSuccess = function(responseText) {
+  this.getSuccess(responseText, true);
+  if (!this.results.length) {
+    errorMessage.display(ERROR_SEARCH_NO_RESULTS);    
+  }
+}
+
+/**
  * Get doclist 
  */
-Doclist.prototype.getSuccess = function(responseText) {
+Doclist.prototype.getSuccess = function(responseText, search) {
   
   try {
     doc = new DOMDocument();
@@ -93,7 +117,11 @@ Doclist.prototype.getSuccess = function(responseText) {
     return false;
   }
   
-  this.documents = [];  
+  if (search) {
+    this.results = [];      
+  } else {
+    this.documents = [];      
+  }
   
   try {
     var entryElements = doc.getElementsByTagName('entry');
@@ -150,7 +178,11 @@ Doclist.prototype.getSuccess = function(responseText) {
         default: continue;
       }
       
-      this.documents.push(document);
+      if (search) {      
+        this.results.push(document);
+      } else {
+        this.documents.push(document);        
+      }
     }   
   } catch(e) {
     debug.error('Could not parse XML.');
@@ -165,6 +197,7 @@ Doclist.prototype.getSuccess = function(responseText) {
  * Display error unless it's a refresh 
  */
 Doclist.prototype.getError = function(status, responseText) {
+  debug.error('error = '+status+' '+responseText);
   if (status == 401) {
     loginSession.logout();
     return;
@@ -222,14 +255,13 @@ Doclist.prototype.autofillDown = function() {
 }
 
 /**
- * Search doclist 
+ * Autofill search doclist 
  */
-Doclist.prototype.search = function() {
+Doclist.prototype.autofillSearch = function() {
   var value = search.value.trim();
   if (!value) return;
   
   this.autofill = [];
-  this.results = [];
   this.autofillSelected = false;
 
   for (var i=0; i<this.documents.length; i++) {
@@ -237,9 +269,6 @@ Doclist.prototype.search = function() {
     if (document.title.match(new RegExp('^'+value, 'i'))) {
       this.autofill.push(document);
     }
-    if (document.title.match(new RegExp(value, 'i'))) {
-      this.results.push(document);
-    }    
   }
 
   if (!this.autofill.length) return false;
