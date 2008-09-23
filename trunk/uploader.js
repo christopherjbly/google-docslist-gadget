@@ -4,6 +4,7 @@
  */
 function Uploader() {
   this.setup();
+  this.guessFileType = true;
   
   commandsUpload.onclick = this.browse.bind(this);
   uploadOption.onclick = this.close.bind(this);     
@@ -68,7 +69,8 @@ Uploader.prototype.newFile = function(filename) {
     title: filename.replace(/(.*?)\\([^\\]+?)(\.(\w+))?$/, '$2'),
     filename: filename,
     status: UPLOAD_STATUS.WAITING,
-    error: false
+    error: false,
+    mime: false
   };
   
   var extension = filename.replace(/(.*?)\.(\w+)$/, '$2').toLowerCase();  
@@ -76,11 +78,11 @@ Uploader.prototype.newFile = function(filename) {
   // make a guess about which icon to show. if we don't know, 'document' is fine.
   file.type = FILE_TYPES[extension] || 'document';
   
-  try {
-    var winShell = new ActiveXObject("Wscript.Shell"); 
-    file.mime = winShell.RegRead("HKEY_CLASSES_ROOT\\."+extension+"\\Content Type") || false;
-  } catch(e) {
-    file.mime = false;
+  if (this.guessFileType) {
+    try {
+      var winShell = new ActiveXObject("Wscript.Shell"); 
+      file.mime = winShell.RegRead("HKEY_CLASSES_ROOT\\."+extension+"\\Content Type") || false;
+    } catch(e) {}    
   }
 
   // fall back in case the OS doesn't return a mime type

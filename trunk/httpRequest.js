@@ -16,6 +16,7 @@ function HTTPRequest() {
   // Token for timeout timer.
   this.timeoutTimer = null;
   this.headers = {};
+  this.loadingIndicator = false;
 }
 
 HTTPRequest.available = true;
@@ -68,7 +69,7 @@ HTTPRequest.prototype.connect = function (data, handler, failedHandler, headers,
     return;
   }
   try {
-    loading.visible = true;
+    this.showLoading();
   } catch(e) {
     // rare occurance, if the details view is just closing
     return;
@@ -159,11 +160,20 @@ HTTPRequest.prototype.onTimeout = function() {
   this.onFailure();
 };
 
-HTTPRequest.prototype.hideLoading = function() {
+HTTPRequest.prototype.showLoading = function() {
   try {
-    loading.visible = false;
+    this.loadingIndicator = this.loadingIndicator || loading;
+    this.loadingIndicator.visible = true;
   } catch(e) {
-    // rare occurance, if the details view is closing when receiving data
+    debug.warning('Could not show loading image.');
+  }  
+};
+
+HTTPRequest.prototype.hideLoading = function() {
+  try {    
+    this.loadingIndicator.visible = false;
+    this.loadingIndicator = false;
+  } catch(e) {
     debug.warning('Could not hide loading image.');
   }  
 };

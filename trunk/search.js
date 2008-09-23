@@ -101,7 +101,7 @@ SearchField.prototype.keydown = function() {
       if (doclist.autofillSelected !== false) {
         doclist.autofillChoose();        
       } else {
-        this.display();        
+        doclist.search();
       }
       break;
       
@@ -116,15 +116,6 @@ SearchField.prototype.keydown = function() {
 }
 
 /**
- * Display search results
- */
-SearchField.prototype.display = function() {
-  if (!search.value.trim()) return;
-  autoFill.visible = false;
-  doclist.refresh();
-}
-
-/**
  * Fill in autofill popdown
  */
 SearchField.prototype.autofill = function() {
@@ -133,7 +124,7 @@ SearchField.prototype.autofill = function() {
     return;
   }
   
-  autoFill.visible = doclist.search();
+  autoFill.visible = doclist.autofillSearch();
   this.draw();  
 }
 
