@@ -8,7 +8,7 @@ function SortOptions() {
   
   switch (options.getValue('sort')) {
     case 'name': this.name(true); break;
-    case 'date': this.date(true); break;
+    case 'date': default: this.date(true); break;
   }
 }
 

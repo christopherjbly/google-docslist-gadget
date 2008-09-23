@@ -15,8 +15,8 @@ function CustomScrollbar() {
   scrollbarDown.onmouseup = this.endDown.bind(this);
   
   view.onmousewheel = this.wheel.bind(this);
-  view.onkeydown = this.keydown.bind(this);
-  view.onkeyup = this.keyup.bind(this);  
+  window.onkeydown = this.keydown.bind(this);
+  window.onkeyup = this.keyup.bind(this);  
 }
 
 /**

@@ -82,6 +82,8 @@ SearchField.prototype.reset = function() {
   search.color = this.defaultColor;
   searchClear.visible = false;
   autoFill.visible = false;
+  doclist.autofillSelected = false;
+  
   window.focus();
 }
 
@@ -96,7 +98,19 @@ SearchField.prototype.keydown = function() {
       break;
       
     case KEYS.ENTER:
-      this.display();
+      if (doclist.autofillSelected !== false) {
+        doclist.autofillChoose();        
+      } else {
+        this.display();        
+      }
+      break;
+      
+    case KEYS.UP:
+      doclist.autofillUp();
+      break;
+  
+    case KEYS.DOWN:
+      doclist.autofillDown();
       break;
   }
 }

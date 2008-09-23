@@ -1,8 +1,18 @@
 // bind function
 Function.prototype.bind = function(context) {
   var __method = this;
+  var __arguments = [];
+  for (var n = 1; n < arguments.length; n++) {
+    __arguments.push(arguments[n]);    
+  }
+  
   return function() {
-    return __method.apply(context, arguments);
+    var myargs = [];
+    for (var m = 0; m < arguments.length; m++) {
+      myargs.push(arguments[m]);      
+    }
+
+    return __method.apply(context, __arguments.concat(myargs));
   };
 };
 
