@@ -214,7 +214,7 @@
       </div>
       
     </div>
-    <div name="loading" background="#cc4444" y="6" height="16" visible="true" >
+    <div name="loading" background="#cc4444" y="6" height="16" visible="false" >
       <label name="loadingLabel" font="arial" size="8" color="#ffffff">&LOADING;</label>
     </div>
     <div name="searching" background="#cc4444" y="6" height="16" visible="false">    
