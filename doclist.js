@@ -6,6 +6,7 @@ function Doclist() {
   this.documents = [];  
   this.autofill = [];  
   this.results = [];  
+  this.autofillSelected = false;
   
   this.content = doclistContent;    
 }
@@ -40,6 +41,8 @@ Doclist.prototype.reset = function() {
   this.documents = [];  
   this.autofill = [];  
   this.results = [];  
+  this.autofillSelected = false;
+  
   doclistContent.removeAllElements();
   uploader.close();
 }
@@ -172,6 +175,53 @@ Doclist.prototype.getError = function(status, responseText) {
 }
 
 /**
+ * Enter key in autofill list 
+ */
+Doclist.prototype.autofillChoose = function() {
+  if (!this.autofill.length || !autoFillOptions.children.count) return;
+  if (this.autofillSelected === false) return;  
+  if (this.autofillSelected > this.autofill.length) return;
+  
+  framework.openUrl(this.autofill[this.autofillSelected].link);   
+  searchField.reset();  
+}
+
+/**
+ * Up arrow in autofill list 
+ */
+Doclist.prototype.autofillUp = function() {
+  if (!this.autofill.length || !autoFillOptions.children.count) return;
+  if (this.autofillSelected === false) return;
+  
+  autoFillOptions.children.item(this.autofillSelected).background = '';
+  if (this.autofillSelected == 0) {
+    this.autofillSelected = false;
+    return;
+  } 
+  
+  this.autofillSelected--;      
+  autoFillOptions.children.item(this.autofillSelected).background = '#e0ecf7';  
+}
+
+/**
+ * Down arrow in autofill list 
+ */
+Doclist.prototype.autofillDown = function() {
+  if (!this.autofill.length || !autoFillOptions.children.count) return;
+  
+  if (this.autofillSelected === false) {
+    this.autofillSelected = 0;
+  } else if (this.autofillSelected >= autoFillOptions.children.count-1) {
+    return;
+  } else {
+    autoFillOptions.children.item(this.autofillSelected).background = '';
+    this.autofillSelected++;    
+  }
+  
+  autoFillOptions.children.item(this.autofillSelected).background = '#e0ecf7';  
+}
+
+/**
  * Search doclist 
  */
 Doclist.prototype.search = function() {
@@ -180,6 +230,7 @@ Doclist.prototype.search = function() {
   
   this.autofill = [];
   this.results = [];
+  this.autofillSelected = false;
 
   for (var i=0; i<this.documents.length; i++) {
     var document = this.documents[i];
@@ -200,11 +251,25 @@ Doclist.prototype.search = function() {
     var document = this.autofill[i];
     
     var item = autoFillOptions.appendElement('<div height="20" enabled="true" cursor="hand" />');    
-    item.appendElement('<div x="5" y="2" width="16" height="16" background="images/icon-'+document.type+'.gif" />');
-    item.appendElement('<label x="28" y="2" font="helvetica" size="8" color="#000000" trimming="character-ellipsis">'+document.title+'</label>');
-        
-    item.onmouseover = function() { event.srcElement.background='#e0ecf7'; }
-    item.onmouseout = function() { event.srcElement.background=''; }    
+    var iconDiv = item.appendElement('<div x="5" y="2" width="16" height="16" />');
+    iconDiv.background = 'images/icon-'+document.type+'.gif';
+    
+    var titleLabel = item.appendElement('<label x="28" y="2" font="helvetica" size="8" color="#000000" trimming="character-ellipsis"></label>');
+    titleLabel.innerText = document.title;
+    
+    item.onmouseover = function(index) { 
+      if (this.autofillSelected !== false) {
+        autoFillOptions.children.item(this.autofillSelected).background = '';        
+      }
+      event.srcElement.background='#e0ecf7'; 
+      this.autofillSelected = index;
+    }.bind(this, i)
+    
+    item.onmouseout = function() { 
+      event.srcElement.background=''; 
+      this.autofillSelected = false;      
+    }.bind(this)
+    
     item.onclick = function() { 
       searchField.reset();      
       framework.openUrl(this.link); 
@@ -268,12 +333,19 @@ Doclist.prototype.refresh = function() {
     var document = documents[i];
 
     var item = doclistContent.appendElement('<div height="20" cursor="hand" enabled="true" />');
-    item.appendElement('<div x="2" y="2" width="16" height="16" background="images/icon-'+document.type+'.gif" />');
-    item.appendElement('<label x="26" y="2" font="helvetica" size="8" color="#000000" trimming="character-ellipsis">'+document.title+'</label>');
+
+    var iconDiv = item.appendElement('<div x="2" y="2" width="16" height="16" />');
+    iconDiv.background = "images/icon-"+document.type+".gif";
+    
+    var titleLabel = item.appendElement('<label x="26" y="2" font="helvetica" size="8" color="#000000" trimming="character-ellipsis"></label>');
+    titleLabel.innerText = document.title;
+    
     if (document.starred) {
       item.appendElement('<div y="4" width="12" height="12" background="images/icon-star.gif" />');
     }
-    item.appendElement('<label y="2" font="helvetica" size="8" color="#66b3ff" align="right">'+document.date+'</label>');
+    
+    var dateLabel = item.appendElement('<label y="2" font="helvetica" size="8" color="#66b3ff" align="right"></label>');
+    dateLabel.innerText = document.date;
 
     item.onmouseover = function() { event.srcElement.background='#e0ecf7'; }
     item.onmouseout = function() { event.srcElement.background=''; }

@@ -21,16 +21,49 @@ Uploader.prototype.setup = function() {
 
   this.updateMessage(true);  
   uploaderContent.removeAllElements();
+  
+  window.dropTarget = true;
+  window.ondragdrop = this.dragdrop.bind(this);
 }
 
 /**
- * Browse and read file
+ * Browse for file
  */
 Uploader.prototype.browse = function() {
   var filename = framework.BrowseForFile('*.*');
   if (!filename) return;
   if (!this.isOpen) this.open();
+  
+  this.newFile(filename);
+}
 
+/**
+ * Handle drag and dropped file
+ */
+Uploader.prototype.dragdrop = function() {
+  if (!event.dragFiles) return;
+
+  var files = [];
+
+  var e = new Enumerator(event.dragFiles);
+  while (!e.atEnd()) {
+    files.push(e.item() + '');
+    e.moveNext();
+  }  
+  
+  if (!files.length) return;  
+  if (!this.isOpen) this.open();
+  
+  for (var i=0; i<files.length; i++) {
+    this.newFile(files[i]);    
+  }
+}
+
+/**
+ * Prepare the file for upload once we have the filename
+ */
+Uploader.prototype.newFile = function(filename) {
+  
   var file = {
     title: filename.replace(/(.*?)\\([^\\]+?)(\.(\w+))?$/, '$2'),
     filename: filename,
@@ -162,15 +195,22 @@ Uploader.prototype.refresh = function() {
     var file = this.files[i];
     var height = (file.status == UPLOAD_STATUS.ERROR && file.error) ? 33 : 20;
     
-    var item = uploaderContent.appendElement('<div height="'+height+'" />');
-    var background = file.status ? 'background="images/icon-upload-'+file.status+'.gif"' : '';
-    var color = file.status ? '#000000' : '#999999';
+    var item = uploaderContent.appendElement('<div />');
+    item.height = height;
+        
+    var newDiv = item.appendElement('<div x="2" y="2" width="16" height="16" />');
+    newDiv.background = 'images/icon-upload-'+file.status+'.gif';
     
-    item.appendElement('<div x="2" y="2" width="16" height="16" '+background+'/>');          
-    item.appendElement('<div x="22" y="2" width="16" height="16" background="images/icon-'+file.type+'.gif" />');
-    item.appendElement('<label x="46" y="2" font="helvetica" size="8" color="'+color+'" trimming="character-ellipsis">'+file.title+'</label>');
+    var iconDiv = item.appendElement('<div x="22" y="2" width="16" height="16" />');
+    iconDiv.background = 'images/icon-'+file.type+'.gif';
+    
+    var titleLabel = item.appendElement('<label x="46" y="2" font="helvetica" size="8" trimming="character-ellipsis"></label>');
+    titleLabel.color = file.status ? '#000000' : '#999999';
+    titleLabel.innerText = file.title;
+    
     if (file.status == UPLOAD_STATUS.ERROR && file.error) {
-      item.appendElement('<label x="46" y="15" height="15" font="helvetica" size="8" color="#ff0000" trimming="character-ellipsis">'+file.error+'</label>');           
+      var errorLabel = item.appendElement('<label x="46" y="15" height="15" font="helvetica" size="8" color="#ff0000" trimming="character-ellipsis"></label>');        
+      errorLabel.innerText = file.error;
     }
 
     uploaderContent.appendElement('<div height="1" background="#dddddd" />');

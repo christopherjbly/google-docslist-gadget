@@ -9,11 +9,6 @@ function LoginSession() {
   commandsSignout.onclick = this.logout.bind(this);  
   
   this.setup();
-    
-  if (user.value !== '' && pass.value !== '') {
-    remember.value = true;
-    this.login();
-  }      
 }
 
 /**
@@ -23,26 +18,30 @@ LoginSession.prototype.setup = function() {
   this.token = '';  
   username.innerText = '';
   username.visible = false;  
-  user.value = options.getValue('user');
-  pass.value = options.getValue('pass');
+  user.value = '';
+  pass.value = '';
+  remember.value = false;
 };
 
 /**
- * Login the user either at startup or from the login view
+ * Auto login the user at startup
+ */
+LoginSession.prototype.autologin = function() {
+  if (options.getValue('token') && options.getValue('username')) {
+    this.token = options.getValue('token');
+    this.username = options.getValue('username');
+    username.innerText = this.username.toLowerCase();
+    username.visible = true;    
+    doclist.login();    
+  }  
+}
+
+/**
+ * Login the user from the login view
  */
 LoginSession.prototype.login = function() {
   if (loading.visible) return;
-  
-  if (remember.value) {
-    options.putValue('user', user.value);
-    options.encryptValue('user');
-    options.putValue('pass', pass.value);
-    options.encryptValue('pass');
-  } else {
-    options.putValue('user', '');
-    options.putValue('pass', '');
-  }
-  
+    
   var userValue = (user.value.indexOf('@') == -1) ? user.value + '@' + CONNECTION.DEFAULT_DOMAIN : user.value;
   var passValue = pass.value;
   
@@ -65,12 +64,17 @@ LoginSession.prototype.login = function() {
  * Save auth token
  */
 LoginSession.prototype.loginSuccess = function(responseText) {
-
   this.token = this.getCookie('Auth', responseText);
   
   if (this.token) {
     username.innerText = this.username.toLowerCase();
     username.visible = true;
+    if (remember.value) {
+      options.putValue('token', this.token);
+      options.encryptValue('token');   
+      options.putValue('username', this.username);
+      options.encryptValue('username');               
+    }
     doclist.login();
   } else {
     this.loginError();
@@ -93,6 +97,8 @@ LoginSession.prototype.loginError = function(status, responseText) {
  */
 LoginSession.prototype.logout = function() {
   this.setup();
+  options.putValue('token', '');
+  options.putValue('username', '');  
   doclist.logout();
 };
 
