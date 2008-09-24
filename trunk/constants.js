@@ -16,8 +16,8 @@ var CONNECTION = {
   AUTH_SERVICE: 'writely',
   AUTH_TYPE: 'HOSTED_OR_GOOGLE',  
   DOCS_HOST: 'docs.google.com',  
-  DOCS_URL: 'https://docs.google.com/feeds/documents/private/full',
-  SEARCH_URL: '?max-results=100&q='
+  DOCS_URL: 'https://docs.google.com/feeds/documents/private/full?max-results=100',
+  SEARCH_URL: '&q='
 };
 
 var UI = {
