@@ -1,14 +1,14 @@
 <strings>
-  <GADGET_NAME>Doclist</GADGET_NAME>
-  <GADGET_DESCRIPTION>View and open your Google Docs documents.</GADGET_DESCRIPTION>
-  <GADGET_ABOUT_TEXT>Doclist © 2008</GADGET_ABOUT_TEXT>
+  <GADGET_NAME>Google Docs</GADGET_NAME>
+  <GADGET_DESCRIPTION>Search, open, and upload Google Docs documents</GADGET_DESCRIPTION>
+  <GADGET_ABOUT_TEXT>Search and open your Google Docs documents. Drag-and-drop files onto the gadget, and they get uploaded to Google docs.</GADGET_ABOUT_TEXT>
   <GADGET_COPYRIGHT>Copyright 2008 Google Inc. All Rights Reserved.</GADGET_COPYRIGHT>
   <GADGET_OWNER>Google</GADGET_OWNER>
   <VERSION_STRING>1.0.0.0</VERSION_STRING>
-  
+
   <!-- date strings -->
   <DATE_YESTERDAY>Yesterday</DATE_YESTERDAY>
-  
+
   <DATE_SUNDAY_LONG>Sunday</DATE_SUNDAY_LONG>
   <DATE_MONDAY_LONG>Monday</DATE_MONDAY_LONG>
   <DATE_TUESDAY_LONG>Tuesday</DATE_TUESDAY_LONG>
@@ -24,7 +24,7 @@
   <DATE_THURSDAY_SHORT>Thu</DATE_THURSDAY_SHORT>
   <DATE_FRIDAY_SHORT>Fri</DATE_FRIDAY_SHORT>
   <DATE_SATURDAY_SHORT>Sat</DATE_SATURDAY_SHORT>
-  
+
   <DATE_JANUARY_LONG>January</DATE_JANUARY_LONG>
   <DATE_FEBRUARY_LONG>February</DATE_FEBRUARY_LONG>
   <DATE_MARCH_LONG>March</DATE_MARCH_LONG>
@@ -49,11 +49,11 @@
   <DATE_SEPTEMBER_SHORT>Sep</DATE_SEPTEMBER_SHORT>
   <DATE_OCTOBER_SHORT>Oct</DATE_OCTOBER_SHORT>
   <DATE_NOVEMBER_SHORT>Nov</DATE_NOVEMBER_SHORT>
-  <DATE_DECEMBER_SHORT>Dec</DATE_DECEMBER_SHORT>  	
-  
+  <DATE_DECEMBER_SHORT>Dec</DATE_DECEMBER_SHORT>
+
   <!-- Login view -->
   <LOGIN_SIGN_IN>Sign in</LOGIN_SIGN_IN>
-  <LOGIN_SIGN_IN_TO_DOCLIST>Sign in to Docs with</LOGIN_SIGN_IN_TO_DOCLIST>
+  <LOGIN_SIGN_IN_TO_DOCLIST>Sign in to Google Docs with</LOGIN_SIGN_IN_TO_DOCLIST>
   <LOGIN_YOUR>your</LOGIN_YOUR>
   <LOGIN_ACCOUNT>Account</LOGIN_ACCOUNT>
   <LOGIN_USERNAME>Username</LOGIN_USERNAME>
@@ -62,42 +62,42 @@
 
   <!-- Error Messages -->
   <ERROR_SERVER_OR_NETWORK>
-    Oops.. Network/Server error.
+    Network or connection error.
     Please try again later.
   </ERROR_SERVER_OR_NETWORK>
   <ERROR_SEARCH_NO_RESULTS>
-    Your search did not match any documents.
+    Your search did not match any documents
   </ERROR_SEARCH_NO_RESULTS>
 
   <!-- Login error messages -->
   <ERROR_BAD_AUTH>
-    Your username and password did not match.
+    Username and password did not match
   </ERROR_BAD_AUTH>
   <ERROR_NOT_VERIFIED>
-    Your account has not been verified.
+    Your account has not been verified
   </ERROR_NOT_VERIFIED>
   <ERROR_TERMS>
-    You did not yet agree to the terms.
+    You did not yet agree to the terms
   </ERROR_TERMS>
   <ERROR_CAPTCHA>
-    There is a problem with your account.
+    There is a problem with your account
   </ERROR_CAPTCHA>
   <ERROR_UNKNOWN>
-    An unknown error occurred.
+    An unknown error occurred
   </ERROR_UNKNOWN>
   <ERROR_ACCOUNT_DELETED>
-    Your account was deleted.
+    Your account was deleted
   </ERROR_ACCOUNT_DELETED>
   <ERROR_ACCOUNT_DISABLED>
-    Your account was disabled.
+    Your account is disabled
   </ERROR_ACCOUNT_DISABLED>
   <ERROR_SERVICE_DISABLED>
-    This service has been disabled.
+    This service has been disabled
   </ERROR_SERVICE_DISABLED>
   <ERROR_SERVICE_UNAVAILABLE>
-    This service is unavailable.
+    This service is unavailable
   </ERROR_SERVICE_UNAVAILABLE>
-  
+
   <!-- Upload error messages -->
   <ERROR_UPLOAD_CORRUPT>
     file is corrupt
@@ -111,26 +111,31 @@
   <ERROR_UPLOAD_NETWORK>
     a network error occurred
   </ERROR_UPLOAD_NETWORK>
-  
+
   <!-- Main view -->
   <UPLOAD_UPLOADING>Now uploading...</UPLOAD_UPLOADING>
   <UPLOAD_OF>of</UPLOAD_OF>
   <UPLOAD_CANCEL>Cancel</UPLOAD_CANCEL>
-  <UPLOAD_DONE>Done</UPLOAD_DONE>    
-  <UPLOAD_ERROR_LINE1>Errors were encountered</UPLOAD_ERROR_LINE1>  
+  <UPLOAD_DONE>Done</UPLOAD_DONE>
+  <UPLOAD_ERROR_LINE1>Errors were encountered</UPLOAD_ERROR_LINE1>
   <UPLOAD_ERROR_LINE2>while uploading:</UPLOAD_ERROR_LINE2>
-  <UPLOAD_SUCCESS_LINE1>Success!</UPLOAD_SUCCESS_LINE1>  
-  <UPLOAD_SUCCESS_LINE2>All files uploaded.</UPLOAD_SUCCESS_LINE2>    
+  <UPLOAD_SUCCESS_LINE1>Success!</UPLOAD_SUCCESS_LINE1>
+  <UPLOAD_SUCCESS_LINE2>All files uploaded</UPLOAD_SUCCESS_LINE2>
+
   <SORT_NAME>Name</SORT_NAME>
   <SORT_DATE>Date</SORT_DATE>
+
   <COMMAND_NEW>New</COMMAND_NEW>
   <COMMAND_UPLOAD>Upload</COMMAND_UPLOAD>
   <COMMAND_SIGN_OUT>Sign out</COMMAND_SIGN_OUT>
+
   <DOCUMENT_FORM>Form</DOCUMENT_FORM>
   <DOCUMENT_PRESENTATION>Presentation</DOCUMENT_PRESENTATION>
   <DOCUMENT_SPREADSHEET>Spreadsheet</DOCUMENT_SPREADSHEET>
   <DOCUMENT_DOCUMENT>Document</DOCUMENT_DOCUMENT>
+
   <SEARCH_DOCS>search docs</SEARCH_DOCS>
+
   <LOADING>Loading...</LOADING>
-  <SEARCHING>Searching...</SEARCHING>  
+  <SEARCHING>Searching...</SEARCHING>
 </strings>
