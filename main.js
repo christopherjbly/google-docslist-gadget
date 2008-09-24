@@ -34,6 +34,25 @@ Main.prototype.isLoggedIn = function() {
 Main.prototype.onMenuItems = function(menu) {
   if (this.isLoggedIn()) {
     menu.AddItem(strings.COMMAND_REFRESH, 0, doclist.get.bind(doclist));
+
+    var newCommands = menu.AddPopup(strings.COMMAND_NEW);
+    newCommands.AddItem(strings.DOCUMENT_FORM, 0,
+        function() {
+          framework.openUrl(NEW_DOC['newDocumentForm']);
+        });
+    newCommands.AddItem(strings.DOCUMENT_PRESENTATION, 0,
+        function() {
+          framework.openUrl(NEW_DOC['newDocumentPresentation']);
+        });
+    newCommands.AddItem(strings.DOCUMENT_SPREADSHEET, 0,
+        function() {
+          framework.openUrl(NEW_DOC['newDocumentSpreadsheet']);
+        });
+    newCommands.AddItem(strings.DOCUMENT_DOCUMENT, 0,
+        function() {
+          framework.openUrl(NEW_DOC['newDocumentDocument']);
+        });
+
     menu.AddItem(strings.COMMAND_UPLOAD, 0, uploader.browse.bind(uploader));
     menu.AddItem(strings.COMMAND_SIGN_OUT, 0, loginSession.logout.bind(loginSession));
   }
