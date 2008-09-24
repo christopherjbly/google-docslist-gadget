@@ -24,7 +24,7 @@ var CONNECTION = {
 };
 
 var UI = {
-  MIN_WIDTH: 210,
+  MIN_WIDTH: 170,
   MIN_HEIGHT: 200,
   MIN_DATE_WIDTH: 85,
   MAX_AUTOFILL: 5,

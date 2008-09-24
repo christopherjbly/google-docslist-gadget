@@ -29,7 +29,7 @@ Main.prototype.onOpen = function() {
  */
 Main.prototype.sizing = function() {
   if (event.width < UI.MIN_WIDTH) {
-    event.width = UI.MIN_WIDTH;  
+    event.width = UI.MIN_WIDTH;
   }
   if (event.height < UI.MIN_HEIGHT) {
     event.height = UI.MIN_HEIGHT;
