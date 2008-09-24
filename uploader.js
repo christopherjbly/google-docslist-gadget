@@ -4,7 +4,7 @@
  */
 function Uploader() {
   this.setup();
-  this.guessFileType = true;
+  this.guessFileType = false;
   
   commandsUpload.onclick = this.browse.bind(this);
   uploadOption.onclick = this.close.bind(this);     

@@ -67,14 +67,45 @@ Doclist.prototype.clearTimeout = function() {
   }
 };
 
+Doclist.prototype.getFeedUrl = function(startIndex, opt_searchQuery) {
+  var url = CONNECTION.DOCS_URL;
+  var params = {};
+  params[CONNECTION.MAX_RESULTS_PARAM] = CONNECTION.MAX_RESULTS;
+  params[CONNECTION.START_INDEX_PARAM] = startIndex;
+
+  if (opt_searchQuery) {
+    params[CONNECTION.SEARCH_PARAM] = opt_searchQuery;
+  }
+
+  return url + '?' + params.toQueryString();
+};
+
 /**
  * Get doclist 
  */
 Doclist.prototype.get = function() {
+  this.getChunk();
+}
+
+Doclist.DOCS_THRESHOLD = 50;
+
+Doclist.prototype.getChunk = function(opt_startIndex, opt_searchQuery) {
+  var startIndex = opt_startIndex || 1;
+
+  if (startIndex >= Doclist.DOCS_THRESHOLD) {
+    // Don't continue if we're past the threshold.
+    return;
+  }
+
   httpRequest.host = CONNECTION.DOCS_HOST;
-  httpRequest.url = CONNECTION.DOCS_URL;    
+  httpRequest.url = this.getFeedUrl(startIndex, opt_searchQuery);
   httpRequest.addHeader('Authorization', 'GoogleLogin auth='+loginSession.token);
-  httpRequest.connect('', this.getSuccess.bind(this), this.getError.bind(this));      
+
+  if (opt_searchQuery) {
+    httpRequest.connect('', this.searchSuccess.bind(this), this.getError.bind(this));
+  } else {
+    httpRequest.connect('', this.getSuccess.bind(this), this.getError.bind(this));
+  }
 }
 
 /**
@@ -83,12 +114,9 @@ Doclist.prototype.get = function() {
 Doclist.prototype.search = function() {
   if (!search.value.trim()) return;
   autoFill.visible = false;
-  
+
   httpRequest.loadingIndicator = searching;
-  httpRequest.host = CONNECTION.DOCS_HOST;
-  httpRequest.url = CONNECTION.DOCS_URL + CONNECTION.SEARCH_URL + encodeURIComponent(search.value.trim());    
-  httpRequest.addHeader('Authorization', 'GoogleLogin auth='+loginSession.token);
-  httpRequest.connect('', this.searchSuccess.bind(this), this.getError.bind(this));      
+  this.getChunk(null, search.value.trim());
 }
 
 /**
@@ -105,7 +133,6 @@ Doclist.prototype.searchSuccess = function(responseText) {
  * Get doclist 
  */
 Doclist.prototype.getSuccess = function(responseText, search) {
-  
   try {
     doc = new DOMDocument();
     doc.loadXML(responseText);
@@ -117,14 +144,28 @@ Doclist.prototype.getSuccess = function(responseText, search) {
     return false;
   }
   
-  if (search) {
-    this.results = [];      
-  } else {
-    this.documents = [];      
-  }
-  
   try {
+    var totalResults = Number(doc.getElementsByTagName('openSearch:totalResults')[0].text);
+    debug.error(totalResults);
+    var startIndex = Number(doc.getElementsByTagName('openSearch:startIndex')[0].text);
+    debug.error(startIndex);
+    var itemsPerPage = Number(doc.getElementsByTagName('openSearch:itemsPerPage')[0].text);
+    debug.error(itemsPerPage);
     var entryElements = doc.getElementsByTagName('entry');
+
+    if (isNaN(totalResults) || isNaN(startIndex) || isNaN(itemsPerPage)) {
+      debug.error('Invalid paging data.');
+      return;
+    }
+
+    if (startIndex == 1) {
+      if (search) {
+        this.results = [];      
+      } else {
+        this.documents = [];      
+      }
+    }
+  
     for (var i=0; i < entryElements.length; i++) {
       var entry = entryElements[i];      
       var document = {};
@@ -188,6 +229,13 @@ Doclist.prototype.getSuccess = function(responseText, search) {
     debug.error('Could not parse XML.');
     this.getError();
     return;
+  }
+
+  var nextIndex = startIndex + itemsPerPage;
+
+  if (nextIndex - 1 < totalResults) {
+    // There are more to retrieve.
+    this.getChunk(nextIndex);
   }
 
   this.sort();
