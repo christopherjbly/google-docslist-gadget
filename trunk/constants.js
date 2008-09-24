@@ -11,11 +11,11 @@ var CONNECTION = {
   REFRESH_INTERVAL: 60000, // 60 seconds
 
   DEFAULT_DOMAIN: 'gmail.com',
-  AUTH_HOST: 'www.google.com',    
+  AUTH_HOST: 'www.google.com',
   AUTH_URL: 'https://www.google.com/accounts/ClientLogin',
   AUTH_SERVICE: 'writely',
-  AUTH_TYPE: 'HOSTED_OR_GOOGLE',  
-  DOCS_HOST: 'docs.google.com',  
+  AUTH_TYPE: 'HOSTED_OR_GOOGLE',
+  DOCS_HOST: 'docs.google.com',
   DOCS_URL: 'https://docs.google.com/feeds/documents/private/full',
   MAX_RESULTS_PARAM: 'max-results',
   MAX_RESULTS: 25,
@@ -25,7 +25,7 @@ var CONNECTION = {
 
 var UI = {
   MIN_WIDTH: 210,
-  MIN_HEIGHT: 200,  
+  MIN_HEIGHT: 200,
   MIN_DATE_WIDTH: 85,
   MAX_AUTOFILL: 5,
   ERROR_MESSAGE_TIMEOUT: 3000
@@ -50,7 +50,7 @@ var FILE_TYPES = {
   '123': 'spreadsheet',
   'ppt': 'presentation',
   'pps': 'presentation',
-  'prc': 'presentation',  
+  'prc': 'presentation',
   'htm': 'document',
   'html': 'document',
   'rtf': 'document'
@@ -101,13 +101,13 @@ var UPLOAD_ERRORS = {
 };
 
 var KEYS = {
-  ENTER: 13, 
+  ENTER: 13,
   ESCAPE: 27,
   SPACE: 32,
-  UP: 38, 
-  DOWN: 40, 
-  PAGE_UP: 33, 
+  UP: 38,
+  DOWN: 40,
+  PAGE_UP: 33,
   PAGE_DOWN: 34,
-  HOME: 36, 
+  HOME: 36,
   END: 35
 };
