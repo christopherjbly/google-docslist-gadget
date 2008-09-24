@@ -7,7 +7,7 @@ var REPORTED_CLIENT_NAME = 'gd-docslist-gadget-' + VERSION_STRING;
 
 var CONNECTION = {
   TIME_BETWEEN_REQUESTS: 1000, // 1 second
-  TIMEOUT: 15000, // 15 seconds
+  TIMEOUT: 30000, // 30 seconds
   REFRESH_INTERVAL: 60000, // 60 seconds
 
   DEFAULT_DOMAIN: 'gmail.com',
@@ -16,8 +16,11 @@ var CONNECTION = {
   AUTH_SERVICE: 'writely',
   AUTH_TYPE: 'HOSTED_OR_GOOGLE',  
   DOCS_HOST: 'docs.google.com',  
-  DOCS_URL: 'https://docs.google.com/feeds/documents/private/full?max-results=100',
-  SEARCH_URL: '&q='
+  DOCS_URL: 'https://docs.google.com/feeds/documents/private/full',
+  MAX_RESULTS_PARAM: 'max-results',
+  MAX_RESULTS: 25,
+  SEARCH_PARAM: 'q',
+  START_INDEX_PARAM: 'start-index'
 };
 
 var UI = {

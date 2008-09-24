@@ -99,6 +99,7 @@ HTTPRequest.prototype.connect = function (data, handler, failedHandler, headers,
   this.failedHandler = failedHandler;
   this.packet.abort();
   this.packet.onreadystatechange = this.receivedData.bind(this);
+  debug.trace('opening URL: ' + this.url);
   if (data) {
     this.packet.open('POST', this.url, true);
     if (!this.headers['Content-Type'] && !headers['Content-Type']) {
