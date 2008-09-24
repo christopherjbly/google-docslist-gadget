@@ -18,11 +18,26 @@ function Main() {
  * Draw the gadget when the view opens.
  */
 Main.prototype.onOpen = function() {
-  view.onsize = this.draw.bind(this);   
-  view.onsizing = this.sizing.bind(this);     
+  // Set up menu management handler.
+  pluginHelper.onAddCustomMenuItems = this.onMenuItems.bind(this);
+
+  view.onsize = this.draw.bind(this);
+  view.onsizing = this.sizing.bind(this);
   loginSession.autologin();
-  this.draw();  
+  this.draw();
 }
+
+Main.prototype.isLoggedIn = function() {
+  return !loginDiv.visible && mainDiv.visible;
+};
+
+Main.prototype.onMenuItems = function(menu) {
+  if (this.isLoggedIn()) {
+    menu.AddItem(strings.COMMAND_REFRESH, 0, doclist.get.bind(doclist));
+    menu.AddItem(strings.COMMAND_UPLOAD, 0, uploader.browse.bind(uploader));
+    menu.AddItem(strings.COMMAND_SIGN_OUT, 0, loginSession.logout.bind(loginSession));
+  }
+};
 
 /**
  * Override the user's sizing if we go under.

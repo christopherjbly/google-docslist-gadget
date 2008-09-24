@@ -4,10 +4,9 @@
 // @fileoverview Functions for handling the login view and session of the gadget
 
 function LoginSession() {
-  
   login.onclick = this.login.bind(this);
-  commandsSignout.onclick = this.logout.bind(this);  
-  
+  commandsSignout.onclick = this.logout.bind(this);
+
   this.setup();
 }
 
