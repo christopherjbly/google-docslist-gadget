@@ -57,21 +57,21 @@ var FILE_TYPES = {
 };
 
 var MIME_TYPES = {
-  'doc': 'application/msword',
-  'dot': 'application/msword',
-  'pdf': 'application/pdf',
-  'xls': 'application/vnd.ms-excel',
-  'xlb': 'application/vnd.ms-excel',
-  'xlt': 'application/vnd.ms-excel',
   'csv': 'text/csv',
-  'wks': 'application/vnd.ms-excel',
-  '123': 'application/vnd.ms-excel',
-  'ppt': 'application/vnd.ms-powerpoint',
-  'pps': 'application/vnd.ms-powerpoint',
-  'prc': 'application/vnd.ms-powerpoint',
+  'doc': 'application/msword',
   'htm': 'text/html',
   'html': 'text/html',
-  'rtf': 'text/rtf'
+  'ods': 'application/x-vnd.oasis.opendocument.spreadsheet',
+  'odt': 'application/vnd.oasis.opendocument.text',
+  'pdf': 'application/pdf',
+  'pps': 'application/vnd.ms-powerpoint',
+  'ppt': 'application/vnd.ms-powerpoint',
+  'rtf': 'application/rtf',
+  'sxw': 'application/vnd.sun.xml.writer',
+  'tab': 'text/tab-separated-values',
+  'txt': 'text/plain',
+  'tsv': 'text/tab-separated-values',
+  'xls': 'application/vnd.ms-excel'
 };
 
 var NEW_DOC = {
