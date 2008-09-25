@@ -3,18 +3,34 @@ Function.prototype.bind = function(context) {
   var __method = this;
   var __arguments = [];
   for (var n = 1; n < arguments.length; n++) {
-    __arguments.push(arguments[n]);    
+    __arguments.push(arguments[n]);
   }
-  
+
   return function() {
     var myargs = [];
     for (var m = 0; m < arguments.length; m++) {
-      myargs.push(arguments[m]);      
+      myargs.push(arguments[m]);
     }
 
     return __method.apply(context, __arguments.concat(myargs));
   };
 };
+
+function buildQueryString(obj) {
+  var parts = [];
+  for (var key in obj) {
+    var type = typeof obj[key];
+    if (type == 'boolean' || type == 'number' || type == 'string') {
+      parts.push(key + '=' + encodeURIComponent(obj[key].toString()));
+    }
+  }
+
+  return parts.join('&');
+}
+
+function child(element, childName) {
+  return element.children.item(childName);
+}
 
 // generate query string for POST
 Object.prototype.toQueryString = function() {
@@ -29,8 +45,7 @@ Object.prototype.toQueryString = function() {
 }
 
 // Strips whitespace from beginning and end of string
-String.prototype.trim = function()
-{
+String.prototype.trim = function() {
   return this.replace(/^\s*|\s*$/g,'');
 }
 

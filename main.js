@@ -23,7 +23,7 @@ Main.prototype.onOpen = function() {
 
   view.onsize = this.draw.bind(this);
   view.onsizing = this.sizing.bind(this);
-  loginSession.autologin();
+  //loginSession.autologin();
   this.draw();
 }
 

@@ -12,7 +12,6 @@ var CONNECTION = {
   TIMEOUT: 30000,  // 30 seconds
   REFRESH_INTERVAL: 5 * 60 * 1000,  // 60 seconds
 
-  DEFAULT_DOMAIN: 'gmail.com',
   AUTH_HOST: 'www.google.com',
   AUTH_URL: 'https://www.google.com/accounts/ClientLogin',
   AUTH_SERVICE: 'writely',
