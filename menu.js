@@ -1,4 +1,3 @@
-
 /**
  * Constructor for DocumentMenu class.
  */
@@ -7,9 +6,9 @@ function DocumentMenu() {
 
   commandsNew.onclick = this.open.bind(this);
   commandsNewArrow.onclick = this.open.bind(this);
-  
+
   window.onclick = this.close.bind(this);
-  
+
   newDocumentForm.onclick = this.newDocument.bind(this);
   newDocumentPresentation.onclick = this.newDocument.bind(this);
   newDocumentSpreadsheet.onclick = this.newDocument.bind(this);
@@ -22,24 +21,26 @@ function DocumentMenu() {
 DocumentMenu.prototype.open = function() {
   this.isOpen = true;
   newDocument.visible = true;
-}
+};
 
 /**
  * Close document menu
  */
 DocumentMenu.prototype.close = function() {
-  if (!this.isOpen) return;
+  if (!this.isOpen) {
+    return;
+  }
   this.isOpen = false;
   newDocument.visible = false;
-}
+};
 
 /**
  * Launch new document
  */
 DocumentMenu.prototype.newDocument = function() {
-  newDocumentMenu.close();
+  this.close();
   if (!framework.system.network.online) {
-    errorMessage.display(ERROR_SERVER_OR_NETWORK);
+    errorMessage.display(strings.ERROR_SERVER_OR_NETWORK);
     return;
   }
   if (NEW_DOC[event.srcElement.name]) {
@@ -49,6 +50,3 @@ DocumentMenu.prototype.newDocument = function() {
 
 // instantiate object in the global scope
 var newDocumentMenu = new DocumentMenu();
-
-
-
