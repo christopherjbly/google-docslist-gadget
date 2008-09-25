@@ -1,21 +1,21 @@
 <view width="260" height="340" resizable="true" resizeBorder="10 15 15 15" onopen="gadget.onOpen()">
 
-  <script src="constants.js" />  
-  <script src="util.js" />    
-  <script src="date.js" />      
-  <script src="httpRequest.js" />  
-  <script src="errorMessage.js" />  
+  <script src="auth.js" />
+  <script src="constants.js" />
+  <script src="util.js" />
+  <script src="date.js" />
+  <script src="httpRequest.js" />
+  <script src="errorMessage.js" />
   <script src="search.js" />
   <script src="sort.js" />
-  <script src="scrollbar.js" />  
+  <script src="scrollbar.js" />
   <script src="menu.js" />
   <script src="uploader.js" />
-  <script src="doclist.js" />  
-  <script src="login.js" />
+  <script src="doclist.js" />
+  <script src="login_ui.js" />
   <script src="main.js" />
 
   <div x="2" y="9" name="window" enabled="true">
-    
     <div name="bottomRightMainBg" width="35" height="29" background="images/base_bottomright.png" />
     <div name="bottomCenterMainBg" x="31" height="29" background="images/base_bottom.png" />
     <div name="bottomLeftMainBg" width="31" height="29" background="images/base_bottomleft.png" />
@@ -26,9 +26,9 @@
     <div name="topCenterMainBg" x="31" height="25" background="images/base_top.png" />
     <div name="topLeftMainBg" width="31" height="25" enabled="true" background="images/base_topleft.png" />
 
-    <label name="username" x="35" y="6" size="10" font="helvetica" color="#0070bf" visible="false"></label>
+    <label name="username" x="35" y="6" size="10" font="helvetica" color="#0070bf" visible="false" />
 
-    <div name="loginDiv" x="10" y="40" height="180" visible="true">      
+    <div name="loginDiv" x="10" y="40" height="180" visible="true">
       <label width="100%" height="16" font="helvetica" size="9">&LOGIN_SIGN_IN_TO_DOCLIST;</label>
       <label width="100%" y="18" height="16" font="helvetica" size="9">&LOGIN_YOUR;</label>
       <img x="30" y="18" width="55" height="19" src="images/google_logo.png" />
@@ -38,21 +38,15 @@
       <div name="passBg" y="104" width="100%" height="18" background="#7f9db9"/>
 
       <label name="userLabel" y="48" width="100%" height="16" font="helvetica" size="9" color="#0066cc">&LOGIN_USERNAME;</label>
-      <edit name="user" x="1" y="65" height="17" font="helvetica"
-        onkeypress="loginSession.onUsernameKeyPress()" />
+      <edit name="user" x="1" y="65" height="17" font="helvetica" />
 
       <label name="passLabel" y="88" height="16" font="helvetica" size="9" color="#0066cc">&LOGIN_PASSWORD;</label>
-      <edit name="pass" x="1" y="105" height="16" font="helvetica" passwordChar="*"
-        onkeypress="loginSession.onPasswordKeyPress()" />
+      <edit name="pass" x="1" y="105" height="16" font="helvetica" passwordChar="*" />
 
       <img name="rememberFocus" visible="false" y="127" width="22" height="22" src="images/checkbox_focus.png" />
       <checkbox name="remember" x="3" y="130" width="100%" height="16"
         font="helvetica" size="9" trimming="word-ellipsis"
         caption="&LOGIN_REMEMBER_ME;" value="false" cursor="hand"
-        onchange="loginSession.onRememberFocus(true)"
-        onkeypress="loginSession.onRememberKeyPress()"
-        onfocusin="loginSession.onRememberFocus(true)"
-        onfocusout="loginSession.onRememberFocus(false)"
         image="images/checkbox_default.png"
         overImage="images/checkbox_default.png"
         downImage="images/checkbox_default.png"
@@ -62,9 +56,6 @@
 
       <button name="login" y="155" width="84" height="24"
         font="helvetica" size="8" caption="&LOGIN_SIGN_IN;" cursor="hand"
-        onkeypress="loginSession.onLoginKeyPress()"
-        onfocusin="loginSession.onLoginFocus(true)"
-        onfocusout="loginSession.onLoginFocus(false)"
         image="images/action_default.png" downImage="images/action_down.png"
         overImage="images/action_hover.png" />
     </div>
