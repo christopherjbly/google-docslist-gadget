@@ -25,12 +25,12 @@ Main.prototype.onOpen = function() {
   view.onsizing = this.sizing.bind(this);
   this.auth = new Auth();
   this.loginUi = new LoginUi();
-  this.loginUi.onLogin = this.onLoginRequest.bind(this);
+  this.loginUi.onLogin = this.onLogin.bind(this);
 
   this.draw();
 }
 
-Main.prototype.onLoginRequest = function(username, password, isRemember) {
+Main.prototype.onLogin = function(username, password, isRemember) {
   this.auth.login(username, password, isRemember,
       this.onLoginSuccess.bind(this),
       this.onLoginFailure.bind(this));
