@@ -187,11 +187,11 @@
          background="images/dropdown-bottom-right.png" />
 
       <div name="newDocumentOptions" x="3" y="3" width="98" height="80" background="#ffffff">
-        <div name="newDocumentForm" width="98" height="20" enabled="true" cursor="hand"
+        <div name="newDocumentDocument" y="0" width="98" height="20" enabled="true" cursor="hand"
           onmouseover="event.srcElement.background='#e0ecf7'" 
           onmouseout="event.srcElement.background=''">
-            <div x="6" y="2" width="16" height="16" background="images/icon-form.gif"/>
-            <label x="28" y="2" font="helvetica" size="8" color="#000000">&DOCUMENT_FORM;</label>
+            <div x="6" y="2" width="16" height="16" background="images/icon-document.gif"/>          
+            <label x="28" y="2" font="helvetica" size="8" color="#000000">&DOCUMENT_DOCUMENT;</label>
         </div>
         <div name="newDocumentPresentation" y="20" width="98" height="20" enabled="true" cursor="hand"
           onmouseover="event.srcElement.background='#e0ecf7'"
@@ -205,14 +205,14 @@
             <div x="6" y="2" width="16" height="16" background="images/icon-spreadsheet.gif"/>          
             <label x="28" y="2" font="helvetica" size="8" color="#000000">&DOCUMENT_SPREADSHEET;</label>
         </div>
-        <div name="newDocumentDocument" y="60" width="98" height="20" enabled="true" cursor="hand"
+        <div name="newDocumentForm" y="60" width="98" height="20" enabled="true" cursor="hand"
           onmouseover="event.srcElement.background='#e0ecf7'" 
           onmouseout="event.srcElement.background=''">
-            <div x="6" y="2" width="16" height="16" background="images/icon-document.gif"/>          
-            <label x="28" y="2" font="helvetica" size="8" color="#000000">&DOCUMENT_DOCUMENT;</label>
-        </div>   
+            <div x="6" y="2" width="16" height="16" background="images/icon-form.gif"/>
+            <label x="28" y="2" font="helvetica" size="8" color="#000000">&DOCUMENT_FORM;</label>
+        </div>
       </div>
-      
+
     </div>
     <div name="loading" background="#cc4444" y="6" height="16" visible="false" >
       <label name="loadingLabel" font="arial" size="8" color="#ffffff">&LOADING;</label>

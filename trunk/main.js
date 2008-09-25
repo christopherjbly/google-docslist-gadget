@@ -36,9 +36,9 @@ Main.prototype.onMenuItems = function(menu) {
     menu.AddItem(strings.COMMAND_REFRESH, 0, doclist.get.bind(doclist));
 
     var newCommands = menu.AddPopup(strings.COMMAND_NEW);
-    newCommands.AddItem(strings.DOCUMENT_FORM, 0,
+    newCommands.AddItem(strings.DOCUMENT_DOCUMENT, 0,
         function() {
-          framework.openUrl(NEW_DOC['newDocumentForm']);
+          framework.openUrl(NEW_DOC['newDocumentDocument']);
         });
     newCommands.AddItem(strings.DOCUMENT_PRESENTATION, 0,
         function() {
@@ -48,9 +48,9 @@ Main.prototype.onMenuItems = function(menu) {
         function() {
           framework.openUrl(NEW_DOC['newDocumentSpreadsheet']);
         });
-    newCommands.AddItem(strings.DOCUMENT_DOCUMENT, 0,
+    newCommands.AddItem(strings.DOCUMENT_FORM, 0,
         function() {
-          framework.openUrl(NEW_DOC['newDocumentDocument']);
+          framework.openUrl(NEW_DOC['newDocumentForm']);
         });
 
     menu.AddItem(strings.COMMAND_UPLOAD, 0, uploader.browse.bind(uploader));
@@ -74,10 +74,9 @@ Main.prototype.sizing = function() {
  * Resize the gadget.
  */
 Main.prototype.draw = function() {
-    
   window.width = view.width - 2;
   window.height = view.height - 9;
-  
+
   topRightMainBg.x = middleRightMainBg.x = bottomRightMainBg.x =
       window.width - topRightMainBg.width;
   topCenterMainBg.width = middleCenterMainBg.width = bottomCenterMainBg.width =
@@ -89,10 +88,10 @@ Main.prototype.draw = function() {
       middleRightMainBg.height = bottomRightMainBg.y - middleLeftMainBg.y;
   // Adjust the positions of a images to move to the top right corner
   var loadingWidth = labelCalcWidth(loadingLabel);
-  loading.x = window.width - (loadingWidth + 12);  
-  loading.width = loadingWidth; 
-   
-  var searchingWidth = labelCalcWidth(searchingLabel);  
+  loading.x = window.width - (loadingWidth + 12);
+  loading.width = loadingWidth;
+
+  var searchingWidth = labelCalcWidth(searchingLabel);
   searching.x = window.width - (searchingWidth + 12);
   searching.width = searchingWidth;
 
@@ -101,23 +100,22 @@ Main.prototype.draw = function() {
     loginDiv.height = window.height - 50;
     user.width = pass.width = loginDiv.width - user.x - user.x;
     login.x = loginDiv.width - login.width;
-    login.y = loginDiv.height - (login.height + 10);    
+    login.y = loginDiv.height - (login.height + 10);
   }
-  
+
   if (mainDiv.visible) {
-    
-    mainDiv.width = window.width - 16; 
-    mainDiv.height = window.height - 46;    
-    
-    searchStatus.width = mainDiv.width;    
+    mainDiv.width = window.width - 16;
+    mainDiv.height = window.height - 46;
+
+    searchStatus.width = mainDiv.width;
     searchStatusContent.width = mainDiv.width - (searchStatusLeft.width + searchStatusRight.width);
     searchStatusRight.x = searchStatusContent.width + searchStatusContent.x;
-    
+
     searchArea.width = searchStatus.width - 24;
     searchContainer.width = searchArea.width - 2;
     search.width = searchContainer.width - 23;
     searchClear.x = search.width + 2;
-    
+
     searchField.draw();
     
     uploadStatus.width = searchContainer.width - 2;
