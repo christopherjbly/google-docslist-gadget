@@ -12,10 +12,6 @@ var CONNECTION = {
   TIMEOUT: 30000,  // 30 seconds
   REFRESH_INTERVAL: 5 * 60 * 1000,  // 60 seconds
 
-  AUTH_HOST: 'www.google.com',
-  AUTH_URL: 'https://www.google.com/accounts/ClientLogin',
-  AUTH_SERVICE: 'writely',
-  AUTH_TYPE: 'HOSTED_OR_GOOGLE',
   DOCS_HOST: 'docs.google.com',
   DOCS_URL: 'https://docs.google.com/feeds/documents/private/full',
   MAX_RESULTS_PARAM: 'max-results',

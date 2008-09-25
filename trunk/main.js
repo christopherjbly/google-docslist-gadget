@@ -12,7 +12,7 @@
  * Constructor for Main class.
  */
 function Main() {
-};
+}
 
 /**
  * Draw the gadget when the view opens.
@@ -23,9 +23,42 @@ Main.prototype.onOpen = function() {
 
   view.onsize = this.draw.bind(this);
   view.onsizing = this.sizing.bind(this);
-  //loginSession.autologin();
+  this.auth = new Auth();
+  this.loginUi = new LoginUi();
+  this.loginUi.onLogin = this.onLoginRequest.bind(this);
+
   this.draw();
 }
+
+Main.prototype.onLoginRequest = function(username, password, isRemember) {
+  this.auth.login(username, password, isRemember,
+      this.onLoginSuccess.bind(this),
+      this.onLoginFailure.bind(this));
+};
+
+Main.prototype.onLoginSuccess = function() {
+  alert(this.auth.lsid);
+  alert(this.auth.sid);
+  alert(this.auth.token);
+  /*
+   *     username.innerText = this.username.toLowerCase();
+    username.visible = true;
+    if (remember.value) {
+      options.putValue('token', this.token);
+      options.encryptValue('token');
+      options.putValue('username', this.username);
+      options.encryptValue('username');
+    }
+    doclist.login();
+    */
+};
+
+Main.prototype.onLoginFailure = function() {
+  /*
+   *   this.token = responseData('token');
+
+*/
+};
 
 Main.prototype.isLoggedIn = function() {
   return !loginDiv.visible && mainDiv.visible;

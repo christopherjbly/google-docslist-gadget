@@ -4,7 +4,7 @@
 function LoginUi() {
   this.onLogin = null;
 
-  this.mainDiv = loginDiv;
+  this.mainDiv = loginDiv;  // loginDiv is name of a div.
 
   this.userField = child(this.mainDiv, 'user');
   this.userField.onkeypress = this.onUserKeyPress.bind(this);
@@ -27,6 +27,21 @@ function LoginUi() {
 
   this.reset();
 }
+
+LoginUi.prototype.hide = function() {
+  this.mainDiv.visible = false;
+};
+
+LoginUi.prototype.show = function() {
+  this.mainDiv.visible = true;
+};
+
+LoginUi.prototype.login = function() {
+  if (this.onLogin) {
+    this.onLogin(this.userField.value, this.passwordField.value,
+        this.rememberCheck.value);
+  }
+};
 
 LoginUi.prototype.reset = function() {
   this.userField.value = '';
@@ -84,5 +99,3 @@ LoginUi.prototype.onLoginFocus = function(got) {
       'images/action_hover.png' :
       'images/action_default.png';
 };
-
-var loginUi = new LoginUi();

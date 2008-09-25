@@ -12,7 +12,7 @@ Function.prototype.bind = function(context) {
       myargs.push(arguments[m]);
     }
 
-    return __method.apply(context, __arguments.concat(myargs));
+    return __method.apply(context, myargs.concat(__arguments));
   };
 };
 
