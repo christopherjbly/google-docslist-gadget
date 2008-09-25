@@ -1,6 +1,3 @@
-/**
- * Constructor for DocumentMenu class.
- */
 function DocumentMenu() {
   this.isOpen = false;
 
@@ -15,17 +12,11 @@ function DocumentMenu() {
   newDocumentDocument.onclick = this.newDocument.bind(this);
 }
 
-/**
- * Open document menu
- */
 DocumentMenu.prototype.open = function() {
   this.isOpen = true;
   newDocument.visible = true;
 };
 
-/**
- * Close document menu
- */
 DocumentMenu.prototype.close = function() {
   if (!this.isOpen) {
     return;
@@ -34,9 +25,6 @@ DocumentMenu.prototype.close = function() {
   newDocument.visible = false;
 };
 
-/**
- * Launch new document
- */
 DocumentMenu.prototype.newDocument = function() {
   this.close();
   if (!framework.system.network.online) {
@@ -48,5 +36,4 @@ DocumentMenu.prototype.newDocument = function() {
   }
 };
 
-// instantiate object in the global scope
 var newDocumentMenu = new DocumentMenu();

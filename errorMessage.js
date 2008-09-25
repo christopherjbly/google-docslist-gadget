@@ -1,7 +1,7 @@
-// Copyright 2007 Google Inc.
+// Copyright 2008 Google Inc.
 // All Rights Reserved.
 
-// @fileoverview Functions for adding and handling an error message UI to a view
+// @fileoverview Functions for adding and displaying an error dialog.
 
 
 function ErrorMessage() {
@@ -24,37 +24,30 @@ function ErrorMessage() {
       'wordWrap="true" />');
 }
 
-
-
 ErrorMessage.prototype.display = function(message) {
-  try {
-    this.messageAndErrorDiv.y =
-        (view.height - this.messageAndErrorDiv.height) / 2;
-    this.messageAndErrorDiv.width =
-        view.width - 2 * this.messageAndErrorDiv.x - 4;
-    this.messageAndErrorRight.x = this.messageAndErrorDiv.width -
-        this.messageAndErrorRight.width;
-    this.messageAndErrorCenter.width = this.messageAndErrorRight.x -
-        this.messageAndErrorCenter.x;
+  this.messageAndErrorDiv.y =
+      (view.height - this.messageAndErrorDiv.height) / 2;
+  this.messageAndErrorDiv.width =
+      view.width - 2 * this.messageAndErrorDiv.x - 4;
+  this.messageAndErrorRight.x = this.messageAndErrorDiv.width -
+      this.messageAndErrorRight.width;
+  this.messageAndErrorCenter.width = this.messageAndErrorRight.x -
+      this.messageAndErrorCenter.x;
 
-    this.messageAndErrorLabel.innerText = message;
-    this.messageAndErrorDiv.visible = true;
+  this.messageAndErrorLabel.innerText = message;
+  this.messageAndErrorDiv.visible = true;
 
-    if (this.removeTimer) {
-      view.clearTimeout(this.removeTimer);
-    }
-    this.removeTimer = view.setTimeout(this.remove.bind(this), UI.ERROR_MESSAGE_TIMEOUT);
+  if (this.removeTimer) {
+    view.clearTimeout(this.removeTimer);
+  }
+  this.removeTimer = view.setTimeout(this.remove.bind(this),
+      UI.ERROR_MESSAGE_TIMEOUT);
 
-    this.messageAndErrorDiv.focus();
-  } catch(e) {}
+  this.messageAndErrorDiv.focus();
 };
 
-
-
 ErrorMessage.prototype.remove = function() {
-  try {
-    this.messageAndErrorDiv.visible = false;
-  } catch(e) {}
+  this.messageAndErrorDiv.visible = false;
 };
 
 var errorMessage = new ErrorMessage();
