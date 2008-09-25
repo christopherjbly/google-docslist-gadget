@@ -1,10 +1,10 @@
 // Copyright 2008 Google Inc.
 // All Rights Reserved.
 
-function LoginUi() {
+function LoginUi(mainDiv) {
   this.onLogin = null;
 
-  this.mainDiv = loginDiv;  // loginDiv is name of a div.
+  this.mainDiv = mainDiv;
 
   this.userField = child(this.mainDiv, 'user');
   this.userField.onkeypress = this.onUserKeyPress.bind(this);
@@ -16,6 +16,7 @@ function LoginUi() {
   this.loginButton.onkeypress = this.onLoginKeyPress.bind(this);
   this.loginButton.onfocusin = this.onLoginFocus.bind(this, true);
   this.loginButton.onfocusout = this.onLoginFocus.bind(this, false);
+  this.loginButton.onclick = this.onLoginPress.bind(this, false);
 
   this.rememberCheck = child(this.mainDiv, 'remember');
   this.rememberCheck.onchange = this.onRememberFocus.bind(this, true);
@@ -82,11 +83,15 @@ LoginUi.prototype.onRememberKeyPress = function() {
 LoginUi.prototype.onLoginKeyPress = function() {
   if (event.keycode == KEYS.ENTER ||
       event.keycode == KEYS.SPACE) {
-    if (!this.userField.value) {
-      this.userField.focus();
-    } else {
-      this.login();
-    }
+    this.onLoginPress();
+  }
+};
+
+LoginUi.prototype.onLoginPress = function() {
+  if (!this.userField.value) {
+    this.userField.focus();
+  } else {
+    this.login();
   }
 };
 

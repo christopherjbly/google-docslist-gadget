@@ -11,6 +11,7 @@
   <script src="scrollbar.js" />
   <script src="menu.js" />
   <script src="uploader.js" />
+  <script src="docs_ui.js" />
   <script src="doclist.js" />
   <script src="login_ui.js" />
   <script src="main.js" />
@@ -26,7 +27,7 @@
     <div name="topCenterMainBg" x="31" height="25" background="images/base_top.png" />
     <div name="topLeftMainBg" width="31" height="25" enabled="true" background="images/base_topleft.png" />
 
-    <label name="username" x="35" y="6" size="10" font="helvetica" color="#0070bf" visible="false" />
+    <label name="username" x="35" y="6" size="10" font="helvetica" color="#0070bf" />
 
     <div name="loginDiv" x="10" y="40" height="180" visible="true">
       <label width="100%" height="16" font="helvetica" size="9">&LOGIN_SIGN_IN_TO_DOCLIST;</label>
