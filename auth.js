@@ -53,11 +53,11 @@ Auth.prototype.login = function(user, pass, isRemember, onSuccess, onFailure) {
   var data = buildQueryString(params);
 
   httpRequest.connect(Auth.URL, data,
-      this.onLoginSuccess.bind(this, onSuccess),
+      this.onLoginSuccess.bind(this, user, isRemember, onSuccess),
       this.onLoginError.bind(this, onFailure));
 };
 
-Auth.prototype.logout = function() {
+Auth.prototype.clear = function() {
   this.username = '';
   this.token = '';
   this.sid = '';
@@ -79,12 +79,18 @@ Auth.prototype.parseResponse = function(response) {
   return responseData;
 };
 
-Auth.prototype.onLoginSuccess = function(response, onSuccess) {
+Auth.prototype.onLoginSuccess = function(response,
+    user, isRemember, onSuccess) {
   var responseData = this.parseResponse(response);
 
   this.token = responseData['Auth'];
   this.sid = responseData['SID'];
   this.lsid = responseData['LSID'];
+
+  if (isRemember) {
+    this.setStoredToken(this.token);
+    this.setStoredUsername(user);
+  }
 
   onSuccess();
 };
@@ -96,6 +102,8 @@ Auth.prototype.onLoginError = function(status, response, onFailure) {
     var responseData = this.parseResponse(response);
     error = responseData['Error'] || error;
   }
+
+  this.clear();
 
   onFailure(error);
 };
