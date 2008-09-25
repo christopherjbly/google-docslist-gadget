@@ -1,98 +1,94 @@
-/**
- * Constructor for SortOptions class.
- */
-function SortOptions() {
-  this.active = "date";
-  sortOptionsName.onclick = this.name.bind(this);
-  sortOptionsDate.onclick = this.date.bind(this);
+SortUi.DATE_OPTION = 'date';
+SortUi.NAME_OPTION = 'name';
 
-  switch (options.getValue('sort')) {
-    case 'name':
-      this.name(true);
-      break;
-    case 'date':
-      this.date(true);
-      break;
-    default:
-      this.date(true);
-  }
+function SortUi(mainDiv) {
+  this.mainDiv = mainDiv;
+  this.active = SortUi.DATE_OPTION;
+
+  this.nameColumn = child(this.mainDiv, 'sortOptionsName');
+  this.nameArrow = child(this.nameColumn, 'sortOptionsNameArrow');
+  this.nameDateDivider = child(this.mainDiv, 'sortOptionsNameDateDivider');
+  this.dateNameDivider = child(this.mainDiv, 'sortOptionsDateNameDivider');
+  this.dateColumn = child(this.mainDiv, 'sortOptionsDate');
+  this.dateArrow = child(this.dateColumn, 'sortOptionsDateArrow');
+
+  this.nameColumn.onclick = this.name.bind(this);
+  this.dateColumn.onclick = this.date.bind(this);
+
+  this.date();
 }
 
-/**
- * Switch to sort by name
- */
-SortOptions.prototype.name = function(init) {
-  if (this.active == "name") {
+SortUi.prototype.name = function() {
+  if (this.active == SortUi.NAME_OPTION) {
     return;
   }
-  this.active = "name";
+  this.active = SortUi.NAME_OPTION;
+  /*
   options.putValue('sort', this.active);
+  */
+  this.draw();
 
-  var background = sortOptionsName.background;
-  sortOptionsName.background = sortOptionsDate.background;
-  sortOptionsDate.background = background;
-
-  sortOptionsName.cursor = "arrow";
-  sortOptionsDate.cursor = "hand";
-  sortOptionsNameDateDivider.visible = "false";
-  sortOptionsDateNameDivider.visible = "true";
-
-  sortOptionsNameArrow.visible = true;
-  sortOptionsDateArrow.visible = false;
-
-  if (!init) {
-    doclist.sort();
+  if (this.onChange) {
+    this.onChange();
   }
 };
 
-/**
- * Switch to sort by date
- */
-SortOptions.prototype.date = function(init) {
-  if (this.active == "date") {
+SortUi.prototype.date = function() {
+  if (this.active == SortUi.DATE_OPTION) {
     return;
   }
-  this.active = "date";
+  this.active = SortUi.DATE_OPTION;
+  /*
   options.putValue('sort', this.active);
+  */
+  this.draw();
 
-  var background = sortOptionsDate.background;
-  sortOptionsDate.background = sortOptionsName.background;
-  sortOptionsName.background = background;
-  sortOptionsNameDateDivider.visible = "true";
-  sortOptionsDateNameDivider.visible = "false";
-
-  sortOptionsName.cursor = "hand";
-  sortOptionsDate.cursor = "arrow";
-
-  sortOptionsNameArrow.visible = false;
-  sortOptionsDateArrow.visible = true;
-
-  if (!init) {
-    doclist.sort();
+  if (this.onChange) {
+    this.onChange();
   }
 };
 
-/**
- * Draw sort options
- */
-SortOptions.prototype.draw = function() {
-  sortOptionsArea.width = mainDiv.width - 6;
-  sortOptionsArea.x = 2;
+SortUi.INACTIVE_BG = 'images/inactive-bg.gif';
+SortUi.ACTIVE_BG = 'images/active-bg.gif';
 
-  sortOptionsName.width = Math.ceil((2/3) * sortOptionsArea.width);
-  if (scrollbar.visible && sortOptionsDate.width < UI.MIN_DATE_WIDTH) {
-    sortOptionsName.width = sortOptionsArea.width - UI.MIN_DATE_WIDTH;
-    sortOptionsDate.width = UI.MIN_DATE_WIDTH;
+SortUi.prototype.draw = function() {
+  this.mainDiv.width = mainDiv.width - 6;
+  this.mainDiv.x = 2;
+
+  this.nameColumn.width = Math.ceil((2/3) * this.mainDiv.width);
+  if (scrollbar.visible && this.dateColumn.width < UI.MIN_DATE_WIDTH) {
+    this.nameColumn.width = this.mainDiv.width - UI.MIN_DATE_WIDTH;
+    this.dateColumn.width = UI.MIN_DATE_WIDTH;
   }
-  sortOptionsNameDateDivider.x = sortOptionsName.width;
-  sortOptionsDateNameDivider.x = sortOptionsName.width;
+  this.nameDateDivider.x = this.nameColumn.width;
+  this.dateNameDivider.x = this.nameColumn.width;
 
-  sortOptionsDate.x = sortOptionsNameDateDivider.width + sortOptionsNameDateDivider.x;
-  sortOptionsDate.width = sortOptionsArea.width - (sortOptionsName.width + sortOptionsNameDateDivider.width);
+  this.dateColumn.x = this.nameDateDivider.width + this.nameDateDivider.x;
+  this.dateColumn.width = this.mainDiv.width -
+      (this.nameColumn.width + this.nameDateDivider.width);
 
-  sortOptionsNameArrow.x = sortOptionsName.width - (sortOptionsNameArrow.width + 5);
-  sortOptionsDateArrow.x = sortOptionsDate.width - (sortOptionsDateArrow.width + 5);
+  this.nameArrow.x = this.nameColumn.width - (this.nameArrow.width + 5);
+  this.dateArrow.x = this.dateColumn.width - (this.dateArrow.width + 5);
+
+  if (this.active == SortUi.DATE_OPTION) {
+    this.dateColumn.background = SortUi.ACTIVE_BG ;
+    this.nameColumn.background = SortUi.INACTIVE_BG;
+
+    this.nameColumn.cursor = 'hand';
+    this.dateColumn.cursor = 'arrow';
+    this.nameDateDivider.visible = true;
+    this.dateNameDivider.visible = false;
+    this.nameArrow.visible = false;
+    this.dateArrow.visible = true;
+  } else {
+    this.dateColumn.background = SortUi.INACTIVE_BG;
+    this.nameColumn.background = SortUi.ACTIVE_BG;
+
+    this.nameColumn.cursor = 'arrow';
+    this.dateColumn.cursor = 'hand';
+    this.nameDateDivider.visible = false;
+    this.dateNameDivider.visible = true;
+    this.nameArrow.visible = true;
+    this.dateArrow.visible = false;
+  }
 };
-
-// instantiate object in the global scope
-var sortOptions = new SortOptions();
