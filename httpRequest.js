@@ -1,18 +1,9 @@
 // Copyright 2007 Google Inc.
 // All Rights Reserved.
 
-// @fileoverview Functions for server communications through XMLHttpRequest
-
-function createXhr() {
-  return new XMLHttpRequest();
-}
-
-var httpRequest = new HTTPRequest();
-
 function HTTPRequest() {
-  this.packet = new createXhr();
-  this.handler = null;
-  this.failedHandler = null;
+  this.packet = createXhr();
+
   // Token for timeout timer.
   this.timeoutTimer = null;
   this.headers = {};
@@ -77,7 +68,7 @@ HTTPRequest.prototype.connect = function (url, data, handler, failedHandler, hea
 
   // Check if network is online.
   if (!framework.system.network.online) {
-    this.onFailure();
+    this.onFailure(failedHandler);
     return;
   }
 
@@ -95,10 +86,8 @@ HTTPRequest.prototype.connect = function (url, data, handler, failedHandler, hea
     stream = null;
   }
 
-  this.handler = handler;
-  this.failedHandler = failedHandler;
   this.packet.abort();
-  this.packet.onreadystatechange = this.receivedData.bind(this);
+  this.packet.onreadystatechange = this.receivedData.bind(this, handler);
   debug.trace('opening URL: ' + url);
   if (data) {
     this.packet.open('POST', url, true);
@@ -128,7 +117,7 @@ HTTPRequest.prototype.connect = function (url, data, handler, failedHandler, hea
   this.packet.send(data);
 
   this.clearTimeout();
-  this.timeoutTimer = view.setTimeout(this.onTimeout.bind(this), CONNECTION.TIMEOUT);
+  this.timeoutTimer = view.setTimeout(this.onTimeout.bind(this, failedHandler), CONNECTION.TIMEOUT);
 
   HTTPRequest.available = false;
 };
@@ -151,14 +140,14 @@ HTTPRequest.prototype.clearTimeout = function() {
   }
 };
 
-HTTPRequest.prototype.onTimeout = function() {
+HTTPRequest.prototype.onTimeout = function(failedHandler) {
   if (this.isFile) return;
   
   debug.error('Request timed out.');
   this.packet.abort();  
   setTimeout(HTTPRequest.finishedGracePeriod, CONNECTION.TIME_BETWEEN_REQUESTS);
   this.hideLoading();
-  this.onFailure();
+  this.onFailure(failedHandler);
 };
 
 HTTPRequest.prototype.showLoading = function() {
@@ -179,16 +168,16 @@ HTTPRequest.prototype.hideLoading = function() {
   }  
 };
 
-HTTPRequest.prototype.onFailure = function() {
+HTTPRequest.prototype.onFailure = function(failedHandler) {
   if (this.failedHandler !== null) {
     var status = this.packet.readyState == 4 ? this.packet.status : 0;
-    this.failedHandler(status, this.packet.responseText);
+    failedHandler(status, this.packet.responseText);
   } else {
     errorMessage.display(ERROR_SERVER_OR_NETWORK);
   }
 };
 
-HTTPRequest.prototype.receivedData = function() {
+HTTPRequest.prototype.receivedData = function(handler, failedHandler) {
   if (!this.packet) {
     return;
   }
@@ -200,10 +189,9 @@ HTTPRequest.prototype.receivedData = function() {
   setTimeout(HTTPRequest.finishedGracePeriod, CONNECTION.TIME_BETWEEN_REQUESTS);
   if (this.packet.status < 200 || this.packet.status >= 300) {
     debug.error('A transfer error has occured !');
-    this.onFailure();
+    this.onFailure(failedHandler);
     return;
   }
-  if (this.handler !== null) {
-    this.handler(this.packet.responseText);
-  }
+
+  handler(this.packet.responseText);
 };

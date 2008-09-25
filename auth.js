@@ -1,3 +1,14 @@
+Auth.LOGIN_ERRORS = {
+  'BadAuthentication': ERROR_BAD_AUTH,
+  'NotVerified': ERROR_NOT_VERIFIED,
+  'TermsNotAgreed': ERROR_TERMS,
+  'CaptchaRequired': ERROR_CAPTCHA,
+  'Unknown': ERROR_UNKNOWN,
+  'AccountDeleted': ERROR_ACCOUNT_DELETED,
+  'AccountDisabled': ERROR_ACCOUNT_DISABLED,
+  'ServiceDisabled': ERROR_SERVICE_DISABLED,
+  'ServiceUnavailable': ERROR_SERVICE_UNAVAILABLE };
+
 function Auth() {
   options.putDefaultValue(Auth.OPTIONS_KEY_TOKEN, '');
   options.putDefaultValue(Auth.OPTIONS_KEY_USERNAME, '');
@@ -52,7 +63,7 @@ Auth.prototype.login = function(user, pass, isRemember, onSuccess, onFailure) {
                  'accountType': Auth.TYPE };
   var data = buildQueryString(params);
 
-  httpRequest.connect(Auth.URL, data,
+  g_httpRequest.connect(Auth.URL, data,
       this.onLoginSuccess.bind(this, user, isRemember, onSuccess),
       this.onLoginError.bind(this, onFailure));
 };
@@ -96,6 +107,8 @@ Auth.prototype.onLoginSuccess = function(response,
 };
 
 Auth.prototype.onLoginError = function(status, response, onFailure) {
+  this.clear();
+
   var error = 'Unknown';
 
   if (status == 403) {
@@ -103,9 +116,7 @@ Auth.prototype.onLoginError = function(status, response, onFailure) {
     error = responseData['Error'] || error;
   }
 
-  this.clear();
-
-  onFailure(error);
+  onFailure(error, Auth.LOGIN_ERRORS[error]);
 };
 
 Auth.prototype.hasCredentials = function() {

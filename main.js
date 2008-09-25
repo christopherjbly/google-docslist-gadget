@@ -1,12 +1,4 @@
-/**
- * Main
- *
- * Doclist view
- *
- * Created by Steve Simitzis on 2008-3-21.
- * Copyright (c) 2008 Google. All rights reserved.
- */
-
+var g_httpRequest;
 
 /**
  * Constructor for Main class.
@@ -18,6 +10,7 @@ function Main() {
  * Draw the gadget when the view opens.
  */
 Main.prototype.onOpen = function() {
+  g_httpRequest = new HTTPRequest();
   // Set up menu management handler.
   pluginHelper.onAddCustomMenuItems = this.onMenuItems.bind(this);
 
@@ -26,6 +19,7 @@ Main.prototype.onOpen = function() {
   this.auth = new Auth();
   this.loginUi = new LoginUi();
   this.loginUi.onLogin = this.onLogin.bind(this);
+  this.errorMessage = new ErrorMessage();
 
   this.draw();
 }
@@ -37,27 +31,16 @@ Main.prototype.onLogin = function(username, password, isRemember) {
 };
 
 Main.prototype.onLoginSuccess = function() {
-  alert(this.auth.lsid);
-  alert(this.auth.sid);
-  alert(this.auth.token);
+  this.loginUi.reset();
   /*
-   *     username.innerText = this.username.toLowerCase();
-    username.visible = true;
-    if (remember.value) {
-      options.putValue('token', this.token);
-      options.encryptValue('token');
-      options.putValue('username', this.username);
-      options.encryptValue('username');
-    }
-    doclist.login();
-    */
+   username.innerText = this.username.toLowerCase();
+   username.visible = true;
+   doclist.login();
+   */
 };
 
-Main.prototype.onLoginFailure = function() {
-  /*
-   *   this.token = responseData('token');
-
-*/
+Main.prototype.onLoginFailure = function(code, reason) {
+  this.errorMessage.display(reason);
 };
 
 Main.prototype.isLoggedIn = function() {

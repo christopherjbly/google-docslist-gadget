@@ -72,17 +72,6 @@ var NEW_DOC = {
   'newDocumentPresentation': 'http://docs.google.com/DocAction?action=new_presentation&source=doclist&hl=en',
   'newDocumentForm': 'http://spreadsheets.google.com/newform?hl=en' };
 
-var LOGIN_ERRORS = {
-  'BadAuthentication': ERROR_BAD_AUTH,
-  'NotVerified': ERROR_NOT_VERIFIED,
-  'TermsNotAgreed': ERROR_TERMS,
-  'CaptchaRequired': ERROR_CAPTCHA,
-  'Unknown': ERROR_UNKNOWN,
-  'AccountDeleted': ERROR_ACCOUNT_DELETED,
-  'AccountDisabled': ERROR_ACCOUNT_DISABLED,
-  'ServiceDisabled': ERROR_SERVICE_DISABLED,
-  'ServiceUnavailable': ERROR_SERVICE_UNAVAILABLE };
-
 var UPLOAD_ERRORS = {
   STATUS_415: ERROR_UPLOAD_TYPE,
   STATUS_401: ERROR_UPLOAD_EXPIRED,

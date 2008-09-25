@@ -1,4 +1,7 @@
-// bind function
+function createXhr() {
+  return new XMLHttpRequest();
+}
+
 Function.prototype.bind = function(context) {
   var __method = this;
   var __arguments = [];
@@ -32,21 +35,8 @@ function child(element, childName) {
   return element.children.item(childName);
 }
 
-// generate query string for POST
-Object.prototype.toQueryString = function() {
-  var str = [];
-  for (var key in this) {
-    var type = typeof this[key];
-    if (type == 'boolean' || type == 'number' || type == 'string') {
-      str.push(key + '=' + encodeURIComponent(this[key].toString()));
-    }
-  }
-  return str.join('&');
-}
-
-// Strips whitespace from beginning and end of string
-String.prototype.trim = function() {
-  return this.replace(/^\s*|\s*$/g,'');
+function trim(str) {
+  return str.replace(/^\s*|\s*$/g,'');
 }
 
 // Converts an RFC3339 date time into local time JS Date.
@@ -86,8 +76,8 @@ function parseRFC3339(date) {
   newDate.setUTCHours(timePart[0]);
   newDate.setUTCMinutes(timePart[1]);
   newDate.setUTCSeconds(timePart[2]);
-	newDate.setUTCMilliseconds(0);
-	
+  newDate.setUTCMilliseconds(0);
+
   var index = 19;
   var dateLen = date.length;
 
@@ -149,26 +139,26 @@ function parseRFC3339(date) {
 }
 
 // Calculate the width of a label
-function labelCalcWidth(ele) { 
+function labelCalcWidth(ele) {
   try {
     var edit = labelCalcHelper;
   } catch(e) {
     var edit = view.appendElement('<edit name="labelCalcHelper" />');
   }
 
-  edit.visible = false; 
-  edit.y = 2000; 
-  edit.x = 0; 
-  edit.width = 1000; 
-  edit.height = 30; 
-  edit.value = ele.innerText; 
-  edit.font = ele.font; 
-  edit.size = ele.size; 
-  edit.bold = ele.bold; 
-  edit.italic = ele.italic; 
-  edit.underline = ele.underline; 
-  var idealRect = edit.idealBoundingRect; 
-  edit.width = idealRect.width; 
-  edit.height = idealRect.height; 
-  return idealRect.width; 
-} 
+  edit.visible = false;
+  edit.y = 2000;
+  edit.x = 0;
+  edit.width = 1000;
+  edit.height = 30;
+  edit.value = ele.innerText;
+  edit.font = ele.font;
+  edit.size = ele.size;
+  edit.bold = ele.bold;
+  edit.italic = ele.italic;
+  edit.underline = ele.underline;
+  var idealRect = edit.idealBoundingRect;
+  edit.width = idealRect.width;
+  edit.height = idealRect.height;
+  return idealRect.width;
+}
