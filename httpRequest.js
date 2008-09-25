@@ -50,7 +50,7 @@ HTTPRequest.finishedGracePeriod = function() {
   HTTPRequest.available = true;
   if (HTTPRequest.queue.length > 0) {
     var request = HTTPRequest.queue.shift();
-    request.requestObject.connect(request.data, request.handler, request.failedHandler, request.headers);
+    request.requestObject.connect(request.url, request.data, request.handler, request.failedHandler, request.headers);
   }
 };
 
@@ -58,14 +58,14 @@ HTTPRequest.finishedGracePeriod = function() {
  * Sends out a request using XMLHttpRequest
  * @param {String} data The data to be packed
  */
-HTTPRequest.prototype.connect = function (data, handler, failedHandler, headers, isFile) {
+HTTPRequest.prototype.connect = function (url, data, handler, failedHandler, headers, isFile) {
   headers = headers || {};
   this.isFile = isFile || false;
 
   if (!HTTPRequest.available) {
     // The server fails to handle too many requests at a time so we need to
     // queue them.
-    HTTPRequest.queue.push({ requestObject: this, data: data, handler: handler, failedHandler: failedHandler, headers: headers });
+    HTTPRequest.queue.push({ requestObject: this, url: url, data: data, handler: handler, failedHandler: failedHandler, headers: headers });
     return;
   }
   try {
@@ -99,14 +99,14 @@ HTTPRequest.prototype.connect = function (data, handler, failedHandler, headers,
   this.failedHandler = failedHandler;
   this.packet.abort();
   this.packet.onreadystatechange = this.receivedData.bind(this);
-  debug.trace('opening URL: ' + this.url);
+  debug.trace('opening URL: ' + url);
   if (data) {
-    this.packet.open('POST', this.url, true);
+    this.packet.open('POST', url, true);
     if (!this.headers['Content-Type'] && !headers['Content-Type']) {
-      this.packet.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');    
+      this.packet.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     }
   } else {
-    this.packet.open('GET', this.url, true);    
+    this.packet.open('GET', url, true);    
   }
 
   // custom headers
@@ -127,7 +127,7 @@ HTTPRequest.prototype.connect = function (data, handler, failedHandler, headers,
   this.packet.setRequestHeader('Host', this.host);  
   this.packet.send(data);
 
-  this.clearTimeout();  
+  this.clearTimeout();
   this.timeoutTimer = view.setTimeout(this.onTimeout.bind(this), CONNECTION.TIMEOUT);
 
   HTTPRequest.available = false;
