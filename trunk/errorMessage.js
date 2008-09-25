@@ -1,9 +1,6 @@
 // Copyright 2008 Google Inc.
 // All Rights Reserved.
 
-// @fileoverview Functions for adding and displaying an error dialog.
-
-
 function ErrorMessage() {
   this.removeTimer = null;
 
@@ -49,5 +46,3 @@ ErrorMessage.prototype.display = function(message) {
 ErrorMessage.prototype.remove = function() {
   this.messageAndErrorDiv.visible = false;
 };
-
-var errorMessage = new ErrorMessage();

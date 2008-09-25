@@ -1,8 +1,11 @@
 function DocumentMenu() {
   this.isOpen = false;
 
+  // MOVE
+  /*
   commandsNew.onclick = this.open.bind(this);
   commandsNewArrow.onclick = this.open.bind(this);
+  */
 
   window.onclick = this.close.bind(this);
 
@@ -12,16 +15,15 @@ function DocumentMenu() {
   newDocumentDocument.onclick = this.newDocument.bind(this);
 }
 
+DocumentMenu.prototype.isOpen = function() {
+  return newDocument.visible;
+};
+
 DocumentMenu.prototype.open = function() {
-  this.isOpen = true;
   newDocument.visible = true;
 };
 
 DocumentMenu.prototype.close = function() {
-  if (!this.isOpen) {
-    return;
-  }
-  this.isOpen = false;
   newDocument.visible = false;
 };
 
