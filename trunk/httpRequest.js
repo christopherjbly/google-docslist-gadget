@@ -1,36 +1,19 @@
 // Copyright 2007 Google Inc.
 // All Rights Reserved.
 
+HTTPRequest.TIME_BETWEEN_REQUESTS = 1000;  // 1 second.
+HTTPRequest.TIMEOUT = 30000;  // 30 seconds.
+
 function HTTPRequest() {
   this.packet = createXhr();
 
   // Token for timeout timer.
   this.timeoutTimer = null;
-  this.headers = {};
-  this.loadingIndicator = false;
+  this.loadingIndicator = loading;  // loading is name of a div.
 }
 
 HTTPRequest.available = true;
 HTTPRequest.queue = [];
-
-/**
- * Add a new custom header
- */
-HTTPRequest.prototype.addHeader = function(key, value) {
-  var type = typeof value;
-  if (type == 'boolean' || type == 'number' || type == 'string') {
-    this.headers[key] = value.toString();
-  }
-};
-
-/**
- * Remove custom header
- */
-HTTPRequest.prototype.removeHeader = function(key) {
-  try {
-    if (this.headers[key]) delete this.headers[key];
-  } catch(e) {}
-};
 
 /**
  * Function used to allow a time between httpRequests, so as not to clutter
@@ -41,30 +24,21 @@ HTTPRequest.finishedGracePeriod = function() {
   HTTPRequest.available = true;
   if (HTTPRequest.queue.length > 0) {
     var request = HTTPRequest.queue.shift();
-    request.requestObject.connect(request.url, request.data, request.handler, request.failedHandler, request.headers);
+    request.requestObject.connect(request.url, request.data, request.handler,
+        request.failedHandler, request.headers, request.isFile);
   }
 };
 
-/**
- * Sends out a request using XMLHttpRequest
- * @param {String} data The data to be packed
- */
-HTTPRequest.prototype.connect = function (url, data, handler, failedHandler, headers, isFile) {
-  headers = headers || {};
-  this.isFile = isFile || false;
-
+HTTPRequest.prototype.connect = function (url, data, handler, failedHandler,
+    headers, isFile) {
   if (!HTTPRequest.available) {
-    // The server fails to handle too many requests at a time so we need to
-    // queue them.
-    HTTPRequest.queue.push({ requestObject: this, url: url, data: data, handler: handler, failedHandler: failedHandler, headers: headers });
+    HTTPRequest.queue.push({ requestObject: this, url: url, data: data,
+        handler: handler, failedHandler: failedHandler,
+        headers: headers, isFile: isFile });
     return;
   }
-  try {
-    this.showLoading();
-  } catch(e) {
-    // rare occurance, if the details view is just closing
-    return;
-  }
+
+  this.showLoading();
 
   // Check if network is online.
   if (!framework.system.network.online) {
@@ -72,54 +46,51 @@ HTTPRequest.prototype.connect = function (url, data, handler, failedHandler, hea
     return;
   }
 
-  if (this.isFile) {
+  if (isFile) {
     var filename = data;
-    
-    var stream = new ActiveXObject("ADODB.Stream");    
-    
-    stream.Type = 1;  // adTypeBinary 
-    stream.Open(); 
+
+    var stream = new ActiveXObject("ADODB.Stream");
+
+    stream.Type = 1;  // adTypeBinary
+    stream.Open();
     stream.LoadFromFile(filename);
 
-    data = stream.Read(-1); // adReadAll
+    data = stream.Read(-1);  // adReadAll
     stream.Close();
     stream = null;
   }
 
   this.packet.abort();
-  this.packet.onreadystatechange = this.receivedData.bind(this, handler);
-  debug.trace('opening URL: ' + url);
+  this.packet.onreadystatechange = this.receivedData.bind(this,
+      handler, failedHandler);
+  debug.trace('Opening URL: ' + url);
+
   if (data) {
     this.packet.open('POST', url, true);
-    if (!this.headers['Content-Type'] && !headers['Content-Type']) {
-      this.packet.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    }
+    this.packet.setRequestHeader('Content-Type',
+        'application/x-www-form-urlencoded');
   } else {
-    this.packet.open('GET', url, true);    
+    this.packet.open('GET', url, true);
   }
 
-  // custom headers
-  for (var key in this.headers) {
-    if (typeof this.headers[key] == 'string') {
-      this.packet.setRequestHeader(key, this.headers[key]);    
-    }
-  }
   for (var key in headers) {
     if (typeof headers[key] == 'string') {
-      this.packet.setRequestHeader(key, headers[key]);    
+      this.packet.setRequestHeader(key, headers[key]);
     }
   }
 
+  /*
   this.packet.setRequestHeader('cookie', 'none');
   this.packet.setRequestHeader('Cache-Control', 'no-cache, no-transform');
   this.packet.setRequestHeader('Connection', 'close');
-  this.packet.setRequestHeader('Host', this.host);  
+  this.packet.setRequestHeader('Host', this.host);
+  */
   this.packet.send(data);
+  HTTPRequest.available = false;
 
   this.clearTimeout();
-  this.timeoutTimer = view.setTimeout(this.onTimeout.bind(this, failedHandler), CONNECTION.TIMEOUT);
-
-  HTTPRequest.available = false;
+  this.timeoutTimer = view.setTimeout(this.onTimeout.bind(this, failedHandler),
+      HTTPRequest.TIMEOUT);
 };
 
 HTTPRequest.prototype.stop = function() {
@@ -127,13 +98,15 @@ HTTPRequest.prototype.stop = function() {
     return;
   }
   if (this.packet.readyState != 4) {
-    this.packet.abort();  
-  }  
-  this.clearTimeout();  
-  this.hideLoading();  
+    this.packet.abort();
+  }
+  this.clearTimeout();
+  this.hideLoading();
 };
 
 HTTPRequest.prototype.clearTimeout = function() {
+  this.hideLoading();
+
   if (this.timeoutTimer) {
     view.clearTimeout(this.timeoutTimer);
     this.timeoutTimer = null;
@@ -141,39 +114,28 @@ HTTPRequest.prototype.clearTimeout = function() {
 };
 
 HTTPRequest.prototype.onTimeout = function(failedHandler) {
-  if (this.isFile) return;
-  
   debug.error('Request timed out.');
-  this.packet.abort();  
-  setTimeout(HTTPRequest.finishedGracePeriod, CONNECTION.TIME_BETWEEN_REQUESTS);
+  this.packet.abort();
+  view.setTimeout(HTTPRequest.finishedGracePeriod,
+      HTTPRequest.TIME_BETWEEN_REQUESTS);
   this.hideLoading();
   this.onFailure(failedHandler);
 };
 
 HTTPRequest.prototype.showLoading = function() {
-  try {
-    this.loadingIndicator = this.loadingIndicator || loading;
-    this.loadingIndicator.visible = true;
-  } catch(e) {
-    debug.warning('Could not show loading image.');
-  }  
+  this.loadingIndicator.visible = true;
 };
 
 HTTPRequest.prototype.hideLoading = function() {
-  try {    
-    this.loadingIndicator.visible = false;
-    this.loadingIndicator = false;
-  } catch(e) {
-    debug.warning('Could not hide loading image.');
-  }  
+  this.loadingIndicator.visible = false;
 };
 
 HTTPRequest.prototype.onFailure = function(failedHandler) {
-  if (this.failedHandler !== null) {
+  if (failedHandler) {
     var status = this.packet.readyState == 4 ? this.packet.status : 0;
     failedHandler(status, this.packet.responseText);
   } else {
-    errorMessage.display(ERROR_SERVER_OR_NETWORK);
+    g_errorMessage.display(strings.ERROR_SERVER_OR_NETWORK);
   }
 };
 
@@ -184,9 +146,11 @@ HTTPRequest.prototype.receivedData = function(handler, failedHandler) {
   if (this.packet.readyState != 4) {
     return;
   }
-  this.hideLoading();  
-  this.clearTimeout();  
-  setTimeout(HTTPRequest.finishedGracePeriod, CONNECTION.TIME_BETWEEN_REQUESTS);
+  this.hideLoading();
+  this.clearTimeout();
+  view.setTimeout(HTTPRequest.finishedGracePeriod,
+      HTTPRequest.TIME_BETWEEN_REQUESTS);
+
   if (this.packet.status < 200 || this.packet.status >= 300) {
     debug.error('A transfer error has occured !');
     this.onFailure(failedHandler);

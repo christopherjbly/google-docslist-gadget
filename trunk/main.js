@@ -1,4 +1,5 @@
 var g_httpRequest;
+var g_errorMessage;
 
 /**
  * Constructor for Main class.
@@ -11,6 +12,8 @@ function Main() {
  */
 Main.prototype.onOpen = function() {
   g_httpRequest = new HTTPRequest();
+  g_errorMessage = new ErrorMessage();
+
   // Set up menu management handler.
   pluginHelper.onAddCustomMenuItems = this.onMenuItems.bind(this);
 
@@ -19,7 +22,6 @@ Main.prototype.onOpen = function() {
   this.auth = new Auth();
   this.loginUi = new LoginUi();
   this.loginUi.onLogin = this.onLogin.bind(this);
-  this.errorMessage = new ErrorMessage();
 
   this.draw();
 }
@@ -40,7 +42,7 @@ Main.prototype.onLoginSuccess = function() {
 };
 
 Main.prototype.onLoginFailure = function(code, reason) {
-  this.errorMessage.display(reason);
+  g_errorMessage.display(reason);
 };
 
 Main.prototype.isLoggedIn = function() {
