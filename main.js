@@ -22,12 +22,13 @@ Main.prototype.onOpen = function() {
 
   view.onsize = this.draw.bind(this);
   view.onsizing = this.sizing.bind(this);
-  this.window = window;  // window is the name of the div.
+  this.window = window;  // window is name of the div.
   this.usernameLabel = child(this.window, 'username');
   this.auth = new Auth();
   this.docsUi = new DocsUi(child(this.window, 'mainDiv'));
   this.loginUi = new LoginUi(child(this.window, 'loginDiv'));
   this.loginUi.onLogin = this.onLogin.bind(this);
+  this.sortUi = new SortUi(sortOptionsArea);  // sortOptionsArea is name of div.
 
   this.draw();
 };
