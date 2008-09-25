@@ -8,8 +8,6 @@ var REPORTED_CLIENT_NAME = 'gd-docslist-gadget-' + strings.VERSION_STRING;
 // TODO: move these to files.
 
 var CONNECTION = {
-  TIME_BETWEEN_REQUESTS: 1000,  // 1 second
-  TIMEOUT: 30000,  // 30 seconds
   REFRESH_INTERVAL: 5 * 60 * 1000,  // 60 seconds
 
   DOCS_HOST: 'docs.google.com',
