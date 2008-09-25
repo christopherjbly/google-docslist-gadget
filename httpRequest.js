@@ -100,13 +100,13 @@ HTTPRequest.prototype.stop = function() {
   if (this.packet.readyState != 4) {
     this.packet.abort();
   }
+  view.setTimeout(HTTPRequest.finishedGracePeriod,
+      HTTPRequest.TIME_BETWEEN_REQUESTS);
   this.clearTimeout();
   this.hideLoading();
 };
 
 HTTPRequest.prototype.clearTimeout = function() {
-  this.hideLoading();
-
   if (this.timeoutTimer) {
     view.clearTimeout(this.timeoutTimer);
     this.timeoutTimer = null;

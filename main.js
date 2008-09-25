@@ -14,17 +14,23 @@ Main.prototype.onOpen = function() {
   g_httpRequest = new HTTPRequest();
   g_errorMessage = new ErrorMessage();
 
+  this.retrieveTimer = null;
+  this.documents = [];
+
   // Set up menu management handler.
   pluginHelper.onAddCustomMenuItems = this.onMenuItems.bind(this);
 
   view.onsize = this.draw.bind(this);
   view.onsizing = this.sizing.bind(this);
+  this.window = window;  // window is the name of the div.
+  this.usernameLabel = child(this.window, 'username');
   this.auth = new Auth();
-  this.loginUi = new LoginUi();
+  this.docsUi = new DocsUi(child(this.window, 'mainDiv'));
+  this.loginUi = new LoginUi(child(this.window, 'loginDiv'));
   this.loginUi.onLogin = this.onLogin.bind(this);
 
   this.draw();
-}
+};
 
 Main.prototype.onLogin = function(username, password, isRemember) {
   this.auth.login(username, password, isRemember,
@@ -34,15 +40,43 @@ Main.prototype.onLogin = function(username, password, isRemember) {
 
 Main.prototype.onLoginSuccess = function() {
   this.loginUi.reset();
-  /*
-   username.innerText = this.username.toLowerCase();
-   username.visible = true;
-   doclist.login();
-   */
+  this.drawUsername(this.auth.username);
+  this.switchDocsMode();
+  this.startRetrieve();
 };
 
 Main.prototype.onLoginFailure = function(code, reason) {
   g_errorMessage.display(reason);
+};
+
+Main.RETRIEVE_INTERVAL = 60 * 1000;
+
+Main.prototype.retrieve = function() {
+  debug.error('foo');
+};
+
+Main.prototype.startRetrieve = function() {
+  this.retrieve();
+  this.retrieveTimer = view.setInterval(this.retrieve.bind(this),
+      Main.RETRIEVE_INTERVAL);
+};
+
+Main.prototype.stopRetrieve = function() {
+  this.clearInterval(this.retrieveTimer);
+};
+
+Main.prototype.switchLoginMode = function() {
+  this.loginUi.show();
+  this.docsUi.hide();
+};
+
+Main.prototype.switchDocsMode = function() {
+  this.loginUi.hide();
+  this.docsUi.show();
+};
+
+Main.prototype.drawUsername = function(username) {
+  this.usernameLabel.innerText = username;
 };
 
 Main.prototype.isLoggedIn = function() {
@@ -86,7 +120,7 @@ Main.prototype.sizing = function() {
   if (event.height < UI.MIN_HEIGHT) {
     event.height = UI.MIN_HEIGHT;
   }
-}
+};
 
 /**
  * Resize the gadget.
@@ -135,13 +169,13 @@ Main.prototype.draw = function() {
     searchClear.x = search.width + 2;
 
     searchField.draw();
-    
+
     uploadStatus.width = searchContainer.width - 2;
     uploadOption.x = uploadStatus.width - labelCalcWidth(uploadOption);
-    
+
     contentArea.width = mainDiv.width;
     contentArea.height = mainDiv.height - (searchStatus.height + 14) - 5;
-    
+
     contentContainer.width = contentArea.width - contentShadowRight.width;
     contentContainer.height = contentArea.height - contentShadowBottom.height;
 
@@ -155,18 +189,18 @@ Main.prototype.draw = function() {
     contentShadowBottomLeft.y = contentContainer.height;
     contentShadowBottomRight.x = contentContainer.width;
     contentShadowBottomRight.y = contentContainer.height;
-    
+
     commands.y = contentArea.height + contentArea.y + 5;
     commands.width = contentArea.width;
     commandsNewArrow.x = labelCalcWidth(commandsNew) + 2;
     commandsNewArrow.y = commandsNewArrow.height + 3;
-    
+
     commandsUpload.x = commandsNewArrow.x + commandsNewArrow.width + 7;
     commandsSignout.x = commands.width - (labelCalcWidth(commandsSignout) + 4);
-  
+
     newDocument.y = mainDiv.height - (newDocument.height - commands.height - 13);
   }
-}
+};
 
 // instantiate object in the global scope
 var gadget = new Main();
