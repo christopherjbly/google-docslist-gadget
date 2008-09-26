@@ -22,15 +22,32 @@ Main.prototype.onOpen = function() {
 
   view.onsize = this.draw.bind(this);
   view.onsizing = this.sizing.bind(this);
-  this.window = window;  // window is name of the div.
-  this.usernameLabel = child(this.window, 'username');
   this.auth = new Auth();
-  this.docsUi = new DocsUi(child(this.window, 'mainDiv'));
+
+  this.window = child(view, 'window');
   this.loginUi = new LoginUi(child(this.window, 'loginDiv'));
   this.loginUi.onLogin = this.onLogin.bind(this);
+  this.mainDiv = child(this.window, 'mainDiv');
+  this.usernameLabel = child(this.window, 'username');
+  this.docsUi = new DocsUi(child(this.mainDiv, 'contentArea'));
   this.sortUi = new SortUi(sortOptionsArea);  // sortOptionsArea is name of div.
+  this.sortUi.onChange = this.onSortChange.bind(this);
+
+  this.commandsDiv = child(this.mainDiv, 'commands');
+  this.uploadCommand = child(this.commandsDiv, 'commandsUpload');
+  this.signoutCommand = child(this.commandsDiv, 'commandsSignout');
+  this.newCommandArrow = child(this.commandsDiv, 'commandsNewArrow');
+  this.newCommand = child(this.commandsDiv, 'commandsNew');
 
   this.draw();
+};
+
+Main.prototype.onSortChange = function() {
+  if (this.sortUi.isDate()) {
+    debug.trace('date');
+  } else {
+    debug.trace('aint');
+  }
 };
 
 Main.prototype.onLogin = function(username, password, isRemember) {
@@ -66,14 +83,22 @@ Main.prototype.stopRetrieve = function() {
   this.clearInterval(this.retrieveTimer);
 };
 
+Main.prototype.showMainUi = function() {
+  this.mainDiv.visible = true;
+};
+
+Main.prototype.hideMainUi = function() {
+  this.mainDiv.visible = false;
+};
+
 Main.prototype.switchLoginMode = function() {
   this.loginUi.show();
-  this.docsUi.hide();
+  this.hideMainUi();
 };
 
 Main.prototype.switchDocsMode = function() {
   this.loginUi.hide();
-  this.docsUi.show();
+  this.showMainUi();
 };
 
 Main.prototype.drawUsername = function(username) {
@@ -127,6 +152,8 @@ Main.prototype.sizing = function() {
  * Resize the gadget.
  */
 Main.prototype.draw = function() {
+  // resize sub UI's here.
+
   window.width = view.width - 2;
   window.height = view.height - 9;
 
@@ -182,6 +209,8 @@ Main.prototype.draw = function() {
 
     doclist.draw();
 
+    this.sortUi.draw();
+
     contentShadowBottom.width = contentContainer.width - contentShadowBottomLeft.width;
     contentShadowRight.height = contentArea.height - contentShadowBottomRight.height;
     contentShadowBottom.x = contentShadowBottomLeft.width;
@@ -191,15 +220,14 @@ Main.prototype.draw = function() {
     contentShadowBottomRight.x = contentContainer.width;
     contentShadowBottomRight.y = contentContainer.height;
 
-    commands.y = contentArea.height + contentArea.y + 5;
-    commands.width = contentArea.width;
-    commandsNewArrow.x = labelCalcWidth(commandsNew) + 2;
-    commandsNewArrow.y = commandsNewArrow.height + 3;
-
-    commandsUpload.x = commandsNewArrow.x + commandsNewArrow.width + 7;
-    commandsSignout.x = commands.width - (labelCalcWidth(commandsSignout) + 4);
-
-    newDocument.y = mainDiv.height - (newDocument.height - commands.height - 13);
+    this.commandsDiv.y = contentArea.height + contentArea.y + 5;
+    this.commandsDiv.width = contentArea.width;
+    this.newCommandArrow.x = labelCalcWidth(this.newCommand) + 2;
+    this.newCommandArrow.y = this.newCommandArrow.height + 3;
+    this.uploadCommand.x = this.newCommandArrow.x +
+        this.newCommandArrow.width + 7;
+    this.signoutCommand.x = this.commandsDiv.width - (labelCalcWidth(this.signoutCommand) + 4);
+    newDocument.y = mainDiv.height - (newDocument.height - this.commandsDiv.height - 13);
   }
 };
 

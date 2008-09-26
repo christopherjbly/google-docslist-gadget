@@ -2,18 +2,9 @@
  * Constructor for Doclist class.
  */
 function DocsUi(mainDiv) {
-  this.mainDiv = mainDiv;
-  this.content = child(this.mainDiv, 'contentArea');
+  this.content = mainDiv;
   this.draw();
 }
-
-DocsUi.prototype.hide = function() {
-  this.mainDiv.visible = false;
-};
-
-DocsUi.prototype.show = function() {
-  this.mainDiv.visible = true;
-};
 
 DocsUi.prototype.clear = function() {
   this.content.removeAllElements();
