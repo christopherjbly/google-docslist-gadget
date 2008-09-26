@@ -9,11 +9,10 @@ function AuthHTTPRequest(httpRequest, auth) {
 AuthHTTPRequest.prototype.connect = function (url, data, handler, failedHandler,
     headers, isFile) {
   headers = headers || {};
-
   headers['Authorization'] = 'GoogleLogin auth=' + this.auth.token;
 
   this.httpRequest.connect(url, data, handler, failedHandler,
-    headers, isFile);
+      headers, isFile);
 };
 
 HTTPRequest.TIME_BETWEEN_REQUESTS = 1000;  // 1 second.
