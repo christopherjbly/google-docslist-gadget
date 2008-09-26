@@ -1,4 +1,5 @@
 var g_httpRequest;
+var g_authHttpRequest;
 var g_errorMessage;
 
 /**
@@ -23,6 +24,7 @@ Main.prototype.onOpen = function() {
   view.onsize = this.draw.bind(this);
   view.onsizing = this.sizing.bind(this);
   this.auth = new Auth();
+  this.docsFeed = new DocsFeed();
 
   this.window = child(view, 'window');
 
@@ -85,6 +87,7 @@ Main.prototype.onLogin = function(username, password, isRemember) {
 };
 
 Main.prototype.onLoginSuccess = function() {
+  g_authHttpRequest = new AuthHTTPRequest(g_httpRequest, this.auth);
   this.loginUi.reset();
   this.drawUsername(this.auth.username);
   this.switchDocsMode();
@@ -108,7 +111,15 @@ Main.prototype.logout = function() {
 Main.RETRIEVE_INTERVAL = 60 * 1000;
 
 Main.prototype.retrieve = function() {
-  debug.error('foo');
+  this.docsFeed.retrieve(this.onRetrieve.bind(this),
+      this.onRetrieveFail.bind(this));
+};
+
+Main.prototype.onRetrieve = function(docs) {
+  alert('');
+};
+
+Main.prototype.onRetrieveFail = function() {
 };
 
 Main.prototype.startRetrieve = function() {

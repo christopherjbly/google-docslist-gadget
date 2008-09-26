@@ -12,29 +12,6 @@ function Doclist() {
 }
 
 /**
- * Open doclist after login
- */
-Doclist.prototype.login = function() {
-  loginDiv.visible = false;
-  mainDiv.visible = true;
-  gadget.draw();
-  this.startTimeout();
-}
-
-/**
-* Close doclist after logout
-*/
-Doclist.prototype.logout = function() {
-  this.reset();
-
-  loginDiv.visible = true;
-  mainDiv.visible = false;
-  gadget.draw();
-
-  this.clearTimeout();
-}
-
-/**
 * Reset doclist
 */
 Doclist.prototype.reset = function() {
@@ -47,66 +24,6 @@ Doclist.prototype.reset = function() {
   uploader.close();
 }
 
-
-/**
-* Start refresh timer
-*/
-Doclist.prototype.startTimeout = function() {
-  this.clearTimeout();
-  this.get();
-  this.timer = view.setTimeout(this.get.bind(this), CONNECTION.REFRESH_INTERVAL);
-};
-
-/**
-* Clear refresh timer
-*/
-Doclist.prototype.clearTimeout = function() {
-  if (this.timer) {
-    view.clearTimeout(this.timer);
-    this.timer = null;
-  }
-};
-
-Doclist.prototype.getFeedUrl = function(startIndex, opt_searchQuery) {
-  var url = CONNECTION.DOCS_URL;
-  var params = {};
-  params[CONNECTION.MAX_RESULTS_PARAM] = CONNECTION.MAX_RESULTS;
-  params[CONNECTION.START_INDEX_PARAM] = startIndex;
-
-  if (opt_searchQuery) {
-    params[CONNECTION.SEARCH_PARAM] = opt_searchQuery;
-  }
-
-  return url + '?' + params.toQueryString();
-};
-
-/**
- * Get doclist
- */
-Doclist.prototype.get = function() {
-  this.getChunk();
-}
-
-Doclist.DOCS_THRESHOLD = 50;
-
-Doclist.prototype.getChunk = function(opt_startIndex, opt_searchQuery) {
-  var startIndex = opt_startIndex || 1;
-
-  if (startIndex >= Doclist.DOCS_THRESHOLD) {
-    // Don't continue if we're past the threshold.
-    return;
-  }
-
-  httpRequest.host = CONNECTION.DOCS_HOST;
-  httpRequest.url = this.getFeedUrl(startIndex, opt_searchQuery);
-  httpRequest.addHeader('Authorization', 'GoogleLogin auth='+loginSession.token);
-
-  if (opt_searchQuery) {
-    httpRequest.connect('', this.searchSuccess.bind(this), this.getError.bind(this));
-  } else {
-    httpRequest.connect('', this.getSuccess.bind(this), this.getError.bind(this));
-  }
-}
 
 /**
  * Search doclist

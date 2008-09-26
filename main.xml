@@ -14,6 +14,7 @@
   <script src="docs_ui.js" />
   <script src="doclist.js" />
   <script src="login_ui.js" />
+  <script src="docs_feed.js" />
   <script src="main.js" />
 
   <div x="2" y="9" name="window" enabled="true">

@@ -48,6 +48,7 @@ LoginUi.prototype.reset = function() {
   this.userField.value = '';
   this.passwordField.value = '';
   this.rememberCheck.value = false;
+  this.rememberCheckFocus.visible = false;
 };
 
 LoginUi.prototype.onUserKeyPress = function() {
