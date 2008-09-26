@@ -7,16 +7,6 @@ var REPORTED_CLIENT_NAME = 'gd-docslist-gadget-' + strings.VERSION_STRING;
 
 // TODO: move these to files.
 
-var CONNECTION = {
-  REFRESH_INTERVAL: 5 * 60 * 1000,  // 60 seconds
-
-  DOCS_HOST: 'docs.google.com',
-  DOCS_URL: 'https://docs.google.com/feeds/documents/private/full',
-  MAX_RESULTS_PARAM: 'max-results',
-  MAX_RESULTS: 25,
-  SEARCH_PARAM: 'q',
-  START_INDEX_PARAM: 'start-index' };
-
 var UI = {
   MIN_WIDTH: 170,
   MIN_HEIGHT: 200,

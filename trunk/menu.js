@@ -1,6 +1,7 @@
 function DocumentMenu(mainDiv) {
-  this.mainDiv = mainDiv;
   this.onSelected = null;
+
+  this.mainDiv = mainDiv;
   this.list = child(this.mainDiv, 'newDocumentOptions');
 
   this.formItem = child(this.list, 'newDocumentForm');

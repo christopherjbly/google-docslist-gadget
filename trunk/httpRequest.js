@@ -1,6 +1,21 @@
 // Copyright 2007 Google Inc.
 // All Rights Reserved.
 
+function AuthHTTPRequest(httpRequest, auth) {
+  this.httpRequest = httpRequest;
+  this.auth = auth;
+}
+
+AuthHTTPRequest.prototype.connect = function (url, data, handler, failedHandler,
+    headers, isFile) {
+  headers = headers || {};
+
+  headers['Authorization'] = 'GoogleLogin auth=' + this.auth.token;
+
+  this.httpRequest.connect(url, data, handler, failedHandler,
+    headers, isFile);
+};
+
 HTTPRequest.TIME_BETWEEN_REQUESTS = 1000;  // 1 second.
 HTTPRequest.TIMEOUT = 30000;  // 30 seconds.
 
