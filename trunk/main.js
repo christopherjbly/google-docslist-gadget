@@ -25,6 +25,7 @@ Main.prototype.onOpen = function() {
   this.auth = new Auth();
 
   this.window = child(view, 'window');
+
   this.loginUi = new LoginUi(child(this.window, 'loginDiv'));
   this.loginUi.onLogin = this.onLogin.bind(this);
   this.mainDiv = child(this.window, 'mainDiv');
@@ -35,11 +36,38 @@ Main.prototype.onOpen = function() {
 
   this.commandsDiv = child(this.mainDiv, 'commands');
   this.uploadCommand = child(this.commandsDiv, 'commandsUpload');
+  this.uploadCommand.onclick = this.onUploadClick.bind(this);
   this.signoutCommand = child(this.commandsDiv, 'commandsSignout');
+  this.signoutCommand.onclick = this.onSignoutClick.bind(this);
   this.newCommandArrow = child(this.commandsDiv, 'commandsNewArrow');
   this.newCommand = child(this.commandsDiv, 'commandsNew');
+  this.newCommand.onclick = this.onNewClick.bind(this);
+
+  this.menuUi = new DocumentMenu(child(this.window, 'newDocument'));
+  this.menuUi.onSelected = this.onMenuSelected.bind(this);
+
+  this.window.onclick = this.onWindowClick.bind(this);
 
   this.draw();
+};
+
+Main.prototype.onWindowClick = function() {
+  this.menuUi.close();
+};
+
+Main.prototype.onMenuSelected = function(type) {
+  this.launchNewDocument(type);
+};
+
+Main.prototype.onUploadClick = function() {
+};
+
+Main.prototype.onSignoutClick = function() {
+  this.logout();
+};
+
+Main.prototype.onNewClick = function() {
+  this.menuUi.open();
 };
 
 Main.prototype.onSortChange = function() {
@@ -65,6 +93,16 @@ Main.prototype.onLoginSuccess = function() {
 
 Main.prototype.onLoginFailure = function(code, reason) {
   g_errorMessage.display(reason);
+};
+
+
+Main.prototype.launchNewDocument = function(type) {
+};
+
+Main.prototype.logout = function() {
+  this.auth.clear();
+  // TODO: Clear content.
+  this.switchLoginMode();
 };
 
 Main.RETRIEVE_INTERVAL = 60 * 1000;
@@ -226,7 +264,8 @@ Main.prototype.draw = function() {
     this.newCommandArrow.y = this.newCommandArrow.height + 3;
     this.uploadCommand.x = this.newCommandArrow.x +
         this.newCommandArrow.width + 7;
-    this.signoutCommand.x = this.commandsDiv.width - (labelCalcWidth(this.signoutCommand) + 4);
+    this.signoutCommand.x = this.commandsDiv.width -
+        (labelCalcWidth(this.signoutCommand) + 4);
     newDocument.y = mainDiv.height - (newDocument.height - this.commandsDiv.height - 13);
   }
 };

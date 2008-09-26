@@ -486,7 +486,8 @@ Doclist.prototype.draw = function() {
   
   // width and horizontal position
   
-//  sortOptions.draw();
+  // TODO:
+  //  sortOptions.draw();
   
   for (var i = 0; i < this.content.children.count; ++i) {
     var div = this.content.children.item(i);
@@ -500,7 +501,8 @@ Doclist.prototype.draw = function() {
       }
     }      
   }  
-  customScrollbar.draw();
+  // TODO:
+  // customScrollbar.draw();
 }
 
 /**
