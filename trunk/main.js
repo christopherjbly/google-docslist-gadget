@@ -17,6 +17,7 @@ Main.prototype.onOpen = function() {
 
   this.retrieveTimer = null;
   this.documents = [];
+  this.docsFeed = null;
 
   // Set up menu management handler.
   pluginHelper.onAddCustomMenuItems = this.onMenuItems.bind(this);
@@ -24,7 +25,6 @@ Main.prototype.onOpen = function() {
   view.onsize = this.draw.bind(this);
   view.onsizing = this.sizing.bind(this);
   this.auth = new Auth();
-  this.docsFeed = new DocsFeed();
 
   this.window = child(view, 'window');
 
@@ -111,15 +111,21 @@ Main.prototype.logout = function() {
 Main.RETRIEVE_INTERVAL = 60 * 1000;
 
 Main.prototype.retrieve = function() {
-  this.docsFeed.retrieve(this.onRetrieve.bind(this),
+  this.docsFeed = new DocsFeed(this.onRetrieve.bind(this),
       this.onRetrieveFail.bind(this));
+  this.docsFeed.retrieve();
 };
 
-Main.prototype.onRetrieve = function(docs) {
-  alert('');
+Main.prototype.onRetrieve = function(feed) {
+  debug.error(feed.documents.length);
+  /*
+  this.sort();
+  */
 };
 
 Main.prototype.onRetrieveFail = function() {
+  // TODO: what if not logged in?
+  this.logout();
 };
 
 Main.prototype.startRetrieve = function() {
