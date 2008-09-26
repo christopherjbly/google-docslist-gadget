@@ -1,41 +1,35 @@
-function DocumentMenu() {
-  this.isOpen = false;
+function DocumentMenu(mainDiv) {
+  this.mainDiv = mainDiv;
+  this.onSelected = null;
+  this.list = child(this.mainDiv, 'newDocumentOptions');
 
-  // MOVE
-  /*
-  commandsNew.onclick = this.open.bind(this);
-  commandsNewArrow.onclick = this.open.bind(this);
-  */
+  this.formItem = child(this.list, 'newDocumentForm');
+  this.presentationItem = child(this.list, 'newDocumentPresentation');
+  this.spreadsheetItem = child(this.list, 'newDocumentSpreadsheet');
+  this.documentItem = child(this.list, 'newDocumentDocument');
 
-  window.onclick = this.close.bind(this);
-
-  newDocumentForm.onclick = this.newDocument.bind(this);
-  newDocumentPresentation.onclick = this.newDocument.bind(this);
-  newDocumentSpreadsheet.onclick = this.newDocument.bind(this);
-  newDocumentDocument.onclick = this.newDocument.bind(this);
+  this.formItem.onclick = this.newDocument.bind(this);
+  this.presentationItem.onclick = this.newDocument.bind(this);
+  this.spreadsheetItem.onclick = this.newDocument.bind(this);
+  this.documentItem.onclick = this.newDocument.bind(this);
 }
 
 DocumentMenu.prototype.isOpen = function() {
-  return newDocument.visible;
+  return this.mainDiv.visible;
 };
 
 DocumentMenu.prototype.open = function() {
-  newDocument.visible = true;
+  this.mainDiv.visible = true;
 };
 
 DocumentMenu.prototype.close = function() {
-  newDocument.visible = false;
+  this.mainDiv.visible = false;
 };
 
 DocumentMenu.prototype.newDocument = function() {
   this.close();
-  if (!framework.system.network.online) {
-    errorMessage.display(strings.ERROR_SERVER_OR_NETWORK);
-    return;
-  }
-  if (NEW_DOC[event.srcElement.name]) {
-    framework.openUrl(NEW_DOC[event.srcElement.name]);
+
+  if (this.onSelected) {
+    this.onSelected(event.srcElement.name);
   }
 };
-
-var newDocumentMenu = new DocumentMenu();
