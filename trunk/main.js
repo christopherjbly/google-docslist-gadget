@@ -270,7 +270,7 @@ Main.prototype.resize = function() {
     this.signoutCommand.x = this.commandsDiv.width -
         (labelCalcWidth(this.signoutCommand) + 4);
     this.menuUi.mainDiv.y = mainDiv.height -
-        this.menuUi.mainDiv.height - this.commandsDiv.height - 13;
+        (this.menuUi.mainDiv.height - this.commandsDiv.height - 13);
   }
 };
 
