@@ -2,7 +2,9 @@
  * Constructor for Doclist class.
  */
 function DocsUi(mainDiv) {
-  this.content = mainDiv;
+  this.mainDiv = mainDiv;
+  this.container = child(this.mainDiv, 'contentContainer');
+  this.content = child(this.container, 'doclistContent');
   this.draw();
 }
 
@@ -84,7 +86,7 @@ DocsUi.prototype.draw = function() {
         this.drawUploader(div);
       } else {
       */
-        this.drawFiles(div);
+//        this.drawFiles(div);
 //      }
     }
   }
