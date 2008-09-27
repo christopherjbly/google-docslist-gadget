@@ -1,25 +1,45 @@
 /**
  * Constructor for SearchField class.
  */
-function SearchField() {
-  this.active = false;
-  this.defaultValue = search.value;
-  this.defaultColor = search.color;
+function SearchField(mainDiv) {
+  this.onSearch = null;
+  this.onReset = null;
 
-  search.onfocusin = this.activate.bind(this);
-  search.onclick = this.activate.bind(this);
+  this.mainDiv = mainDiv;
+  this.content = child(this.mainDiv, 'searchStatusContent');
+  this.leftBkg = child(this.mainDiv, 'searchStatusLeft');
+  this.rightBkg = child(this.mainDiv, 'searchStatusRight');
 
-  search.onfocusout = this.blur.bind(this);
-  search.onchange = this.autofill.bind(this);
-  search.onkeydown = this.keydown.bind(this);
+  this.area = child(this.content, 'searchArea');
+  this.container = child(this.area, 'searchContainer');
+  this.field = child(this.container, 'search');
+  this.clearButton = child(this.container, 'searchClear');
 
-  searchClear.onclick = this.reset.bind(this);
+  this.defaultValue = this.field.value;
+  this.defaultColor = this.field.color;
+
+  this.field.onfocusin = this.activate.bind(this);
+  this.field.onclick = this.activate.bind(this);
+
+  this.field.onfocusout = this.blur.bind(this);
+  this.field.onchange = this.autofill.bind(this);
+  this.field.onkeydown = this.keydown.bind(this);
+
+  this.clearButton.onclick = this.reset.bind(this);
 }
 
-/**
- * Draw autofill
- */
-SearchField.prototype.draw = function() {
+SearchField.prototype.resize = function(width) {
+  this.mainDiv.width = width;
+  this.content.width = this.mainDiv.width -
+      this.leftBkg.width + this.rightBkg.width;
+  this.rightBkg.x = this.content.width + this.content.x;
+
+  this.area.width = this.mainDiv.width - 24;
+  this.container.width = this.area.width - 2;
+  this.field.width = this.container.width - 23;
+  this.clearButton.x = this.field.width + 2;
+
+  /*
   autoFill.width = searchArea.width + (autoFillTopRight.width + 1);
   autoFillTopCenter.width = autoFill.width - (autoFillTopLeft.width + autoFillTopRight.width);
   autoFillOptions.width = autoFillTopCenter.width;
@@ -48,85 +68,72 @@ SearchField.prototype.draw = function() {
   autoFillBottomRight.y = y + autoFillTopRight.height;
   autoFillMiddleLeft.height = y;
   autoFillMiddleRight.height = y;
-}
+  */
+};
 
-/**
- * Activate search field
- */
 SearchField.prototype.activate = function() {
-  if (search.value != this.defaultValue) return;
-  this.active = true;
-  search.value = '';
-  search.color = '#000000';
-  searchClear.visible = true;
-}
+  if (this.field.value != this.defaultValue) {
+    return;
+  }
+  this.field.value = '';
+  this.field.color = '#000000';
+  this.field.visible = true;
+};
 
-/**
- * Blur search field
- */
 SearchField.prototype.blur = function() {
-  if (!search.value.trim()) {
+  if (!trim(this.field.value)) {
     this.reset();
   }
-}
+};
 
-/**
- * Reset search field
- */
 SearchField.prototype.reset = function() {
-  var refresh = this.active;
-  this.active = false;
-  if (refresh) doclist.refresh();
+  if (this.onReset) {
+    this.onReset();
+  }
 
-  search.value = this.defaultValue;
-  search.color = this.defaultColor;
-  searchClear.visible = false;
-  autoFill.visible = false;
-  doclist.autofillSelected = false;
+  this.field.value = this.defaultValue;
+  this.field.color = this.defaultColor;
+  this.clearButton.visible = false;
+//  autoFill.visible = false;
+//  doclist.autofillSelected = false;
+//  window.focus();
+};
 
-  window.focus();
-}
-
-/**
- * Keyboard controls
- */
 SearchField.prototype.keydown = function() {
   switch(event.keycode) {
-
     case KEYS.ESCAPE:
       this.reset();
       break;
-
     case KEYS.ENTER:
+      if (this.onSearch) {
+        this.onSearch();
+      }
+      /*
       if (doclist.autofillSelected !== false) {
         doclist.autofillChoose();
       } else {
         doclist.search();
       }
+      */
       break;
-
     case KEYS.UP:
-      doclist.autofillUp();
+      // doclist.autofillUp();
       break;
-
     case KEYS.DOWN:
-      doclist.autofillDown();
+      // doclist.autofillDown();
       break;
   }
-}
+};
 
-/**
- * Fill in autofill popdown
- */
 SearchField.prototype.autofill = function() {
-  if (!search.value.trim()) {
+  /*
+  if (!trim(search.value)) {
     autoFill.visible = false;
     return;
   }
 
   autoFill.visible = doclist.autofillSearch();
   this.draw();
-}
+  */
 
-// instantiate object in the global scope
-var searchField = new SearchField();
+};

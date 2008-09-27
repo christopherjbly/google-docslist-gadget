@@ -84,21 +84,15 @@ SortUi.prototype.draw = function() {
   }
 };
 
-SortUi.prototype.resize = function(width) {
-  this.mainDiv.width = width;
+SortUi.prototype.resize = function(fullWidth, nameWidth) {
+  this.mainDiv.width = fullWidth;
   this.mainDiv.x = 2;
 
-  this.nameColumn.width = Math.ceil((2/3) * this.mainDiv.width);
-  if (scrollbar.visible && this.dateColumn.width < UI.MIN_DATE_WIDTH) {
-    this.nameColumn.width = this.mainDiv.width - UI.MIN_DATE_WIDTH;
-    this.dateColumn.width = UI.MIN_DATE_WIDTH;
-  }
+  this.nameColumn.width = nameWidth;
   this.nameDateDivider.x = this.nameColumn.width;
   this.dateNameDivider.x = this.nameColumn.width;
-
   this.dateColumn.x = this.nameDateDivider.width + this.nameDateDivider.x;
-  this.dateColumn.width = this.mainDiv.width -
-      (this.nameColumn.width + this.nameDateDivider.width);
+  this.dateColumn.width = this.mainDiv.width - this.dateColumn.x;
 
   this.nameArrow.x = this.nameColumn.width - (this.nameArrow.width + 5);
   this.dateArrow.x = this.dateColumn.width - (this.dateArrow.width + 5);
