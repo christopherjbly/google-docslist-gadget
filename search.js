@@ -31,14 +31,13 @@ function SearchField(mainDiv) {
 SearchField.prototype.resize = function(width) {
   this.mainDiv.width = width;
   this.content.width = this.mainDiv.width -
-      this.leftBkg.width + this.rightBkg.width;
+      (this.leftBkg.width + this.rightBkg.width);
   this.rightBkg.x = this.content.width + this.content.x;
 
   this.area.width = this.mainDiv.width - 24;
   this.container.width = this.area.width - 2;
   this.field.width = this.container.width - 23;
   this.clearButton.x = this.field.width + 2;
-
   /*
   autoFill.width = searchArea.width + (autoFillTopRight.width + 1);
   autoFillTopCenter.width = autoFill.width - (autoFillTopLeft.width + autoFillTopRight.width);
@@ -77,7 +76,7 @@ SearchField.prototype.activate = function() {
   }
   this.field.value = '';
   this.field.color = '#000000';
-  this.field.visible = true;
+  this.clearButton.visible = true;
 };
 
 SearchField.prototype.blur = function() {
