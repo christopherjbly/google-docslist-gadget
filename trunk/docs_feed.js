@@ -52,6 +52,11 @@ DocsFeed.prototype.retrieveChunk = function(startIndex) {
 
 DocsFeed.prototype.onRetrieve = function(response) {
   var feed = this.parseFeed(response);
+
+  if (!feed) {
+    return;
+  }
+
   this.callback(feed);
 
   var nextIndex = feed.startIndex + feed.itemsPerPage;
@@ -81,11 +86,6 @@ DocsFeed.prototype.parseFeed = function(response) {
   }
 
   doc.loadXML(response);
-
-  if (doc.documentElement.tagName != 'feed') {
-    debug.error('Could not load XML.');
-    return;
-  }
 
   var feed = {};
   feed.totalResults = Number(

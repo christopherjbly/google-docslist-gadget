@@ -29,6 +29,15 @@ function LoginUi(mainDiv) {
   this.reset();
 }
 
+LoginUi.prototype.resize = function(width, height) {
+  this.mainDiv.width = width;
+  this.mainDiv.height = height;
+  this.userField.width = this.passwordField.width = this.mainDiv.width -
+      this.userField.x - this.userField.x;
+  this.loginButton.x = this.mainDiv.width - this.loginButton.width;
+  this.loginButton.y = this.mainDiv.height - (this.loginButton.height + 10);
+};
+
 LoginUi.prototype.hide = function() {
   this.mainDiv.visible = false;
 };

@@ -6,14 +6,10 @@ var g_errorMessage;
  * Constructor for Main class.
  */
 function Main() {
-}
-
-/**
- * Draw the gadget when the view opens.
- */
-Main.prototype.onOpen = function() {
   g_httpRequest = new HTTPRequest();
   g_errorMessage = new ErrorMessage();
+
+  this.auth = new Auth();
 
   this.retrieveTimer = null;
   this.documents = [];
@@ -22,10 +18,6 @@ Main.prototype.onOpen = function() {
   // Set up menu management handler.
   pluginHelper.onAddCustomMenuItems = this.onMenuItems.bind(this);
 
-  view.onsize = this.draw.bind(this);
-  view.onsizing = this.sizing.bind(this);
-  this.auth = new Auth();
-
   this.window = child(view, 'window');
 
   this.loginUi = new LoginUi(child(this.window, 'loginDiv'));
@@ -33,7 +25,7 @@ Main.prototype.onOpen = function() {
   this.mainDiv = child(this.window, 'mainDiv');
   this.usernameLabel = child(this.window, 'username');
   this.docsUi = new DocsUi(child(this.mainDiv, 'contentArea'));
-  this.sortUi = new SortUi(sortOptionsArea);  // sortOptionsArea is name of div.
+  this.sortUi = new SortUi(child(this.mainDiv, 'sortOptionsArea'));
   this.sortUi.onChange = this.onSortChange.bind(this);
 
   this.commandsDiv = child(this.mainDiv, 'commands');
@@ -50,8 +42,10 @@ Main.prototype.onOpen = function() {
 
   this.window.onclick = this.onWindowClick.bind(this);
 
-  this.draw();
-};
+  view.onsize = this.resize.bind(this);
+  view.onsizing = this.sizing.bind(this);
+  this.resize();
+}
 
 Main.prototype.onWindowClick = function() {
   this.menuUi.close();
@@ -117,7 +111,14 @@ Main.prototype.retrieve = function() {
 };
 
 Main.prototype.onRetrieve = function(feed) {
-  debug.error(feed.documents.length);
+  if (feed.startIndex == 1) {
+    this.documents = feed.documents;
+  } else {
+    this.documents.concat(feed.documents);
+  }
+  this.docsUi.clear();
+  this.docsUi.drawDocuments(this.documents);
+
   /*
   this.sort();
   */
@@ -203,12 +204,7 @@ Main.prototype.sizing = function() {
   }
 };
 
-/**
- * Resize the gadget.
- */
-Main.prototype.draw = function() {
-  // resize sub UI's here.
-
+Main.prototype.resize = function() {
   window.width = view.width - 2;
   window.height = view.height - 9;
 
@@ -221,22 +217,18 @@ Main.prototype.draw = function() {
 
   middleLeftMainBg.height = middleCenterMainBg.height =
       middleRightMainBg.height = bottomRightMainBg.y - middleLeftMainBg.y;
+
   // Adjust the positions of a images to move to the top right corner
   var loadingWidth = labelCalcWidth(loadingLabel);
   loading.x = window.width - (loadingWidth + 12);
   loading.width = loadingWidth;
 
+  // resize sub UI's here.
+  this.loginUi.resize(window.width - 24, window.height - 50);
+
   var searchingWidth = labelCalcWidth(searchingLabel);
   searching.x = window.width - (searchingWidth + 12);
   searching.width = searchingWidth;
-
-  if (loginDiv.visible) {
-    loginDiv.width = window.width - 24;
-    loginDiv.height = window.height - 50;
-    user.width = pass.width = loginDiv.width - user.x - user.x;
-    login.x = loginDiv.width - login.width;
-    login.y = loginDiv.height - (login.height + 10);
-  }
 
   if (mainDiv.visible) {
     mainDiv.width = window.width - 16;
@@ -264,7 +256,7 @@ Main.prototype.draw = function() {
 
     doclist.draw();
 
-    this.sortUi.draw();
+    this.sortUi.resize(mainDiv.width - 6);
 
     contentShadowBottom.width = contentContainer.width - contentShadowBottomLeft.width;
     contentShadowRight.height = contentArea.height - contentShadowBottomRight.height;
@@ -289,4 +281,3 @@ Main.prototype.draw = function() {
 
 // instantiate object in the global scope
 var gadget = new Main();
-

@@ -61,24 +61,6 @@ SortUi.ACTIVE_BG = 'images/active-bg.gif';
 SortUi.INACTIVE_BG = 'images/inactive-bg.gif';
 
 SortUi.prototype.draw = function() {
-  this.mainDiv.width = mainDiv.width - 6;
-  this.mainDiv.x = 2;
-
-  this.nameColumn.width = Math.ceil((2/3) * this.mainDiv.width);
-  if (scrollbar.visible && this.dateColumn.width < UI.MIN_DATE_WIDTH) {
-    this.nameColumn.width = this.mainDiv.width - UI.MIN_DATE_WIDTH;
-    this.dateColumn.width = UI.MIN_DATE_WIDTH;
-  }
-  this.nameDateDivider.x = this.nameColumn.width;
-  this.dateNameDivider.x = this.nameColumn.width;
-
-  this.dateColumn.x = this.nameDateDivider.width + this.nameDateDivider.x;
-  this.dateColumn.width = this.mainDiv.width -
-      (this.nameColumn.width + this.nameDateDivider.width);
-
-  this.nameArrow.x = this.nameColumn.width - (this.nameArrow.width + 5);
-  this.dateArrow.x = this.dateColumn.width - (this.dateArrow.width + 5);
-
   if (this.active == SortUi.DATE_OPTION) {
     this.dateColumn.background = SortUi.ACTIVE_BG ;
     this.nameColumn.background = SortUi.INACTIVE_BG;
@@ -100,4 +82,24 @@ SortUi.prototype.draw = function() {
     this.nameArrow.visible = true;
     this.dateArrow.visible = false;
   }
+};
+
+SortUi.prototype.resize = function(width) {
+  this.mainDiv.width = width;
+  this.mainDiv.x = 2;
+
+  this.nameColumn.width = Math.ceil((2/3) * this.mainDiv.width);
+  if (scrollbar.visible && this.dateColumn.width < UI.MIN_DATE_WIDTH) {
+    this.nameColumn.width = this.mainDiv.width - UI.MIN_DATE_WIDTH;
+    this.dateColumn.width = UI.MIN_DATE_WIDTH;
+  }
+  this.nameDateDivider.x = this.nameColumn.width;
+  this.dateNameDivider.x = this.nameColumn.width;
+
+  this.dateColumn.x = this.nameDateDivider.width + this.nameDateDivider.x;
+  this.dateColumn.width = this.mainDiv.width -
+      (this.nameColumn.width + this.nameDateDivider.width);
+
+  this.nameArrow.x = this.nameColumn.width - (this.nameArrow.width + 5);
+  this.dateArrow.x = this.dateColumn.width - (this.dateArrow.width + 5);
 };
