@@ -27,7 +27,10 @@ function Main() {
   this.docsUi = new DocsUi(child(this.mainDiv, 'contentArea'));
   this.sortUi = new SortUi(child(this.mainDiv, 'sortOptionsArea'));
   this.sortUi.onChange = this.onSortChange.bind(this);
-  this.searchUi = new SearchField(child(this.mainDiv, 'searchStatus'));
+  this.searchUi = new SearchUi(child(this.mainDiv, 'searchStatus'),
+      child(this.window, 'autoFill'));
+  this.searchUi.onSearch = this.onSearch.bind(this);
+  this.searchUi.onReset = this.onSearchReset.bind(this);
 
   this.commandsDiv = child(this.mainDiv, 'commands');
   this.uploadCommand = child(this.commandsDiv, 'commandsUpload');
@@ -47,6 +50,14 @@ function Main() {
   view.onsizing = this.sizing.bind(this);
   this.resize();
 }
+
+Main.prototype.onSearch = function() {
+  alert('cool');
+};
+
+Main.prototype.onSearchReset = function() {
+  this.window.focus();
+};
 
 Main.prototype.onWindowClick = function() {
   this.menuUi.close();

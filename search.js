@@ -1,7 +1,7 @@
 /**
- * Constructor for SearchField class.
+ * Constructor for SearchUi class.
  */
-function SearchField(mainDiv) {
+function SearchUi(mainDiv, autofillDiv) {
   this.onSearch = null;
   this.onReset = null;
 
@@ -14,6 +14,9 @@ function SearchField(mainDiv) {
   this.container = child(this.area, 'searchContainer');
   this.field = child(this.container, 'search');
   this.clearButton = child(this.container, 'searchClear');
+
+  this.autofillDiv = autofillDiv;
+  this.autofillContent = child(this.autofillDiv, 'autoFillOptions');
 
   this.defaultValue = this.field.value;
   this.defaultColor = this.field.color;
@@ -28,7 +31,7 @@ function SearchField(mainDiv) {
   this.clearButton.onclick = this.reset.bind(this);
 }
 
-SearchField.prototype.resize = function(width) {
+SearchUi.prototype.resize = function(width) {
   this.mainDiv.width = width;
   this.content.width = this.mainDiv.width -
       (this.leftBkg.width + this.rightBkg.width);
@@ -38,10 +41,20 @@ SearchField.prototype.resize = function(width) {
   this.container.width = this.area.width - 2;
   this.field.width = this.container.width - 23;
   this.clearButton.x = this.field.width + 2;
-  /*
-  autoFill.width = searchArea.width + (autoFillTopRight.width + 1);
-  autoFillTopCenter.width = autoFill.width - (autoFillTopLeft.width + autoFillTopRight.width);
-  autoFillOptions.width = autoFillTopCenter.width;
+
+  var autoFillTopLeft = child(this.autofillDiv, 'autoFillTopLeft');
+  var autoFillTopCenter = child(this.autofillDiv, 'autoFillTopCenter');
+  var autoFillTopRight = child(this.autofillDiv, 'autoFillTopRight');
+  var autoFillMiddleLeft = child(this.autofillDiv, 'autoFillMiddleLeft');
+  var autoFillMiddleRight = child(this.autofillDiv, 'autoFillMiddleRight');
+  var autoFillBottomLeft = child(this.autofillDiv, 'autoFillBottomLeft');
+  var autoFillBottomCenter = child(this.autofillDiv, 'autoFillBottomCenter');
+  var autoFillBottomRight = child(this.autofillDiv, 'autoFillBottomRight');
+
+  this.autofillDiv.width = this.mainDiv.width + (autoFillTopRight.width + 1);
+  autoFillTopCenter.width = this.autofillDiv.width -
+      (autoFillTopLeft.width + autoFillTopRight.width);
+  this.autofillContent.width = autoFillTopCenter.width;
   autoFillBottomCenter.width = autoFillTopCenter.width;
 
   autoFillTopRight.x = autoFillTopCenter.x + autoFillTopCenter.width;
@@ -49,28 +62,29 @@ SearchField.prototype.resize = function(width) {
   autoFillBottomRight.x = autoFillTopRight.x;
 
   var y = 0;
-  for (var i=0; i<autoFillOptions.children.count; i++) {
-    var div = autoFillOptions.children.item(i);
-    div.width = autoFillOptions.width;
+
+  for (var i = 0; i < this.autofillContent.children.count; ++i) {
+    var div = this.autofillContent.children.item(i);
+    div.width = this.autofillContent.width;
     div.y = y;
     y += div.height;
 
+    // TODO: don't do item(#)
     if (div.children.count == 2) {
-      div.children.item(1).width = autoFillOptions.width - div.children.item(1).x - 5;
+      div.children.item(1).width = this.autofillContent.width - div.children.item(1).x - 5;
     }
   }
 
-  autoFillOptions.height = y;
-  autoFill.height = autoFillOptions.height + autoFillTopCenter.height + autoFillBottomCenter.height;
+  this.autofillContent.height = y;
+  this.autofillDiv.height = this.autofillContent.height + autoFillTopCenter.height + autoFillBottomCenter.height;
   autoFillBottomLeft.y = y + autoFillTopLeft.height;
   autoFillBottomCenter.y = y + autoFillTopCenter.height;
   autoFillBottomRight.y = y + autoFillTopRight.height;
   autoFillMiddleLeft.height = y;
   autoFillMiddleRight.height = y;
-  */
 };
 
-SearchField.prototype.activate = function() {
+SearchUi.prototype.activate = function() {
   if (this.field.value != this.defaultValue) {
     return;
   }
@@ -79,26 +93,23 @@ SearchField.prototype.activate = function() {
   this.clearButton.visible = true;
 };
 
-SearchField.prototype.blur = function() {
+SearchUi.prototype.blur = function() {
   if (!trim(this.field.value)) {
     this.reset();
   }
 };
 
-SearchField.prototype.reset = function() {
-  if (this.onReset) {
-    this.onReset();
-  }
-
+SearchUi.prototype.reset = function() {
   this.field.value = this.defaultValue;
   this.field.color = this.defaultColor;
   this.clearButton.visible = false;
-//  autoFill.visible = false;
-//  doclist.autofillSelected = false;
-//  window.focus();
+
+  if (this.onReset) {
+    this.onReset();
+  }
 };
 
-SearchField.prototype.keydown = function() {
+SearchUi.prototype.keydown = function() {
   switch(event.keycode) {
     case KEYS.ESCAPE:
       this.reset();
@@ -124,7 +135,7 @@ SearchField.prototype.keydown = function() {
   }
 };
 
-SearchField.prototype.autofill = function() {
+SearchUi.prototype.autofill = function() {
   /*
   if (!trim(search.value)) {
     autoFill.visible = false;
