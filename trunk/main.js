@@ -27,6 +27,7 @@ function Main() {
   this.docsUi = new DocsUi(child(this.mainDiv, 'contentArea'));
   this.sortUi = new SortUi(child(this.mainDiv, 'sortOptionsArea'));
   this.sortUi.onChange = this.onSortChange.bind(this);
+  this.searchUi = new SearchField(child(this.mainDiv, 'searchStatus'));
 
   this.commandsDiv = child(this.mainDiv, 'commands');
   this.uploadCommand = child(this.commandsDiv, 'commandsUpload');
@@ -116,6 +117,7 @@ Main.prototype.onRetrieve = function(feed) {
   } else {
     this.documents.concat(feed.documents);
   }
+
   this.docsUi.clear();
   this.docsUi.drawDocuments(this.documents);
 
@@ -214,7 +216,6 @@ Main.prototype.resize = function() {
       topRightMainBg.x - topCenterMainBg.x;
   bottomRightMainBg.y = bottomCenterMainBg.y = bottomLeftMainBg.y =
       window.height - bottomLeftMainBg.height;
-
   middleLeftMainBg.height = middleCenterMainBg.height =
       middleRightMainBg.height = bottomRightMainBg.y - middleLeftMainBg.y;
 
@@ -223,27 +224,18 @@ Main.prototype.resize = function() {
   loading.x = window.width - (loadingWidth + 12);
   loading.width = loadingWidth;
 
-  // resize sub UI's here.
-  this.loginUi.resize(window.width - 24, window.height - 50);
-
   var searchingWidth = labelCalcWidth(searchingLabel);
   searching.x = window.width - (searchingWidth + 12);
   searching.width = searchingWidth;
+
+  // resize sub UI's here.
+  this.loginUi.resize(window.width - 24, window.height - 50);
 
   if (mainDiv.visible) {
     mainDiv.width = window.width - 16;
     mainDiv.height = window.height - 46;
 
-    searchStatus.width = mainDiv.width;
-    searchStatusContent.width = mainDiv.width - (searchStatusLeft.width + searchStatusRight.width);
-    searchStatusRight.x = searchStatusContent.width + searchStatusContent.x;
-
-    searchArea.width = searchStatus.width - 24;
-    searchContainer.width = searchArea.width - 2;
-    search.width = searchContainer.width - 23;
-    searchClear.x = search.width + 2;
-
-    searchField.draw();
+    this.searchUi.resize(mainDiv.width);
 
     uploadStatus.width = searchContainer.width - 2;
     uploadOption.x = uploadStatus.width - labelCalcWidth(uploadOption);
@@ -256,7 +248,9 @@ Main.prototype.resize = function() {
 
     doclist.draw();
 
-    this.sortUi.resize(mainDiv.width - 6);
+    var contentWidth = mainDiv.width - 6;
+    var nameWidth = Math.ceil((2/3) * contentWidth);
+    this.sortUi.resize(contentWidth, nameWidth);
 
     contentShadowBottom.width = contentContainer.width - contentShadowBottomLeft.width;
     contentShadowRight.height = contentArea.height - contentShadowBottomRight.height;
@@ -275,7 +269,8 @@ Main.prototype.resize = function() {
         this.newCommandArrow.width + 7;
     this.signoutCommand.x = this.commandsDiv.width -
         (labelCalcWidth(this.signoutCommand) + 4);
-    newDocument.y = mainDiv.height - (newDocument.height - this.commandsDiv.height - 13);
+    this.menuUi.mainDiv.y = mainDiv.height -
+        this.menuUi.mainDiv.height - this.commandsDiv.height - 13;
   }
 };
 
