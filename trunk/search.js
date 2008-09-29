@@ -1,9 +1,13 @@
 /**
  * Constructor for SearchUi class.
  */
-function SearchUi(mainDiv, autofillDiv) {
+function SearchUi(mainDiv, autofillDiv, gadget) {
   this.onSearch = null;
   this.onReset = null;
+  this.gadget = gadget;
+
+  this.autofillItems = [];
+  this.autofillSelectedIndex = -1;
 
   this.mainDiv = mainDiv;
   this.content = child(this.mainDiv, 'searchStatusContent');
@@ -42,6 +46,10 @@ SearchUi.prototype.resize = function(width) {
   this.field.width = this.container.width - 23;
   this.clearButton.x = this.field.width + 2;
 
+  this.resizeAutofill();
+};
+
+SearchUi.prototype.resizeAutofill = function() {
   var autoFillTopLeft = child(this.autofillDiv, 'autoFillTopLeft');
   var autoFillTopCenter = child(this.autofillDiv, 'autoFillTopCenter');
   var autoFillTopRight = child(this.autofillDiv, 'autoFillTopRight');
@@ -109,41 +117,160 @@ SearchUi.prototype.reset = function() {
   }
 };
 
+SearchUi.prototype.isAutofillVisible = function() {
+  return this.autofillDiv.visible;
+};
+
+SearchUi.prototype.hideAutofill = function() {
+  this.autofillDiv.visible = false;
+};
+
+SearchUi.prototype.showAutofill = function() {
+  this.autofillDiv.visible = true;
+};
+
+SearchUi.prototype.search = function() {
+  if (!trim(this.field.value)) {
+    return;
+  }
+
+  this.hideAutofill();
+
+  if (this.onSearch) {
+    this.onSearch(this.field.value);
+  }
+};
+
 SearchUi.prototype.keydown = function() {
   switch(event.keycode) {
     case KEYS.ESCAPE:
       this.reset();
       break;
     case KEYS.ENTER:
-      if (this.onSearch) {
-        this.onSearch();
-      }
-      /*
-      if (doclist.autofillSelected !== false) {
-        doclist.autofillChoose();
+      if (this.isAutofillVisible()) {
+        this.chooseAutofill();
       } else {
-        doclist.search();
+        this.search();
       }
-      */
       break;
     case KEYS.UP:
-      // doclist.autofillUp();
+      this.onAutofillUp();
       break;
     case KEYS.DOWN:
-      // doclist.autofillDown();
+      this.onAutofillDown();
       break;
   }
 };
 
-SearchUi.prototype.autofill = function() {
-  /*
-  if (!trim(search.value)) {
-    autoFill.visible = false;
+SearchUi.prototype.chooseAutofill = function() {
+  var selected = this.getAutofillSelected();
+  if (selected) {
+    framework.openUrl(selected.link);
+  }
+
+  this.reset();
+};
+
+SearchUi.prototype.getAutofillSelected = function() {
+  if (this.autofillSelectedIndex >= 0 &&
+      this.autofillSelectedIndex < this.autofillItems.length) {
+    return this.autofillItems[this.autofillSelectedIndex];
+  }
+
+  return;
+};
+
+SearchUi.prototype.onAutofillUp = function() {
+  if (!this.isAutofillVisible) {
     return;
   }
 
-  autoFill.visible = doclist.autofillSearch();
-  this.draw();
-  */
+  var selected = this.getAutofillSelected();
 
+  if (!selected) {
+    this.autofillContent.children.item(this.autofillSelectedIndex).background =
+        '';
+  }
+
+  --this.autofillSelectedIndex;
+
+  this.autofillContent.children.item(this.autofillSelectedIndex).background =
+      SearchUi.AUTOFILL_SELECTED_BACKGROUND;
+};
+
+SearchUi.prototype.onAutofillDown = function() {
+  if (!this.isAutofillVisible) {
+    return;
+  }
+
+  var selected = this.getAutofillSelected();
+
+  if (selected) {
+    this.autofillContent.children.item(this.autofillSelectedIndex).background =
+        '';
+  }
+
+  ++this.autofillSelectedIndex;
+
+  this.autofillContent.children.item(this.autofillSelectedIndex).background =
+      SearchUi.AUTOFILL_SELECTED_BACKGROUND;
+};
+
+SearchUi.AUTOFILL_SELECTED_BACKGROUND = '#e0ecf7';
+
+SearchUi.prototype.addAutofillItem = function(document) {
+    var item = this.autofillContent.appendElement('<div height="20" enabled="true" cursor="hand" />');
+    var iconDiv = item.appendElement('<div x="5" y="2" width="16" height="16" />');
+    iconDiv.background = document.getIcon();
+
+    var titleLabel = item.appendElement('<label x="28" y="2" font="helvetica" size="8" color="#000000" trimming="character-ellipsis" />');
+    titleLabel.innerText = document.title;
+
+    this.resizeAutofill();
+
+    /*
+    item.onmouseover = function(index) {
+      if (this.autofillSelected !== false) {
+        autoFillOptions.children.item(this.autofillSelected).background = '';
+      }
+      event.srcElement.background='#e0ecf7';
+      this.autofillSelected = index;
+    }.bind(this, i)
+
+    item.onmouseout = function() {
+      event.srcElement.background='';
+      this.autofillSelected = false;
+    }.bind(this)
+
+    item.onclick = function() {
+      searchField.reset();
+      framework.openUrl(this.link);
+    }.bind(document)
+    */
+};
+
+SearchUi.prototype.clearAutofill = function() {
+  this.autofillSelectedIndex = -1;
+  this.autofillContent.removeAllElements();
+};
+
+SearchUi.prototype.autofill = function() {
+  if (!trim(this.field.value)) {
+    this.hideAutofill();
+    return;
+  }
+
+  this.autofillItems = this.gadget.getAutofillItems(this.field.value);
+  this.clearAutofill();
+
+  if (!this.autofillItems.length) {
+    this.hideAutofill();
+    return;
+  }
+
+  for (var i = 0; i < this.autofillItems.length; ++i) {
+    this.addAutofillItem(this.autofillItems[i]);
+  }
+
+  this.showAutofill();
 };

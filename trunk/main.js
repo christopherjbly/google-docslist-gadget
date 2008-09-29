@@ -13,7 +13,7 @@ function Main() {
 
   this.retrieveTimer = null;
   this.documents = [];
-  this.docsFeed = null;
+  this.searchDocuments = [];
 
   // Set up menu management handler.
   pluginHelper.onAddCustomMenuItems = this.onMenuItems.bind(this);
@@ -28,7 +28,7 @@ function Main() {
   this.sortUi = new SortUi(child(this.mainDiv, 'sortOptionsArea'));
   this.sortUi.onChange = this.onSortChange.bind(this);
   this.searchUi = new SearchUi(child(this.mainDiv, 'searchStatus'),
-      child(this.window, 'autoFill'));
+      child(this.window, 'autoFill'), this);
   this.searchUi.onSearch = this.onSearch.bind(this);
   this.searchUi.onReset = this.onSearchReset.bind(this);
 
@@ -51,8 +51,34 @@ function Main() {
   this.resize();
 }
 
-Main.prototype.onSearch = function() {
-  alert('cool');
+Main.prototype.onSearch = function(query) {
+  this.search(query);
+};
+
+Main.prototype.search = function(query) {
+  var docsFeed = new DocsFeed(this.onSearchRetrieve.bind(this),
+      this.onSearchFail.bind(this), query);
+  docsFeed.retrieve();
+};
+
+Main.prototype.onSearchRetrieve = function(feed) {
+  if (feed.startIndex == 1) {
+    this.searchDocuments = feed.documents;
+  } else {
+    this.searchDocuments.concat(feed.documents);
+  }
+
+  this.docsUi.clear();
+  this.docsUi.drawDocuments(this.searchDocuments);
+
+  /*
+  this.sort();
+  */
+};
+
+Main.prototype.onSearchFail = function() {
+  // TODO: what if not logged in?
+  this.logout();
 };
 
 Main.prototype.onSearchReset = function() {
@@ -104,7 +130,6 @@ Main.prototype.onLoginFailure = function(code, reason) {
   g_errorMessage.display(reason);
 };
 
-
 Main.prototype.launchNewDocument = function(type) {
 };
 
@@ -117,9 +142,9 @@ Main.prototype.logout = function() {
 Main.RETRIEVE_INTERVAL = 60 * 1000;
 
 Main.prototype.retrieve = function() {
-  this.docsFeed = new DocsFeed(this.onRetrieve.bind(this),
+  var docsFeed = new DocsFeed(this.onRetrieve.bind(this),
       this.onRetrieveFail.bind(this));
-  this.docsFeed.retrieve();
+  docsFeed.retrieve();
 };
 
 Main.prototype.onRetrieve = function(feed) {
@@ -176,6 +201,21 @@ Main.prototype.drawUsername = function(username) {
 
 Main.prototype.isLoggedIn = function() {
   return !loginDiv.visible && mainDiv.visible;
+};
+
+Main.prototype.getAutofillItems = function(query) {
+  var items = [];
+
+  if (query) {
+    for (var i = 0; i < this.documents.length; ++i) {
+      var document = this.documents[i];
+      if (document.title.match(new RegExp('^' + query, 'i'))) {
+        items.push(document);
+      }
+    }
+  }
+
+  return items;
 };
 
 Main.prototype.onMenuItems = function(menu) {

@@ -22,7 +22,7 @@ Doclist.prototype.reset = function() {
 
   this.clear();
   uploader.close();
-}
+};
 
 
 /**
@@ -58,53 +58,6 @@ Doclist.prototype.getError = function(status, responseText) {
   if (doclistContent.children.count == 0) {
     errorMessage.display(ERROR_SERVER_OR_NETWORK);
   }
-}
-
-/**
- * Enter key in autofill list
- */
-Doclist.prototype.autofillChoose = function() {
-  if (!this.autofill.length || !autoFillOptions.children.count) return;
-  if (this.autofillSelected === false) return;
-  if (this.autofillSelected > this.autofill.length) return;
-
-  framework.openUrl(this.autofill[this.autofillSelected].link);
-  searchField.reset();
-}
-
-/**
- * Up arrow in autofill list
- */
-Doclist.prototype.autofillUp = function() {
-  if (!this.autofill.length || !autoFillOptions.children.count) return;
-  if (this.autofillSelected === false) return;
-
-  autoFillOptions.children.item(this.autofillSelected).background = '';
-  if (this.autofillSelected == 0) {
-    this.autofillSelected = false;
-    return;
-  }
-
-  this.autofillSelected--;
-  autoFillOptions.children.item(this.autofillSelected).background = '#e0ecf7';
-}
-
-/**
- * Down arrow in autofill list
- */
-Doclist.prototype.autofillDown = function() {
-  if (!this.autofill.length || !autoFillOptions.children.count) return;
-
-  if (this.autofillSelected === false) {
-    this.autofillSelected = 0;
-  } else if (this.autofillSelected >= autoFillOptions.children.count-1) {
-    return;
-  } else {
-    autoFillOptions.children.item(this.autofillSelected).background = '';
-    this.autofillSelected++;
-  }
-
-  autoFillOptions.children.item(this.autofillSelected).background = '#e0ecf7';
 }
 
 /**
