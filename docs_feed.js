@@ -7,6 +7,10 @@ function Document() {
   this.starred = false;
 }
 
+Document.prototype.getIcon = function() {
+  return 'images/icon-' + this.type + '.gif';
+};
+
 DocsFeed.FEED_URL = 'https://docs.google.com/feeds/documents/private/full';
 
 DocsFeed.MAX_RESULTS_PARAM = 'max-results';
