@@ -13,16 +13,14 @@ function CustomScrollbar(mainDiv) {
   this.bar.onmousedown = this.startBar.bind(this);
   this.bar.onmousemove = this.dragBar.bind(this);
   this.bar.onmouseup = this.endBar.bind(this);
-  this.track.onclick = this.track.bind(this);
+  this.track.onclick = this.clickTrack.bind(this);
 
   this.up.onmousedown = this.startUp.bind(this);
   this.down.onmousedown = this.startDown.bind(this);
   this.up.onmouseup = this.endUp.bind(this);
   this.down.onmouseup = this.endDown.bind(this);
 
-  view.onmousewheel = this.wheel.bind(this);
-  window.onkeydown = this.keydown.bind(this);
-  window.onkeyup = this.keyup.bind(this);
+
 }
 
 /**
@@ -30,7 +28,6 @@ function CustomScrollbar(mainDiv) {
  */
 CustomScrollbar.prototype.keydown = function() {
   switch(event.keycode) {
-
     case KEYS.UP:
       this.startUp();
       break;
@@ -57,168 +54,127 @@ CustomScrollbar.prototype.keydown = function() {
   }
 };
 
-/**
- * Shortcut functions
- */
-CustomScrollbar.prototype.scrollBottom = function() {  
+CustomScrollbar.prototype.scrollBottom = function() {
   if (this.mainDiv.visible) {
     this.bar.y = this.max();
-    this.scroll();            
+    this.scroll();
   }
 };
 
-CustomScrollbar.prototype.scrollTop = function() {    
-  if (this.mainDiv.visible) {  
+CustomScrollbar.prototype.scrollTop = function() {
+  if (this.mainDiv.visible) {
     this.bar.y = this.min();
-    this.scroll();  
+    this.scroll();
   }
 };
 
-CustomScrollbar.prototype.scrollPageDown = function() {  
-  if (this.mainDiv.visible) {    
+CustomScrollbar.prototype.scrollPageDown = function() {
+  if (this.mainDiv.visible) {
     this.moveBar(this.bar.height);
   }
 };
 
-CustomScrollbar.prototype.scrollPageUp = function() {    
-  if (this.mainDiv.visible) {    
+CustomScrollbar.prototype.scrollPageUp = function() {
+  if (this.mainDiv.visible) {
     this.moveBar(-this.bar.height);
   }
 };
 
-/**
- * Keyboard controls on keyup
- */
-CustomScrollbar.prototype.keyup = function() {    
-  switch(event.keycode) {      
-
+CustomScrollbar.prototype.keyup = function() {
+  switch(event.keycode) {
     case KEYS.UP:
       this.endUp();
       break;
-      
+
     case KEYS.DOWN:
       this.endDown();
       break;
   }
 };
 
-
-/**
- * Mouse wheel
- */
-CustomScrollbar.prototype.wheel = function() {    
+CustomScrollbar.prototype.wheel = function() {
   if (this.halt.wheel) {
     return;
   }
   this.halt.wheel = true;
-    
+
   if (event.wheelDelta > 0) {
     this.startUp();
-    
-    var time = 100 * (Math.abs(event.wheelDelta) / 360);    
+
+    var time = 100 * (Math.abs(event.wheelDelta) / 360);
     view.setTimeout(function() {
       this.endUp();
       this.halt.wheel = false;
     }.bind(this), time);
   } else if (event.wheelDelta < 0) {
     this.startDown();
-    
-    time = 100 * (Math.abs(event.wheelDelta) / 360);          
+
+    time = 100 * (Math.abs(event.wheelDelta) / 360);
     view.setTimeout(function() {
       this.endDown();
-      this.halt.wheel = false;      
-    }.bind(this), time);    
+      this.halt.wheel = false;
+    }.bind(this), time);
   }
 };
 
-/**
- * Scroll button up
- */
-CustomScrollbar.prototype.startUp = function() {    
+CustomScrollbar.prototype.startUp = function() {
   var time = (this.bar.height && this.track.height) ? 100 / (this.bar.height / this.track.height) : 100;
-  
+
   this.up = view.beginAnimation(function() {
     this.bar.y = event.value;
     this.scroll();
   }.bind(this), this.bar.y, this.min(), time * this.ratio());
 };
 
-/**
- * Scroll button down
- */
-CustomScrollbar.prototype.startDown = function() {  
+CustomScrollbar.prototype.startDown = function() {
   var time = (this.bar.height && this.track.height) ? 100 / (this.bar.height / this.track.height) : 100;
-  
+
   this.down = view.beginAnimation(function() {
     this.bar.y = event.value;
-    this.scroll();    
+    this.scroll();
   }.bind(this), this.bar.y, this.max(), time * (1 - this.ratio()));
 };
 
-/**
- * End scroll button up
- */
-CustomScrollbar.prototype.endUp = function() {    
+CustomScrollbar.prototype.endUp = function() {
   view.cancelAnimation(this.up);
 };
 
-/**
- * End scroll button down
- */
-CustomScrollbar.prototype.endDown = function() {    
+CustomScrollbar.prototype.endDown = function() {
   view.cancelAnimation(this.down);
 };
 
-/**
- * Start scrollbar move
- */
-CustomScrollbar.prototype.startBar = function() {   
+CustomScrollbar.prototype.startBar = function() {
   this.halt.drag = true;
   this.start = event.y;
 };
 
-/**
- * End scrollbar move
- */
-CustomScrollbar.prototype.endBar = function() {   
+CustomScrollbar.prototype.endBar = function() {
   this.halt.drag = false;
 };
 
-/**
- * Compute min value of y
- */
-CustomScrollbar.prototype.min = function() {    
+CustomScrollbar.prototype.min = function() {
   return this.up.height;
 };
 
-/**
- * Compute max value of y
- */
-CustomScrollbar.prototype.max = function() {    
+CustomScrollbar.prototype.max = function() {
   return (this.track.height - (this.bar.height - this.up.height + 1));
 };
 
-/**
- * Compute scroll ratio
- */
-CustomScrollbar.prototype.ratio = function() {    
+CustomScrollbar.prototype.ratio = function() {
   if (this.max() == this.min()) {
     return 0;
   }
   return (this.bar.y - this.min()) / (this.max() - this.min());
 };
 
-/**
- * Scroll content area
- */
-CustomScrollbar.prototype.scroll = function() { 
+CustomScrollbar.prototype.scroll = function() {
   var maxY = doclist.content.height - contentContainer.height;
   if (maxY < 0) {
     maxY = 0;
   }
 
-  var newY = maxY * this.ratio(); 
-  
+  var newY = maxY * this.ratio();
+
   if (newY > maxY) {
     doclist.content.y = -maxY;
   } else {
@@ -226,10 +182,7 @@ CustomScrollbar.prototype.scroll = function() {
   }
 };
 
-/**
- * Handle clicked track
- */
-CustomScrollbar.prototype.track = function() {      
+CustomScrollbar.prototype.clickTrack = function() {
   var min = this.min();
   var max = this.max();
 
@@ -244,10 +197,7 @@ CustomScrollbar.prototype.track = function() {
   this.scroll();
 };
 
-/**
- * Move scrollbar
- */
-CustomScrollbar.prototype.moveBar = function(moveY) {    
+CustomScrollbar.prototype.moveBar = function(moveY) {
   var y = moveY;
 
   var min = this.min();
@@ -267,9 +217,6 @@ CustomScrollbar.prototype.moveBar = function(moveY) {
   this.scroll();
 };
 
-/**
- * Drag scrollbar
- */
 CustomScrollbar.prototype.dragBar = function() {
   if (!this.halt.drag) {
     return;
@@ -281,9 +228,6 @@ CustomScrollbar.prototype.dragBar = function() {
   this.halt.drag = true;
 };
 
-/**
- * Draw scrollbar
- */
 CustomScrollbar.prototype.draw = function() {
   var scrollRatio = this.track.height ? ((this.bar.y - this.up.height) / (this.track.height)) : 0;
 
