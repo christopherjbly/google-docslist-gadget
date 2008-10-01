@@ -25,6 +25,10 @@ function Main() {
   this.mainDiv = child(this.window, 'mainDiv');
   this.usernameLabel = child(this.window, 'username');
   this.docsUi = new DocsUi(child(this.mainDiv, 'contentArea'));
+  view.onmousewheel = this.docsUi.scrollbar.wheel.bind(this.docsUi.scrollbar);
+  this.window.onkeydown = this.docsUi.scrollbar.keydown.bind(this.docsUi.scrollbar);
+  this.window.onkeyup = this.docsUi.scrollbar.keyup.bind(this.docsUi.scrollbar);
+
   this.sortUi = new SortUi(child(this.mainDiv, 'sortOptionsArea'));
   this.sortUi.onChange = this.onSortChange.bind(this);
   this.searchUi = new SearchUi(child(this.mainDiv, 'searchStatus'),
@@ -203,11 +207,14 @@ Main.prototype.isLoggedIn = function() {
   return !loginDiv.visible && mainDiv.visible;
 };
 
+Main.AUTOFILL_MAX = 5;
+
 Main.prototype.getAutofillItems = function(query) {
   var items = [];
 
   if (query) {
-    for (var i = 0; i < this.documents.length; ++i) {
+    for (var i = 0;
+         i < this.documents.length && items.length < Main.AUTOFILL_MAX; ++i) {
       var document = this.documents[i];
       if (document.title.match(new RegExp('^' + query, 'i'))) {
         items.push(document);

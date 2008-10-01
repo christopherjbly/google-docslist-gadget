@@ -59,7 +59,7 @@ SearchUi.prototype.resizeAutofill = function() {
   var autoFillBottomCenter = child(this.autofillDiv, 'autoFillBottomCenter');
   var autoFillBottomRight = child(this.autofillDiv, 'autoFillBottomRight');
 
-  this.autofillDiv.width = this.mainDiv.width + (autoFillTopRight.width + 1);
+  this.autofillDiv.width = this.area.width + (autoFillTopRight.width + 1);
   autoFillTopCenter.width = this.autofillDiv.width -
       (autoFillTopLeft.width + autoFillTopRight.width);
   this.autofillContent.width = autoFillTopCenter.width;
@@ -147,7 +147,7 @@ SearchUi.prototype.keydown = function() {
       this.reset();
       break;
     case KEYS.ENTER:
-      if (this.isAutofillVisible()) {
+      if (this.isAutofillVisible() && this.isAutofillSelected()) {
         this.chooseAutofill();
       } else {
         this.search();
@@ -171,13 +171,18 @@ SearchUi.prototype.chooseAutofill = function() {
   this.reset();
 };
 
+SearchUi.prototype.isAutofillSelected = function() {
+  return this.autofillItems.length &&
+      this.autofillSelectedIndex >= 0 &&
+      this.autofillSelectedIndex < this.autofillItems.length;
+};
+
 SearchUi.prototype.getAutofillSelected = function() {
-  if (this.autofillSelectedIndex >= 0 &&
-      this.autofillSelectedIndex < this.autofillItems.length) {
-    return this.autofillItems[this.autofillSelectedIndex];
+  if (!this.isAutofillSelected()) {
+    return;
   }
 
-  return;
+  return this.autofillItems[this.autofillSelectedIndex];
 };
 
 SearchUi.prototype.onAutofillUp = function() {
@@ -185,14 +190,17 @@ SearchUi.prototype.onAutofillUp = function() {
     return;
   }
 
-  var selected = this.getAutofillSelected();
-
-  if (!selected) {
+  if (this.isAutofillSelected()) {
     this.autofillContent.children.item(this.autofillSelectedIndex).background =
         '';
   }
 
   --this.autofillSelectedIndex;
+
+  if (this.autofillSelectedIndex < 0) {
+    this.autofillSelectedIndex = -1;
+    return;
+  }
 
   this.autofillContent.children.item(this.autofillSelectedIndex).background =
       SearchUi.AUTOFILL_SELECTED_BACKGROUND;
@@ -203,14 +211,16 @@ SearchUi.prototype.onAutofillDown = function() {
     return;
   }
 
-  var selected = this.getAutofillSelected();
-
-  if (selected) {
+  if (this.isAutofillSelected()) {
     this.autofillContent.children.item(this.autofillSelectedIndex).background =
         '';
   }
 
   ++this.autofillSelectedIndex;
+
+  if (this.autofillSelectedIndex >= this.autofillItems.length) {
+    this.autofillSelectedIndex = this.autofillItems.length - 1;
+  }
 
   this.autofillContent.children.item(this.autofillSelectedIndex).background =
       SearchUi.AUTOFILL_SELECTED_BACKGROUND;
