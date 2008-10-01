@@ -25,6 +25,7 @@ function Main() {
   this.mainDiv = child(this.window, 'mainDiv');
   this.usernameLabel = child(this.window, 'username');
   this.docsUi = new DocsUi(child(this.mainDiv, 'contentArea'));
+  this.docsUi.scrollbar.onChange = this.onScroll.bind(this);
   view.onmousewheel = this.docsUi.scrollbar.wheel.bind(this.docsUi.scrollbar);
   this.window.onkeydown = this.docsUi.scrollbar.keydown.bind(this.docsUi.scrollbar);
   this.window.onkeyup = this.docsUi.scrollbar.keyup.bind(this.docsUi.scrollbar);
@@ -264,6 +265,9 @@ Main.prototype.sizing = function() {
   }
 };
 
+Main.prototype.onScroll = function(value) {
+};
+
 Main.prototype.resize = function() {
   window.width = view.width - 2;
   window.height = view.height - 9;
@@ -305,6 +309,14 @@ Main.prototype.resize = function() {
     contentContainer.height = contentArea.height - contentShadowBottom.height;
 
     doclist.draw();
+
+    // TODO:
+    this.docsUi.scrollbar.setMax(doclist.content.height - contentContainer.height);
+    this.docsUi.scrollbar.resize(doclist.content.width + 9,
+        contentContainer.height,
+        doclist.content.height === 0 ?
+            1 :
+            contentContainer.height / doclist.content.height);
 
     var contentWidth = mainDiv.width - 6;
     var nameWidth = Math.ceil((2/3) * contentWidth);
