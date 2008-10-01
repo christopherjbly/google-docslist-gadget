@@ -2,6 +2,9 @@
  * Constructor for CustomScrollbar class.
  */
 function CustomScrollbar(mainDiv) {
+  this.maxY = 0;
+  this.onChange = null;
+
   this.mainDiv = mainDiv;
   this.bar = child(this.mainDiv, 'scrollbarBar');
   this.track = child(this.mainDiv, 'scrollbarTrack');
@@ -19,15 +22,29 @@ function CustomScrollbar(mainDiv) {
   this.down.onmousedown = this.startDown.bind(this);
   this.up.onmouseup = this.endUp.bind(this);
   this.down.onmouseup = this.endDown.bind(this);
-
-
 }
+
+CustomScrollbar.prototype.isVisible = function() {
+  return this.mainDiv.visible;
+};
+
+CustomScrollbar.prototype.setMax = function(max) {
+  this.maxY = max;
+};
+
+CustomScrollbar.prototype.hide = function() {
+  this.mainDiv.visible = false;
+};
+
+CustomScrollbar.prototype.show = function() {
+  this.mainDiv.visible = true;
+};
 
 /**
  * Keyboard controls on keydown
  */
 CustomScrollbar.prototype.keydown = function() {
-  switch(event.keycode) {
+  switch (event.keycode) {
     case KEYS.UP:
       this.startUp();
       break;
@@ -55,33 +72,33 @@ CustomScrollbar.prototype.keydown = function() {
 };
 
 CustomScrollbar.prototype.scrollBottom = function() {
-  if (this.mainDiv.visible) {
+  if (this.isVisible()) {
     this.bar.y = this.max();
     this.scroll();
   }
 };
 
 CustomScrollbar.prototype.scrollTop = function() {
-  if (this.mainDiv.visible) {
+  if (this.isVisible()) {
     this.bar.y = this.min();
     this.scroll();
   }
 };
 
 CustomScrollbar.prototype.scrollPageDown = function() {
-  if (this.mainDiv.visible) {
+  if (this.isVisible()) {
     this.moveBar(this.bar.height);
   }
 };
 
 CustomScrollbar.prototype.scrollPageUp = function() {
-  if (this.mainDiv.visible) {
+  if (this.isVisible()) {
     this.moveBar(-this.bar.height);
   }
 };
 
 CustomScrollbar.prototype.keyup = function() {
-  switch(event.keycode) {
+  switch (event.keycode) {
     case KEYS.UP:
       this.endUp();
       break;
@@ -96,6 +113,7 @@ CustomScrollbar.prototype.wheel = function() {
   if (this.halt.wheel) {
     return;
   }
+
   this.halt.wheel = true;
 
   if (event.wheelDelta > 0) {
@@ -168,18 +186,17 @@ CustomScrollbar.prototype.ratio = function() {
 };
 
 CustomScrollbar.prototype.scroll = function() {
-  var maxY = doclist.content.height - contentContainer.height;
-  if (maxY < 0) {
-    maxY = 0;
+  if (this.maxY < 0) {
+    this.maxY = 0;
   }
 
-  var newY = maxY * this.ratio();
+  var newY = this.maxY * this.ratio();
 
-  if (newY > maxY) {
-    doclist.content.y = -maxY;
-  } else {
-    doclist.content.y = -newY;
+  if (newY > this.maxY) {
+    newY = this.maxY;
   }
+
+  this.onChange(newY);
 };
 
 CustomScrollbar.prototype.clickTrack = function() {
@@ -228,24 +245,24 @@ CustomScrollbar.prototype.dragBar = function() {
   this.halt.drag = true;
 };
 
-CustomScrollbar.prototype.draw = function() {
+CustomScrollbar.prototype.resize = function(x, height, sizeRatio) {
   var scrollRatio = this.track.height ? ((this.bar.y - this.up.height) / (this.track.height)) : 0;
 
-  this.mainDiv.x = doclist.content.width + 9;
-  this.mainDiv.height = contentContainer.height - 5;
+  this.mainDiv.x = x;
+  this.mainDiv.height = height - 5;
 
   this.down.y = this.mainDiv.height - this.down.height;
   this.track.height = this.mainDiv.height - (this.down.height + this.up.height);
 
-  if (doclist.content.height === 0) {
-    this.bar.height = this.track.height - 1;
-  } else {
-    var newHeight = Math.ceil(this.track.height * (contentContainer.height / doclist.content.height));
+//  if (this.maxY === 0) {
+//    this.bar.height = this.track.height - 1;
+//  } else {
+    var newHeight = Math.ceil(this.track.height * sizeRatio);
     if (newHeight < 10) {
       newHeight = 10;
     }
     this.bar.height = newHeight >= this.track.height ? this.track.height - 1 : newHeight;
-  }
+//  }
 
   var newY = scrollRatio * this.track.height + this.up.height;
 
