@@ -4,10 +4,14 @@
 function DocsUi(mainDiv, gadget) {
   this.mainDiv = mainDiv;
   this.gadget = gadget;
+  this.onSearch = null;
+  this.onSearchReset = null;
+
   this.contentArea = child(this.mainDiv, 'contentArea');
   this.container = child(this.contentArea, 'contentContainer');
   this.content = child(this.container, 'doclistContent');
   this.scrollbar = new CustomScrollbar(child(this.container, 'scrollbar'));
+  this.scrollbar.onChange = this.onScroll.bind(this);
 
   this.documents = [];
 
@@ -16,15 +20,29 @@ function DocsUi(mainDiv, gadget) {
   this.searchUi = new SearchUi(child(this.mainDiv, 'searchStatus'),
       child(this.gadget.window, 'autoFill'), this.gadget);
 
-  this.itemDateWidth = 0;
-/*
-  this.searchUi.onSearch = this.onSearch.bind(this);
-  this.searchUi.onReset = this.onSearchReset.bind(this);
-  */
+  this.itemNameWidth = 0;
+  this.searchUi.onSearch = this.onSearchUiSearch.bind(this);
+  this.searchUi.onReset = this.onSearchUiReset.bind(this);
 }
+
+DocsUi.prototype.onScroll = function(value) {
+  this.content.y = -value;
+};
 
 DocsUi.prototype.onSortChange = function() {
   this.draw();
+};
+
+DocsUi.prototype.onSearchUiSearch = function(query) {
+  if (this.onSearch) {
+    this.onSearch(query);
+  }
+};
+
+DocsUi.prototype.onSearchUiReset = function() {
+  if (this.onSearchReset) {
+    this.onSearchReset();
+  }
 };
 
 DocsUi.prototype.clear = function() {
@@ -62,9 +80,9 @@ DocsUi.sortByName = function(a, b) {
 DocsUi.sortByDate = function(a, b) {
   a = a.updated.getTime();
   b = b.updated.getTime();
-  if (a < b) {
+  if (a > b) {
     return -1;
-  } else if (a > b) {
+  } else if (a < b) {
     return 1;
   } else {
     return 0;
@@ -72,7 +90,6 @@ DocsUi.sortByDate = function(a, b) {
 };
 
 DocsUi.prototype.redraw = function(documents) {
-  this.clear();
   this.documents = documents;
   this.draw();
 };
@@ -80,16 +97,17 @@ DocsUi.prototype.redraw = function(documents) {
 DocsUi.prototype.draw = function() {
   this.sort();
   var documents = this.documents;
+  this.clear();
 
   for (var i = 0; i < documents.length; ++i) {
     var document = documents[i];
 
-    var item = this.content.appendElement('<div height="20" cursor="hand" enabled="true" />');
+    var item = this.content.appendElement('<div width="100%" height="20" cursor="hand" enabled="true" />');
 
     var iconDiv = item.appendElement('<div name="icon" x="2" y="2" width="16" height="16" />');
     iconDiv.background = document.getIcon();
 
-    var titleLabel = item.appendElement('<label name="title" x="26" y="2" font="helvetica" size="8" color="#000000" trimming="character-ellipsis" />');
+    var titleLabel = item.appendElement('<label name="title" x="21" y="2" font="helvetica" size="8" color="#000000" trimming="character-ellipsis" />');
     titleLabel.innerText = document.title;
     titleLabel.tooltip = document.title;
 
@@ -121,26 +139,24 @@ DocsUi.prototype.resizeContent = function() {
 
   this.content.height = y;
 
+  this.content.width = this.container.width - 14;
+
   if (this.content.height <= this.container.height) {
-    this.content.width = this.container.width;
     this.scrollbar.hide();
   } else {
-    this.content.width = this.container.width - (this.scrollbar.getWidth() + 14);
+    this.content.width -= this.scrollbar.getWidth();
     this.scrollbar.show();
     // --this.content.height;
+    this.scrollbar.setMax(this.content.height - this.container.height);
+    this.scrollbar.resize(this.content.width + 9,
+        this.container.height,
+        this.content.height === 0 ?
+            1 :
+            this.container.height / this.content.height);
   }
-
-  // TODO: fix.
-  this.scrollbar.setMax(this.content.height - this.container.height);
-  this.scrollbar.resize(this.content.width + 9,
-      this.container.height,
-      this.content.height === 0 ?
-          1 :
-          this.container.height / this.content.height);
 
   for (i = 0; i < this.content.children.count; ++i) {
     div = this.content.children.item(i);
-    div.width = this.container.width; // - (scrollbar.visible ? 0 : 8);
 
     if (div.children.count > 0) {
       // Not a separator.
@@ -149,12 +165,19 @@ DocsUi.prototype.resizeContent = function() {
       var star = child(div, 'star');
       var date = child(div, 'date');
 
+      title.width = this.itemNameWidth - icon.width - 3;
+
       if (star) {
-        star.x = title.x + labelCalcWidth(title);
+        title.width -= star.width;
+        var starX = title.x + labelCalcWidth(title);
+        if (starX > title.x + title.width) {
+          starX = title.x + title.width;
+        }
+        star.x = starX;
       }
-      date.x = div.width - this.itemDateWidth;
-      date.width = this.itemDateWidth;
-      //  dateLabel.width = (sortOptionsDate.width - scrollbar.width - (9 + 4) + (scrollbar.visible ? 0 : (scrollbar.width + 8)));
+
+      date.x = this.itemNameWidth + 2;
+      date.width = this.content.width - date.x;
     }
   }
 };
@@ -183,33 +206,9 @@ DocsUi.prototype.resize = function(width, height) {
   contentShadowBottomRight.y = this.container.height;
 
   var contentWidth = this.mainDiv.width - 6;
-  this.itemDateWidth = Math.ceil((1/3) * contentWidth);
-  this.sortUi.resize(contentWidth, this.itemDateWidth);
+  this.itemNameWidth = Math.ceil((2/3) * contentWidth);
+  this.sortUi.resize(contentWidth, this.itemNameWidth);
   this.searchUi.resize(this.mainDiv.width);
 
   this.resizeContent();
-//.  customScrollbar.draw();
 };
-
-
-/**
- * Draw doclist file listing
- */
-/*
-DocsUi.prototype.drawFiles = function(div) {
-  var dateLabel;
-  div.children.item(1).width = sortOptionsName.width - div.children.item(1).x;
-
-  if (div.children.count == 4) {
-    div.children.item(1).width = (div.children.item(1).width - div.children.item(2).width - 2);
-    var width = labelCalcWidth(div.children.item(1));
-    width = (width > div.children.item(1).width) ? div.children.item(1).width : width;
-    div.children.item(2).x = width + div.children.item(1).x;
-    dateLabel = div.children.item(3);
-  } else {
-    dateLabel = div.children.item(2);
-  }
-
-
-};
-*/

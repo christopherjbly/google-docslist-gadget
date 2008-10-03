@@ -86,11 +86,10 @@ SortUi.prototype.draw = function() {
   }
 };
 
-SortUi.prototype.resize = function(fullWidth, dateWidth) {
+SortUi.prototype.resize = function(fullWidth, nameWidth) {
   this.mainDiv.width = fullWidth;
   this.mainDiv.x = 2;
 
-  var nameWidth = fullWidth - dateWidth;
   this.nameColumn.width = nameWidth;
   this.nameDateDivider.x = this.nameColumn.width;
   this.dateNameDivider.x = this.nameColumn.width;
