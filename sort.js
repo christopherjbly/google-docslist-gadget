@@ -1,9 +1,11 @@
 SortUi.DATE_OPTION = 'date';
 SortUi.NAME_OPTION = 'name';
+SortUi.SORT_TYPE_OPTION = 'sort_type';
 
 function SortUi(mainDiv) {
   this.mainDiv = mainDiv;
-  this.active = SortUi.DATE_OPTION;
+  options.putDefaultValue(SortUi.SORT_TYPE_OPTION, SortUi.DATE_OPTION);
+  this.active = options.getValue(SortUi.SORT_TYPE_OPTION);
   this.onChange = null;
 
   this.nameColumn = child(this.mainDiv, 'sortOptionsName');
@@ -27,14 +29,16 @@ SortUi.prototype.isName = function() {
   return this.active == SortUi.NAME_OPTION;
 };
 
+SortUi.prototype.saveState = function() {
+  options.putValue(SortUi.SORT_TYPE_OPTION, this.active);
+};
+
 SortUi.prototype.name = function() {
   if (this.active == SortUi.NAME_OPTION) {
     return;
   }
   this.active = SortUi.NAME_OPTION;
-  /*
-  options.putValue('sort', this.active);
-  */
+  this.saveState();
   this.draw();
 
   if (this.onChange) {
@@ -47,9 +51,7 @@ SortUi.prototype.date = function() {
     return;
   }
   this.active = SortUi.DATE_OPTION;
-  /*
-  options.putValue('sort', this.active);
-  */
+  this.saveState();
   this.draw();
 
   if (this.onChange) {
@@ -84,10 +86,11 @@ SortUi.prototype.draw = function() {
   }
 };
 
-SortUi.prototype.resize = function(fullWidth, nameWidth) {
+SortUi.prototype.resize = function(fullWidth, dateWidth) {
   this.mainDiv.width = fullWidth;
   this.mainDiv.x = 2;
 
+  var nameWidth = fullWidth - dateWidth;
   this.nameColumn.width = nameWidth;
   this.nameDateDivider.x = this.nameColumn.width;
   this.dateNameDivider.x = this.nameColumn.width;

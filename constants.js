@@ -54,12 +54,6 @@ var MIME_TYPES = {
   'tsv': 'text/tab-separated-values',
   'xls': 'application/vnd.ms-excel' };
 
-var NEW_DOC = {
-  'newDocumentDocument': 'http://docs.google.com/MiscCommands?command=newdoc&redirectToDocument=true&hl=en',
-  'newDocumentSpreadsheet': 'http://spreadsheets.google.com/ccc?new&hl=en',
-  'newDocumentPresentation': 'http://docs.google.com/DocAction?action=new_presentation&source=doclist&hl=en',
-  'newDocumentForm': 'http://spreadsheets.google.com/newform?hl=en' };
-
 var UPLOAD_ERRORS = {
   STATUS_415: ERROR_UPLOAD_TYPE,
   STATUS_401: ERROR_UPLOAD_EXPIRED,

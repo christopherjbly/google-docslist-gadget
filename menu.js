@@ -9,10 +9,14 @@ function DocumentMenu(mainDiv) {
   this.spreadsheetItem = child(this.list, 'newDocumentSpreadsheet');
   this.documentItem = child(this.list, 'newDocumentDocument');
 
-  this.formItem.onclick = this.newDocument.bind(this);
-  this.presentationItem.onclick = this.newDocument.bind(this);
-  this.spreadsheetItem.onclick = this.newDocument.bind(this);
-  this.documentItem.onclick = this.newDocument.bind(this);
+  this.formItem.onclick = this.newDocument.bind(this,
+      Document.FORM);
+  this.presentationItem.onclick = this.newDocument.bind(this,
+      Document.PRESENTATION);
+  this.spreadsheetItem.onclick = this.newDocument.bind(this,
+      Document.SPREADSHEET);
+  this.documentItem.onclick = this.newDocument.bind(this,
+      Document.DOCUMENT);
 }
 
 DocumentMenu.prototype.isOpen = function() {
@@ -35,10 +39,10 @@ DocumentMenu.prototype.close = function() {
   this.mainDiv.visible = false;
 };
 
-DocumentMenu.prototype.newDocument = function() {
+DocumentMenu.prototype.newDocument = function(type) {
   this.close();
 
   if (this.onSelected) {
-    this.onSelected(event.srcElement.name);
+    this.onSelected(type);
   }
 };

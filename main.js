@@ -1,3 +1,8 @@
+// TODO: what to do about retrieve requests that stagger in.
+// 1. after logged out.
+// 2. after a refresh.
+// TODO: move sort order to SortUi class.
+
 var g_httpRequest;
 var g_authHttpRequest;
 var g_errorMessage;
@@ -14,9 +19,6 @@ function Main() {
   this.retrieveTimer = null;
   this.documents = [];
   this.searchDocuments = [];
-
-  // Set up menu management handler.
-  pluginHelper.onAddCustomMenuItems = this.onMenuItems.bind(this);
 
   this.window = child(view, 'window');
 
@@ -48,8 +50,6 @@ function Main() {
 
   view.onsize = this.resize.bind(this);
   view.onsizing = this.sizing.bind(this);
-  // TODO: needed?
-  this.resize();
 
   if (this.auth.hasCredentials()) {
     this.completeAuth();
@@ -75,12 +75,7 @@ Main.prototype.onSearchRetrieve = function(feed) {
     this.searchDocuments.concat(feed.documents);
   }
 
-  this.docsUi.clear();
-  this.docsUi.drawDocuments(this.searchDocuments);
-
-  /*
-  this.sort();
-  */
+  this.docsUi.redraw(this.searchDocuments);
 };
 
 Main.prototype.onSearchFail = function() {
@@ -101,6 +96,7 @@ Main.prototype.onMenuSelected = function(type) {
 };
 
 Main.prototype.onUploadClick = function() {
+  this.browseUpload();
 };
 
 Main.prototype.onSignoutClick = function() {
@@ -109,14 +105,6 @@ Main.prototype.onSignoutClick = function() {
 
 Main.prototype.onNewClick = function() {
   this.menuUi.toggle();
-};
-
-Main.prototype.onSortChange = function() {
-  if (this.sortUi.isDate()) {
-    debug.trace('date');
-  } else {
-    debug.trace('aint');
-  }
 };
 
 Main.prototype.onLogin = function(username, password, isRemember) {
@@ -142,12 +130,17 @@ Main.prototype.onLoginFailure = function(code, reason) {
 };
 
 Main.prototype.launchNewDocument = function(type) {
+  alert(Document.buildNewDocumentUrl(type));
+};
+
+Main.prototype.browseUpload = function() {
 };
 
 Main.prototype.logout = function() {
   this.auth.clear();
-  // TODO: Clear content.
-  // stop timers.
+  view.clearInterval(this.retrieveTimer);
+  this.documents = [];
+  this.searchDocuments = [];
   this.switchLoginMode();
 };
 
@@ -166,12 +159,7 @@ Main.prototype.onRetrieve = function(feed) {
     this.documents.concat(feed.documents);
   }
 
-  this.docsUi.clear();
-  this.docsUi.drawDocuments(this.documents);
-
-  /*
-  this.sort();
-  */
+  this.docsUi.redraw(this.documents);
 };
 
 Main.prototype.onRetrieveFail = function() {
@@ -193,23 +181,19 @@ Main.prototype.switchLoginMode = function() {
   this.loginUi.show();
   this.docsUi.hide();
   this.commandsDiv.visible = false;
+  pluginHelper.onAddCustomMenuItems = null;
 };
 
 Main.prototype.switchDocsMode = function() {
   this.loginUi.hide();
   this.docsUi.show();
   this.commandsDiv.visible = true;
+  pluginHelper.onAddCustomMenuItems = this.onMenuItems.bind(this);
 };
 
 Main.prototype.drawUsername = function(username) {
   this.usernameLabel.innerText = username;
 };
-
-/*
-Main.prototype.isLoggedIn = function() {
-  return !loginDiv.visible && mainDiv.visible;
-};
-*/
 
 Main.AUTOFILL_MAX = 5;
 
@@ -230,37 +214,24 @@ Main.prototype.getAutofillItems = function(query) {
 };
 
 Main.prototype.onMenuItems = function(menu) {
-  /*
-  if (this.isLoggedIn()) {
-    menu.AddItem(strings.COMMAND_REFRESH, 0, doclist.get.bind(doclist));
-
-    var newCommands = menu.AddPopup(strings.COMMAND_NEW);
-    newCommands.AddItem(strings.DOCUMENT_DOCUMENT, 0,
-        function() {
-          framework.openUrl(NEW_DOC['newDocumentDocument']);
-        });
-    newCommands.AddItem(strings.DOCUMENT_PRESENTATION, 0,
-        function() {
-          framework.openUrl(NEW_DOC['newDocumentPresentation']);
-        });
-    newCommands.AddItem(strings.DOCUMENT_SPREADSHEET, 0,
-        function() {
-          framework.openUrl(NEW_DOC['newDocumentSpreadsheet']);
-        });
-    newCommands.AddItem(strings.DOCUMENT_FORM, 0,
-        function() {
-          framework.openUrl(NEW_DOC['newDocumentForm']);
-        });
-
-    menu.AddItem(strings.COMMAND_UPLOAD, 0, uploader.browse.bind(uploader));
-    menu.AddItem(strings.COMMAND_SIGN_OUT, 0, loginSession.logout.bind(loginSession));
-  }
-  */
+  var newCommands = menu.AddPopup(strings.COMMAND_NEW);
+  newCommands.AddItem(strings.DOCUMENT_DOCUMENT, 0,
+      this.onNewDocumentMenuItem.bind(this, Document.DOCUMENT));
+  newCommands.AddItem(strings.DOCUMENT_PRESENTATION, 0,
+      this.onNewDocumentMenuItem.bind(this, Document.PRESENTATION));
+  newCommands.AddItem(strings.DOCUMENT_SPREADSHEET, 0,
+      this.onNewDocumentMenuItem.bind(this, Document.SPREADSHEET));
+  newCommands.AddItem(strings.DOCUMENT_FORM, 0,
+      this.onNewDocumentMenuItem.bind(this, Document.FORM));
+  menu.AddItem(strings.COMMAND_REFRESH, 0, this.retrieve.bind(this));
+  menu.AddItem(strings.COMMAND_UPLOAD, 0, this.browseUpload.bind(this));
+  menu.AddItem(strings.COMMAND_SIGN_OUT, 0, this.logout.bind(this));
 };
 
-/**
- * Override the user's sizing if we go under.
- */
+Main.prototype.onNewDocumentMenuItem = function(commandLabel, type) {
+  this.launchNewDocument(type);
+};
+
 Main.prototype.sizing = function() {
   if (event.width < UI.MIN_WIDTH) {
     event.width = UI.MIN_WIDTH;
@@ -320,9 +291,6 @@ Main.prototype.resize = function() {
  //   uploadOption.x = uploadStatus.width - labelCalcWidth(uploadOption);
 
     doclist.draw();
-
-    this.docsUi.resize();
-
   }
   */
 
@@ -338,5 +306,4 @@ Main.prototype.resize = function() {
   this.menuUi.mainDiv.y = this.commandsDiv.y - this.menuUi.mainDiv.height;
 };
 
-// instantiate object in the global scope
 var g_gadget = new Main();
