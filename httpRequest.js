@@ -146,8 +146,12 @@ HTTPRequest.prototype.hideLoading = function() {
 
 HTTPRequest.prototype.onFailure = function(failedHandler) {
   if (failedHandler) {
-    var status = this.packet.readyState == 4 ? this.packet.status : 0;
-    failedHandler(status, this.packet.responseText);
+    var status = this.packet.readyState;
+    if (status == 4) {
+      failedHandler(status, this.packet.responseText);
+    } else {
+      failedHandler(0, '');
+    }
   } else {
     g_errorMessage.display(strings.ERROR_SERVER_OR_NETWORK);
   }

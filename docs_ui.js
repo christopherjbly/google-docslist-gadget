@@ -45,6 +45,10 @@ DocsUi.prototype.onSearchUiReset = function() {
   }
 };
 
+DocsUi.prototype.resetSearch = function() {
+  this.searchUi.reset();
+};
+
 DocsUi.prototype.clear = function() {
   this.content.removeAllElements();
 };
