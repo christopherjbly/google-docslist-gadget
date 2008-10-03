@@ -48,7 +48,14 @@ function Main() {
 
   view.onsize = this.resize.bind(this);
   view.onsizing = this.sizing.bind(this);
+  // TODO: needed?
   this.resize();
+
+  if (this.auth.hasCredentials()) {
+    this.completeAuth();
+  } else {
+    this.switchLoginMode();
+  }
 }
 
 Main.prototype.onSearch = function(query) {
@@ -113,17 +120,16 @@ Main.prototype.onSortChange = function() {
 };
 
 Main.prototype.onLogin = function(username, password, isRemember) {
-  /********
-  this.loginUi.reset();
-  this.switchDocsMode();
-  return;
-  */
   this.auth.login(username, password, isRemember,
       this.onLoginSuccess.bind(this),
       this.onLoginFailure.bind(this));
 };
 
 Main.prototype.onLoginSuccess = function() {
+  this.completeAuth();
+};
+
+Main.prototype.completeAuth = function() {
   g_authHttpRequest = new AuthHTTPRequest(g_httpRequest, this.auth);
   this.loginUi.reset();
   this.drawUsername(this.auth.username);

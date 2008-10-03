@@ -23,7 +23,7 @@ Auth.OPTIONS_KEY_TOKEN = 'token';
 Auth.OPTIONS_KEY_USERNAME = 'username';
 
 Auth.prototype.getStoredToken = function() {
-  options.getValue(Auth.OPTIONS_KEY_TOKEN);
+  return options.getValue(Auth.OPTIONS_KEY_TOKEN);
 };
 
 Auth.prototype.setStoredToken = function(token) {
@@ -32,7 +32,7 @@ Auth.prototype.setStoredToken = function(token) {
 };
 
 Auth.prototype.getStoredUsername = function() {
-  options.getValue(Auth.OPTIONS_KEY_USERNAME);
+  return options.getValue(Auth.OPTIONS_KEY_USERNAME);
 };
 
 Auth.prototype.setStoredUsername = function(username) {
