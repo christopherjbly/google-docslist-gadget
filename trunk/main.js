@@ -1,7 +1,6 @@
 // TODO: what to do about retrieve requests that stagger in.
 // 1. after logged out.
 // 2. after a refresh.
-// TODO: move sort order to SortUi class.
 
 var g_httpRequest;
 var g_authHttpRequest;
@@ -26,13 +25,11 @@ function Main() {
   this.loginUi.onLogin = this.onLogin.bind(this);
   this.usernameLabel = child(this.window, 'username');
   this.docsUi = new DocsUi(child(this.window, 'mainDiv'), this);
-  // TODO:
-  this.docsUi.scrollbar.onChange = this.onScroll.bind(this);
-  /*kku
+  this.docsUi.onSearch = this.onSearch.bind(this);
+  this.docsUi.onSearchReset = this.onSearchReset.bind(this);
   view.onmousewheel = this.docsUi.scrollbar.wheel.bind(this.docsUi.scrollbar);
   this.window.onkeydown = this.docsUi.scrollbar.keydown.bind(this.docsUi.scrollbar);
   this.window.onkeyup = this.docsUi.scrollbar.keyup.bind(this.docsUi.scrollbar);
-  */
 
   this.commandsDiv = child(this.window, 'commands');
   this.uploadCommand = child(this.commandsDiv, 'commandsUpload');
@@ -84,6 +81,7 @@ Main.prototype.onSearchFail = function() {
 };
 
 Main.prototype.onSearchReset = function() {
+  this.docsUi.redraw(this.documents);
   this.window.focus();
 };
 
@@ -239,9 +237,6 @@ Main.prototype.sizing = function() {
   if (event.height < UI.MIN_HEIGHT) {
     event.height = UI.MIN_HEIGHT;
   }
-};
-
-Main.prototype.onScroll = function(value) {
 };
 
 Main.prototype.resize = function() {

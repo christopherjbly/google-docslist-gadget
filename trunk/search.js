@@ -77,8 +77,8 @@ SearchUi.prototype.resizeAutofill = function() {
     div.y = y;
     y += div.height;
 
-    // TODO: don't do item(#)
     if (div.children.count == 2) {
+      // Not a separator.
       div.children.item(1).width = this.autofillContent.width - div.children.item(1).x - 5;
     }
   }
