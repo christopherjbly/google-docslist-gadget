@@ -186,11 +186,13 @@ Main.prototype.stopRetrieve = function() {
 Main.prototype.switchLoginMode = function() {
   this.loginUi.show();
   this.docsUi.hide();
+  this.commandsDiv.visible = false;
 };
 
 Main.prototype.switchDocsMode = function() {
   this.loginUi.hide();
   this.docsUi.show();
+  this.commandsDiv.visible = true;
 };
 
 Main.prototype.drawUsername = function(username) {
@@ -222,6 +224,7 @@ Main.prototype.getAutofillItems = function(query) {
 };
 
 Main.prototype.onMenuItems = function(menu) {
+  /*
   if (this.isLoggedIn()) {
     menu.AddItem(strings.COMMAND_REFRESH, 0, doclist.get.bind(doclist));
 
@@ -246,6 +249,7 @@ Main.prototype.onMenuItems = function(menu) {
     menu.AddItem(strings.COMMAND_UPLOAD, 0, uploader.browse.bind(uploader));
     menu.AddItem(strings.COMMAND_SIGN_OUT, 0, loginSession.logout.bind(loginSession));
   }
+  */
 };
 
 /**
@@ -267,6 +271,15 @@ Main.prototype.resize = function() {
   this.window.width = view.width - 2;
   this.window.height = view.height - 9;
 
+  var bottomCenterMainBg = child(this.window, 'bottomCenterMainBg');
+  var bottomLeftMainBg = child(this.window, 'bottomLeftMainBg');
+  var bottomRightMainBg = child(this.window, 'bottomRightMainBg');
+  var middleLeftMainBg = child(this.window, 'middleLeftMainBg');
+  var middleCenterMainBg = child(this.window, 'middleCenterMainBg');
+  var middleRightMainBg = child(this.window, 'middleRightMainBg');
+  var topCenterMainBg = child(this.window, 'topCenterMainBg');
+  var topRightMainBg = child(this.window, 'topRightMainBg');
+
   topRightMainBg.x = middleRightMainBg.x = bottomRightMainBg.x =
       this.window.width - topRightMainBg.width;
   topCenterMainBg.width = middleCenterMainBg.width = bottomCenterMainBg.width =
@@ -276,10 +289,15 @@ Main.prototype.resize = function() {
   middleLeftMainBg.height = middleCenterMainBg.height =
       middleRightMainBg.height = bottomRightMainBg.y - middleLeftMainBg.y;
 
-  // Adjust the positions of a images to move to the top right corner
+  var loading = child(this.window, 'loading');
+  var loadingLabel = child(loading, 'loadingLabel');
+
   var loadingWidth = labelCalcWidth(loadingLabel);
   loading.x = this.window.width - (loadingWidth + 12);
   loading.width = loadingWidth;
+
+  var searching = child(this.window, 'searching');
+  var searchingLabel = child(searching, 'searchingLabel');
 
   var searchingWidth = labelCalcWidth(searchingLabel);
   searching.x = this.window.width - (searchingWidth + 12);
@@ -304,7 +322,7 @@ Main.prototype.resize = function() {
 
   // Footer.
   this.commandsDiv.y = this.window.height - 33;
-  this.commandsDiv.width = contentArea.width;
+  this.commandsDiv.width = this.window.width - 16;
   this.newCommandArrow.x = labelCalcWidth(this.newCommand) + 2;
   this.newCommandArrow.y = this.newCommandArrow.height + 3;
   this.uploadCommand.x = this.newCommandArrow.x +
@@ -315,4 +333,4 @@ Main.prototype.resize = function() {
 };
 
 // instantiate object in the global scope
-var gadget = new Main();
+var g_gadget = new Main();

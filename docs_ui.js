@@ -74,7 +74,7 @@ DocsUi.prototype.resize = function(width, height) {
   this.mainDiv.height = height;
 
   this.contentArea.width = this.mainDiv.width;
-  this.contentArea.height = this.mainDiv.height - (searchStatus.height + 14) - 5;
+  this.contentArea.height = this.mainDiv.height - 83;
 
   var contentShadowBottom = child(this.contentArea, 'contentShadowBottom');
   var contentShadowBottomLeft = child(this.contentArea, 'contentShadowBottomLeft');
