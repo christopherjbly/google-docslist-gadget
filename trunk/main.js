@@ -22,22 +22,17 @@ function Main() {
 
   this.loginUi = new LoginUi(child(this.window, 'loginDiv'));
   this.loginUi.onLogin = this.onLogin.bind(this);
-  this.mainDiv = child(this.window, 'mainDiv');
   this.usernameLabel = child(this.window, 'username');
-  this.docsUi = new DocsUi(child(this.mainDiv, 'contentArea'));
+  this.docsUi = new DocsUi(child(this.window, 'mainDiv'), this);
+  // TODO:
   this.docsUi.scrollbar.onChange = this.onScroll.bind(this);
+  /*kku
   view.onmousewheel = this.docsUi.scrollbar.wheel.bind(this.docsUi.scrollbar);
   this.window.onkeydown = this.docsUi.scrollbar.keydown.bind(this.docsUi.scrollbar);
   this.window.onkeyup = this.docsUi.scrollbar.keyup.bind(this.docsUi.scrollbar);
+  */
 
-  this.sortUi = new SortUi(child(this.mainDiv, 'sortOptionsArea'));
-  this.sortUi.onChange = this.onSortChange.bind(this);
-  this.searchUi = new SearchUi(child(this.mainDiv, 'searchStatus'),
-      child(this.window, 'autoFill'), this);
-  this.searchUi.onSearch = this.onSearch.bind(this);
-  this.searchUi.onReset = this.onSearchReset.bind(this);
-
-  this.commandsDiv = child(this.mainDiv, 'commands');
+  this.commandsDiv = child(this.window, 'commands');
   this.uploadCommand = child(this.commandsDiv, 'commandsUpload');
   this.uploadCommand.onclick = this.onUploadClick.bind(this);
   this.signoutCommand = child(this.commandsDiv, 'commandsSignout');
@@ -106,7 +101,7 @@ Main.prototype.onSignoutClick = function() {
 };
 
 Main.prototype.onNewClick = function() {
-  this.menuUi.open();
+  this.menuUi.toggle();
 };
 
 Main.prototype.onSortChange = function() {
@@ -118,6 +113,11 @@ Main.prototype.onSortChange = function() {
 };
 
 Main.prototype.onLogin = function(username, password, isRemember) {
+  /********
+  this.loginUi.reset();
+  this.switchDocsMode();
+  return;
+  */
   this.auth.login(username, password, isRemember,
       this.onLoginSuccess.bind(this),
       this.onLoginFailure.bind(this));
@@ -141,6 +141,7 @@ Main.prototype.launchNewDocument = function(type) {
 Main.prototype.logout = function() {
   this.auth.clear();
   // TODO: Clear content.
+  // stop timers.
   this.switchLoginMode();
 };
 
@@ -182,31 +183,25 @@ Main.prototype.stopRetrieve = function() {
   this.clearInterval(this.retrieveTimer);
 };
 
-Main.prototype.showMainUi = function() {
-  this.mainDiv.visible = true;
-};
-
-Main.prototype.hideMainUi = function() {
-  this.mainDiv.visible = false;
-};
-
 Main.prototype.switchLoginMode = function() {
   this.loginUi.show();
-  this.hideMainUi();
+  this.docsUi.hide();
 };
 
 Main.prototype.switchDocsMode = function() {
   this.loginUi.hide();
-  this.showMainUi();
+  this.docsUi.show();
 };
 
 Main.prototype.drawUsername = function(username) {
   this.usernameLabel.innerText = username;
 };
 
+/*
 Main.prototype.isLoggedIn = function() {
   return !loginDiv.visible && mainDiv.visible;
 };
+*/
 
 Main.AUTOFILL_MAX = 5;
 
@@ -269,79 +264,54 @@ Main.prototype.onScroll = function(value) {
 };
 
 Main.prototype.resize = function() {
-  window.width = view.width - 2;
-  window.height = view.height - 9;
+  this.window.width = view.width - 2;
+  this.window.height = view.height - 9;
 
   topRightMainBg.x = middleRightMainBg.x = bottomRightMainBg.x =
-      window.width - topRightMainBg.width;
+      this.window.width - topRightMainBg.width;
   topCenterMainBg.width = middleCenterMainBg.width = bottomCenterMainBg.width =
       topRightMainBg.x - topCenterMainBg.x;
   bottomRightMainBg.y = bottomCenterMainBg.y = bottomLeftMainBg.y =
-      window.height - bottomLeftMainBg.height;
+      this.window.height - bottomLeftMainBg.height;
   middleLeftMainBg.height = middleCenterMainBg.height =
       middleRightMainBg.height = bottomRightMainBg.y - middleLeftMainBg.y;
 
   // Adjust the positions of a images to move to the top right corner
   var loadingWidth = labelCalcWidth(loadingLabel);
-  loading.x = window.width - (loadingWidth + 12);
+  loading.x = this.window.width - (loadingWidth + 12);
   loading.width = loadingWidth;
 
   var searchingWidth = labelCalcWidth(searchingLabel);
-  searching.x = window.width - (searchingWidth + 12);
+  searching.x = this.window.width - (searchingWidth + 12);
   searching.width = searchingWidth;
 
-  // resize sub UI's here.
-  this.loginUi.resize(window.width - 24, window.height - 50);
+  this.loginUi.resize(this.window.width - 24, this.window.height - 50);
+  this.docsUi.resize(this.window.width - 16, this.window.height - 46);
 
-  if (mainDiv.visible) {
-    mainDiv.width = window.width - 16;
-    mainDiv.height = window.height - 46;
+  /*
+  if (this.mainDiv.visible) {
 
-    this.searchUi.resize(mainDiv.width);
 
-    uploadStatus.width = searchContainer.width - 2;
-    uploadOption.x = uploadStatus.width - labelCalcWidth(uploadOption);
-
-    contentArea.width = mainDiv.width;
-    contentArea.height = mainDiv.height - (searchStatus.height + 14) - 5;
-
-    contentContainer.width = contentArea.width - contentShadowRight.width;
-    contentContainer.height = contentArea.height - contentShadowBottom.height;
+ //   uploadStatus.width = searchContainer.width - 2;
+ //   uploadOption.x = uploadStatus.width - labelCalcWidth(uploadOption);
 
     doclist.draw();
 
-    // TODO:
-    this.docsUi.scrollbar.setMax(doclist.content.height - contentContainer.height);
-    this.docsUi.scrollbar.resize(doclist.content.width + 9,
-        contentContainer.height,
-        doclist.content.height === 0 ?
-            1 :
-            contentContainer.height / doclist.content.height);
+    this.docsUi.resize();
 
-    var contentWidth = mainDiv.width - 6;
-    var nameWidth = Math.ceil((2/3) * contentWidth);
-    this.sortUi.resize(contentWidth, nameWidth);
-
-    contentShadowBottom.width = contentContainer.width - contentShadowBottomLeft.width;
-    contentShadowRight.height = contentArea.height - contentShadowBottomRight.height;
-    contentShadowBottom.x = contentShadowBottomLeft.width;
-    contentShadowRight.x = contentContainer.width;
-    contentShadowBottom.y = contentContainer.height;
-    contentShadowBottomLeft.y = contentContainer.height;
-    contentShadowBottomRight.x = contentContainer.width;
-    contentShadowBottomRight.y = contentContainer.height;
-
-    this.commandsDiv.y = contentArea.height + contentArea.y + 5;
-    this.commandsDiv.width = contentArea.width;
-    this.newCommandArrow.x = labelCalcWidth(this.newCommand) + 2;
-    this.newCommandArrow.y = this.newCommandArrow.height + 3;
-    this.uploadCommand.x = this.newCommandArrow.x +
-        this.newCommandArrow.width + 7;
-    this.signoutCommand.x = this.commandsDiv.width -
-        (labelCalcWidth(this.signoutCommand) + 4);
-    this.menuUi.mainDiv.y = mainDiv.height -
-        (this.menuUi.mainDiv.height - this.commandsDiv.height - 13);
   }
+  */
+
+  // Footer.
+  this.commandsDiv.y = this.window.height - 33;
+  this.commandsDiv.width = contentArea.width;
+  this.newCommandArrow.x = labelCalcWidth(this.newCommand) + 2;
+  this.newCommandArrow.y = this.newCommandArrow.height + 3;
+  this.uploadCommand.x = this.newCommandArrow.x +
+      this.newCommandArrow.width + 7;
+  this.signoutCommand.x = this.commandsDiv.width -
+      (labelCalcWidth(this.signoutCommand) + 4);
+  this.menuUi.mainDiv.y = this.commandsDiv.y - this.menuUi.mainDiv.height;
 };
 
 // instantiate object in the global scope

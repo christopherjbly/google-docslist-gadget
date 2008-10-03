@@ -19,6 +19,14 @@ DocumentMenu.prototype.isOpen = function() {
   return this.mainDiv.visible;
 };
 
+DocumentMenu.prototype.toggle = function() {
+  if (this.isOpen()) {
+    this.close();
+  } else {
+    this.open();
+  }
+};
+
 DocumentMenu.prototype.open = function() {
   this.mainDiv.visible = true;
 };

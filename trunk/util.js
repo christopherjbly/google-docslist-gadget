@@ -32,6 +32,7 @@ function buildQueryString(obj) {
 }
 
 function child(element, childName) {
+  debug.trace(childName);
   return element.children.item(childName);
 }
 
