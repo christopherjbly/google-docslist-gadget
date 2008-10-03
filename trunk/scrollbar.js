@@ -32,6 +32,10 @@ CustomScrollbar.prototype.setMax = function(max) {
   this.maxY = max;
 };
 
+CustomScrollbar.prototype.getWidth = function() {
+  return this.mainDiv.width;
+};
+
 CustomScrollbar.prototype.hide = function() {
   this.mainDiv.visible = false;
 };

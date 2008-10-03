@@ -9,15 +9,23 @@ function DocsUi(mainDiv, gadget) {
   this.content = child(this.container, 'doclistContent');
   this.scrollbar = new CustomScrollbar(child(this.container, 'scrollbar'));
 
+  this.documents = [];
+
   this.sortUi = new SortUi(child(this.mainDiv, 'sortOptionsArea'));
+  this.sortUi.onChange = this.onSortChange.bind(this);
   this.searchUi = new SearchUi(child(this.mainDiv, 'searchStatus'),
       child(this.gadget.window, 'autoFill'), this.gadget);
-//  this.sortUi.onChange = this.onSortChange.bind(this);
+
+  this.itemDateWidth = 0;
 /*
   this.searchUi.onSearch = this.onSearch.bind(this);
   this.searchUi.onReset = this.onSearchReset.bind(this);
   */
 }
+
+DocsUi.prototype.onSortChange = function() {
+  this.draw();
+};
 
 DocsUi.prototype.clear = function() {
   this.content.removeAllElements();
@@ -31,29 +39,65 @@ DocsUi.prototype.hide = function() {
   this.mainDiv.visible = false;
 };
 
-/**
- * Refresh doclist contents
- */
-DocsUi.prototype.drawDocuments = function(documents) {
+DocsUi.prototype.sort = function() {
+  if (this.sortUi.isDate()) {
+    this.documents.sort(DocsUi.sortByDate);
+  } else {
+    this.documents.sort(DocsUi.sortByName);
+  }
+};
+
+DocsUi.sortByName = function(a, b) {
+  a = a.title.toLowerCase();
+  b = b.title.toLowerCase();
+  if (a < b) {
+    return -1;
+  } else if (a > b) {
+    return 1;
+  } else {
+    return 0;
+  }
+};
+
+DocsUi.sortByDate = function(a, b) {
+  a = a.updated.getTime();
+  b = b.updated.getTime();
+  if (a < b) {
+    return -1;
+  } else if (a > b) {
+    return 1;
+  } else {
+    return 0;
+  }
+};
+
+DocsUi.prototype.redraw = function(documents) {
   this.clear();
+  this.documents = documents;
+  this.draw();
+};
+
+DocsUi.prototype.draw = function() {
+  this.sort();
+  var documents = this.documents;
 
   for (var i = 0; i < documents.length; ++i) {
     var document = documents[i];
 
     var item = this.content.appendElement('<div height="20" cursor="hand" enabled="true" />');
 
-    var iconDiv = item.appendElement('<div x="2" y="2" width="16" height="16" />');
-    iconDiv.background = "images/icon-" + document.type + ".gif";
+    var iconDiv = item.appendElement('<div name="icon" x="2" y="2" width="16" height="16" />');
+    iconDiv.background = document.getIcon();
 
-    var titleLabel = item.appendElement('<label x="26" y="2" font="helvetica" size="8" color="#000000" trimming="character-ellipsis" />');
+    var titleLabel = item.appendElement('<label name="title" x="26" y="2" font="helvetica" size="8" color="#000000" trimming="character-ellipsis" />');
     titleLabel.innerText = document.title;
     titleLabel.tooltip = document.title;
 
     if (document.starred) {
-      item.appendElement('<div y="4" width="12" height="12" background="images/icon-star.gif" />');
+      item.appendElement('<div name="star" y="4" width="12" height="12" background="images/icon-star.gif" />');
     }
 
-    var dateLabel = item.appendElement('<label y="2" font="helvetica" size="8" color="#66b3ff" align="right" />');
+    var dateLabel = item.appendElement('<label name="date" y="2" font="helvetica" size="8" color="#66b3ff" align="right" />');
     dateLabel.innerText = document.date;
 
     item.onmouseover = function() { event.srcElement.background='#E0ECF7'; };
@@ -63,12 +107,58 @@ DocsUi.prototype.drawDocuments = function(documents) {
     this.content.appendElement('<div height="1" background="#dddddd" />');
   }
 
-//  this.resize();
+  this.resizeContent();
 };
 
-/**
- * Draw doclist contents
- */
+DocsUi.prototype.resizeContent = function() {
+  var y = 0;
+
+  for (var i = 0; i < this.content.children.count; ++i) {
+    var div = this.content.children.item(i);
+    div.y = y;
+    y += div.height;
+  }
+
+  this.content.height = y;
+
+  if (this.content.height <= this.container.height) {
+    this.content.width = this.container.width;
+    this.scrollbar.hide();
+  } else {
+    this.content.width = this.container.width - (this.scrollbar.getWidth() + 14);
+    this.scrollbar.show();
+    // --this.content.height;
+  }
+
+  // TODO: fix.
+  this.scrollbar.setMax(this.content.height - this.container.height);
+  this.scrollbar.resize(this.content.width + 9,
+      this.container.height,
+      this.content.height === 0 ?
+          1 :
+          this.container.height / this.content.height);
+
+  for (i = 0; i < this.content.children.count; ++i) {
+    div = this.content.children.item(i);
+    div.width = this.container.width; // - (scrollbar.visible ? 0 : 8);
+
+    if (div.children.count > 0) {
+      // Not a separator.
+      var icon = child(div, 'icon');
+      var title = child(div, 'title');
+      var star = child(div, 'star');
+      var date = child(div, 'date');
+
+      if (star) {
+        star.x = title.x + labelCalcWidth(title);
+      }
+      date.x = div.width - this.itemDateWidth;
+      date.width = this.itemDateWidth;
+      //  dateLabel.width = (sortOptionsDate.width - scrollbar.width - (9 + 4) + (scrollbar.visible ? 0 : (scrollbar.width + 8)));
+    }
+  }
+};
+
 DocsUi.prototype.resize = function(width, height) {
   this.mainDiv.width = width;
   this.mainDiv.height = height;
@@ -93,59 +183,11 @@ DocsUi.prototype.resize = function(width, height) {
   contentShadowBottomRight.y = this.container.height;
 
   var contentWidth = this.mainDiv.width - 6;
-  var nameWidth = Math.ceil((2/3) * contentWidth);
-  this.sortUi.resize(contentWidth, nameWidth);
+  this.itemDateWidth = Math.ceil((1/3) * contentWidth);
+  this.sortUi.resize(contentWidth, this.itemDateWidth);
   this.searchUi.resize(this.mainDiv.width);
 
-    // TODO:
-  this.scrollbar.setMax(this.content.height - this.container.height);
-  this.scrollbar.resize(this.content.width + 9,
-      this.container.height,
-      this.content.height === 0 ?
-          1 :
-          this.container.height / this.content.height);
-
-  // height and vertical position
-  /*
-  var y = 0;
-  for (var i = 0; i < this.content.children.count; ++i) {
-    var div = this.content.children.item(i);
-    div.y = y;
-    y += div.height;
-  }
-
-  this.content.height = y;
-
-  // show or hide scrollbar
-
-  if (this.content.height <= contentContainer.height) {
-    this.content.width = contentContainer.width;
-    scrollbar.visible = false;
-  } else {
-    this.content.width = contentContainer.width - (scrollbar.width + 14);
-    scrollbar.visible = true;
-    --this.content.height;
-  }
-  */
-
-  // width and horizontal position
-
-//  sortOptions.draw();
-
-  /*
-  for (i = 0; i < this.content.children.count; ++i) {
-    div = this.content.children.item(i);
-    div.width = contentContainer.width - (scrollbar.visible ? 0 : 8);
-
-    if (div.children.count > 0) {
-//      if (uploader.isOpen) {
-//        this.drawUploader(div);
-//      } else {
-//        this.drawFiles(div);
-//      }
-    }
-  }
-    */
+  this.resizeContent();
 //.  customScrollbar.draw();
 };
 
@@ -168,7 +210,6 @@ DocsUi.prototype.drawFiles = function(div) {
     dateLabel = div.children.item(2);
   }
 
-  dateLabel.x = sortOptionsDate.x;
-  dateLabel.width = (sortOptionsDate.width - scrollbar.width - (9 + 4) + (scrollbar.visible ? 0 : (scrollbar.width + 8)));
+
 };
 */

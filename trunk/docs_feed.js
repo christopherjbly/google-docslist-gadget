@@ -11,6 +11,23 @@ Document.prototype.getIcon = function() {
   return 'images/icon-' + this.type + '.gif';
 };
 
+Document.DOCUMENT = 'document';
+Document.SPREADSHEET = 'spreadsheet';
+Document.PRESENTATION = 'presentation';
+Document.FORM = 'form';
+
+Document.buildNewDocumentUrl = function(type) {
+  // TODO: google apps URLs.
+  return Document.NEW_DOC_MAP[type];
+};
+
+Document.NEW_DOC_MAP = {};
+Document.NEW_DOC_MAP[Document.DOCUMENT] = 'http://docs.google.com/MiscCommands?command=newdoc&redirectToDocument=true';
+Document.NEW_DOC_MAP[Document.SPREADSHEET] = 'http://spreadsheets.google.com/ccc?new';
+Document.NEW_DOC_MAP[Document.PRESENTATION] = 'http://docs.google.com/DocAction?action=new_presentation&source=doclist';
+Document.NEW_DOC_MAP[Document.FORM] = 'http://spreadsheets.google.com/newform';
+
+
 DocsFeed.FEED_URL = 'https://docs.google.com/feeds/documents/private/full';
 
 DocsFeed.MAX_RESULTS_PARAM = 'max-results';
@@ -36,6 +53,7 @@ DocsFeed.prototype.buildFeedUrl = function(startIndex) {
   return DocsFeed.FEED_URL + '?' + buildQueryString(params);
 };
 
+// TODO: should cancel or ignore old chunks. may be out of sequence.
 DocsFeed.prototype.retrieve = function() {
   this.retrieveChunk(1);
 };

@@ -135,69 +135,6 @@ Doclist.prototype.sort = function() {
 }
 
 /**
- * Sort functions - by name
- */
-Doclist.prototype.sortByName = function(a, b) {
-  var A = a.title.toLowerCase();
-  var B = b.title.toLowerCase();
-  if (A < B) return -1;
-  if (A > B) return 1;
-  return 0;
-}
-
-/**
- * Sort functions - by date
- */
-Doclist.prototype.sortByDate = function(a, b) {
-  var A = a.updated.getTime();
-  var B = b.updated.getTime();
-  if (A > B) return -1;
-  if (A < B) return 1;
-  return 0;
-}
-
-Doclist.prototype.clear = function() {
-  doclistContent.removeAllElements();
-};
-
-/**
- * Refresh doclist contents
- */
-Doclist.prototype.refresh = function() {
-  this.clear();
-
-  var documents = searchField.active ? this.results : this.documents;
-
-  for (var i = 0; i < documents.length; ++i) {
-    var document = documents[i];
-
-    var item = doclistContent.appendElement('<div height="20" cursor="hand" enabled="true" />');
-
-    var iconDiv = item.appendElement('<div x="2" y="2" width="16" height="16" />');
-    iconDiv.background = "images/icon-" + document.type + ".gif";
-
-    var titleLabel = item.appendElement('<label x="26" y="2" font="helvetica" size="8" color="#000000" trimming="character-ellipsis" />');
-    titleLabel.innerText = document.title;
-    titleLabel.tooltip = document.title;
-
-    if (document.starred) {
-      item.appendElement('<div y="4" width="12" height="12" background="images/icon-star.gif" />');
-    }
-
-    var dateLabel = item.appendElement('<label y="2" font="helvetica" size="8" color="#66b3ff" align="right" />');
-    dateLabel.innerText = document.date;
-
-    item.onmouseover = function() { event.srcElement.background='#E0ECF7'; }
-    item.onmouseout = function() { event.srcElement.background=''; }
-    item.onclick = function() { framework.openUrl(this.link); }.bind(document)
-
-    doclistContent.appendElement('<div height="1" background="#dddddd" />');
-  }
-
-  this.draw();
-}
-
-/**
  * Open uploader
  */
 Doclist.prototype.onOpenUploader = function() {
