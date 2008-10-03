@@ -72,11 +72,15 @@ Main.prototype.onSearchRetrieve = function(feed) {
     this.searchDocuments.concat(feed.documents);
   }
 
-  this.docsUi.redraw(this.searchDocuments);
+  if (!this.searchDocuments.length) {
+    this.docsUi.resetSearch();
+    g_errorMessage.display(strings.ERROR_SEARCH_NO_RESULTS);
+  } else {
+    this.docsUi.redraw(this.searchDocuments);
+  }
 };
 
 Main.prototype.onSearchFail = function() {
-  // TODO: what if not logged in?
   this.logout();
 };
 
@@ -278,16 +282,8 @@ Main.prototype.resize = function() {
   this.loginUi.resize(this.window.width - 24, this.window.height - 50);
   this.docsUi.resize(this.window.width - 16, this.window.height - 46);
 
-  /*
-  if (this.mainDiv.visible) {
-
-
  //   uploadStatus.width = searchContainer.width - 2;
  //   uploadOption.x = uploadStatus.width - labelCalcWidth(uploadOption);
-
-    doclist.draw();
-  }
-  */
 
   // Footer.
   this.commandsDiv.y = this.window.height - 33;

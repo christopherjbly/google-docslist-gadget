@@ -77,10 +77,8 @@ SearchUi.prototype.resizeAutofill = function() {
     div.y = y;
     y += div.height;
 
-    if (div.children.count == 2) {
-      // Not a separator.
-      div.children.item(1).width = this.autofillContent.width - div.children.item(1).x - 5;
-    }
+    div.children.item('title').width =
+        this.autofillContent.width - div.children.item('title').x - 5;
   }
 
   this.autofillContent.height = y;
@@ -185,25 +183,32 @@ SearchUi.prototype.getAutofillSelected = function() {
   return this.autofillItems[this.autofillSelectedIndex];
 };
 
+SearchUi.prototype.setAutofillSelected = function(index) {
+  this.autofillSelectedIndex = index;
+
+  if (this.autofillSelectedIndex < 0) {
+    this.autofillSelectedIndex = -1;
+  } else if (this.autofillSelectedIndex >= this.autofillItems.length) {
+    this.autofillSelectedIndex = this.autofillItems.length - 1;
+  }
+
+  for (var i = 0; i < this.autofillContent.children.count; ++i) {
+    var div = this.autofillContent.children.item(i);
+
+    if (i == this.autofillSelectedIndex) {
+      div.background = SearchUi.AUTOFILL_SELECTED_BACKGROUND;
+    } else {
+      div.background = '';
+    }
+  }
+};
+
 SearchUi.prototype.onAutofillUp = function() {
   if (!this.isAutofillVisible) {
     return;
   }
 
-  if (this.isAutofillSelected()) {
-    this.autofillContent.children.item(this.autofillSelectedIndex).background =
-        '';
-  }
-
-  --this.autofillSelectedIndex;
-
-  if (this.autofillSelectedIndex < 0) {
-    this.autofillSelectedIndex = -1;
-    return;
-  }
-
-  this.autofillContent.children.item(this.autofillSelectedIndex).background =
-      SearchUi.AUTOFILL_SELECTED_BACKGROUND;
+  this.setAutofillSelected(this.autofillSelectedIndex - 1);
 };
 
 SearchUi.prototype.onAutofillDown = function() {
@@ -211,56 +216,38 @@ SearchUi.prototype.onAutofillDown = function() {
     return;
   }
 
-  if (this.isAutofillSelected()) {
-    this.autofillContent.children.item(this.autofillSelectedIndex).background =
-        '';
-  }
-
-  ++this.autofillSelectedIndex;
-
-  if (this.autofillSelectedIndex >= this.autofillItems.length) {
-    this.autofillSelectedIndex = this.autofillItems.length - 1;
-  }
-
-  this.autofillContent.children.item(this.autofillSelectedIndex).background =
-      SearchUi.AUTOFILL_SELECTED_BACKGROUND;
+  this.setAutofillSelected(this.autofillSelectedIndex + 1);
 };
 
-SearchUi.AUTOFILL_SELECTED_BACKGROUND = '#e0ecf7';
+SearchUi.AUTOFILL_SELECTED_BACKGROUND = '#E0ECF7';
 
-SearchUi.prototype.addAutofillItem = function(document) {
-    var item = this.autofillContent.appendElement('<div height="20" enabled="true" cursor="hand" />');
-    var iconDiv = item.appendElement('<div x="5" y="2" width="16" height="16" />');
-    iconDiv.background = document.getIcon();
+SearchUi.prototype.addAutofillItem = function(index) {
+  var document = this.autofillItems[index];
 
-    var titleLabel = item.appendElement('<label x="28" y="2" font="helvetica" size="8" color="#000000" trimming="character-ellipsis" />');
-    titleLabel.innerText = document.title;
+  var item = this.autofillContent.appendElement('<div height="20" enabled="true" cursor="hand" />');
+  var iconDiv = item.appendElement('<div x="5" y="2" width="16" height="16" />');
+  iconDiv.background = document.getIcon();
 
-    this.resizeAutofill();
+  var titleLabel = item.appendElement('<label name="title" x="28" y="2" font="helvetica" size="8" color="#000000" trimming="character-ellipsis" />');
+  titleLabel.innerText = document.title;
 
-    /*
-    item.onmouseover = function(index) {
-      if (this.autofillSelected !== false) {
-        autoFillOptions.children.item(this.autofillSelected).background = '';
-      }
-      event.srcElement.background='#e0ecf7';
-      this.autofillSelected = index;
-    }.bind(this, i)
+  item.onmouseover = this.onAutofillMouseOver.bind(this, index);
+  item.onclick = this.onAutofillClick.bind(this, document.link);
 
-    item.onmouseout = function() {
-      event.srcElement.background='';
-      this.autofillSelected = false;
-    }.bind(this)
+  this.resizeAutofill();
+};
 
-    item.onclick = function() {
-      searchField.reset();
-      framework.openUrl(this.link);
-    }.bind(document)
-    */
+SearchUi.prototype.onAutofillMouseOver = function(index) {
+  this.setAutofillSelected(index);
+};
+
+SearchUi.prototype.onAutofillClick = function(link) {
+  this.reset();
+  framework.openUrl(link);
 };
 
 SearchUi.prototype.clearAutofill = function() {
-  this.autofillSelectedIndex = -1;
+  this.setAutofillSelected(-1);
   this.autofillContent.removeAllElements();
 };
 
@@ -271,6 +258,7 @@ SearchUi.prototype.autofill = function() {
   }
 
   this.autofillItems = this.gadget.getAutofillItems(this.field.value);
+  this.autofillItems.sort(DocsUi.sortByName);
   this.clearAutofill();
 
   if (!this.autofillItems.length) {
@@ -279,7 +267,7 @@ SearchUi.prototype.autofill = function() {
   }
 
   for (var i = 0; i < this.autofillItems.length; ++i) {
-    this.addAutofillItem(this.autofillItems[i]);
+    this.addAutofillItem(i);
   }
 
   this.showAutofill();
