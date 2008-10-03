@@ -264,4 +264,4 @@ Uploader.prototype.close = function() {
 }
 
 // instantiate object in the global scope
-var uploader = new Uploader();
+// var uploader = new Uploader();

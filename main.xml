@@ -63,40 +63,34 @@
     </div>
 
     <div name="mainDiv" x="7" y="26" visible="false">
-
       <div name="searchStatus" y="0" height="64">
-        <div name="searchStatusLeft" width="4" height="64" 
+        <div name="searchStatusLeft" width="4" height="64"
           background="images/blue-area-left.gif" />
         <div name="searchStatusContent" x="4" height="64"
-          background="images/blue-area-fill.gif">        
+          background="images/blue-area-fill.gif">
             <div name="searchArea" x="7" y="12" height="25" background="#5697de">
               <div name="searchContainer" x="1" y="1" height="23" background="#ffffff">
-                <edit name="search" y="3" size="11" height="17" font="helvetica" 
-                  background="#ffffff" color="#999999" value="&SEARCH_DOCS;" enabled="true" />              
-                <div name="searchClear" y="2" width="19" height="19" 
-                  background="images/textbox-close.gif" cursor="hand" visible="false" enabled="true" />              
+                <edit name="search" y="3" size="11" height="17" font="helvetica"
+                  background="#ffffff" color="#999999" value="&SEARCH_DOCS;" enabled="true" />
+                <div name="searchClear" y="2" width="19" height="19"
+                  background="images/textbox-close.gif" cursor="hand" visible="false" enabled="true" />
               </div>
-            </div>
-            <div name="uploadStatus" x="9" y="7" height="50" visible="false">
-              <label name="uploadStatusLine1" size="11" width="100%" height="18" font="helvetica" color="#ffffff">&UPLOAD_UPLOADING;</label>
-              <label y="18" name="uploadStatusLine2" size="11" width="100%" height="18" font="helvetica" color="#ffffff">0 &UPLOAD_OF; 0</label>              
-              <a y="35" name="uploadOption" size="8" font="helvetica" color="#ffffff" underline="true">&UPLOAD_CANCEL;</a>                            
             </div>
         </div>
         <div name="searchStatusRight" width="6" height="64"
-          background="images/blue-area-right.gif" />    
+          background="images/blue-area-right.gif" />
       </div>
 
       <div name="sortOptionsArea" y="46" height="18">
         <div name="sortOptionsName" height="18"
           background="images/inactive-bg.gif" cursor="hand" enabled="true">
             <label x="6" y="1" font="helvetica" size="8" color="#000000">&SORT_NAME;</label>
-            <div name="sortOptionsNameArrow" y="7" width="9" height="6" background="images/name-date-arrow.gif" visible="false" />              
+            <div name="sortOptionsNameArrow" y="7" width="9" height="6" background="images/name-date-arrow.gif" visible="false" />
         </div>
         <div name="sortOptionsNameDateDivider" width="2" height="18"
           background="images/name-date-divider.gif" />
         <div name="sortOptionsDateNameDivider" width="2" height="18"
-          background="images/date-name-divider.gif" visible="false" />                  
+          background="images/date-name-divider.gif" visible="false" />
         <div name="sortOptionsDate" height="18"
           background="images/active-bg.gif" enabled="true">
             <label x="5" y="1" font="helvetica" size="8" color="#000000">&SORT_DATE;</label>
@@ -107,73 +101,108 @@
       <div name="contentArea" y="64">
         <div name="contentContainer" background="#FFFFFF">
           <div x="4" y="0" name="doclistContent" background="#FFFFFF" />
+          <div y="3" width="14" name="scrollbar" background="#FFFFFF">
+            <div width="14" height="12" name="scrollbarUp" background="images/scroll-up.gif" enabled="true"/>
+            <div width="14" y="12" name="scrollbarTrack" background="images/scroll-track.gif" enabled="true" />
+            <div width="14" y="12" name="scrollbarBar" background="images/scroll-bar.gif" enabled="true" />
+            <div width="14" height="11" name="scrollbarDown" background="images/scroll-down.gif" enabled="true" />
+          </div>
+        </div>
+        <div name="contentShadowRight" width="2"
+          background="images/dropshadow-right.gif" />
+        <div name="contentShadowBottomLeft" width="2" height="2"
+          background="images/dropshadow-left-bottom.gif" />
+        <div name="contentShadowBottom" height="2"
+          background="images/dropshadow-bottom.gif" />
+        <div name="contentShadowBottomRight" width="2" height="2"
+          background="images/dropshadow-right-bottom.gif" />
+      </div>
+    </div>
+
+    <!--
+    <div name="uploadDiv" x="7" y="26" visible="false">
+      <div name="searchStatus" y="0" height="64">
+        <div name="searchStatusLeft" width="4" height="64"
+          background="images/blue-area-left.gif" />
+        <div name="searchStatusContent" x="4" height="64"
+          background="images/blue-area-fill.gif">
+            <div name="uploadStatus" x="9" y="7" height="50" visible="false">
+              <label name="uploadStatusLine1" size="11" width="100%" height="18" font="helvetica" color="#ffffff">&UPLOAD_UPLOADING;</label>
+              <label y="18" name="uploadStatusLine2" size="11" width="100%" height="18" font="helvetica" color="#ffffff">0 &UPLOAD_OF; 0</label>
+              <a y="35" name="uploadOption" size="8" font="helvetica" color="#ffffff" underline="true">&UPLOAD_CANCEL;</a>
+            </div>
+        </div>
+        <div name="searchStatusRight" width="6" height="64"
+          background="images/blue-area-right.gif" />
+      </div>
+
+      <div name="contentArea" y="64">
+        <div name="contentContainer" background="#FFFFFF">
           <div x="4" y="0" name="uploaderContent" background="#FFFFFF" visible="false" />
           <div y="3" width="14" name="scrollbar" background="#FFFFFF">
             <div width="14" height="12" name="scrollbarUp" background="images/scroll-up.gif" enabled="true"/>
-            <div width="14" y="12" name="scrollbarTrack" background="images/scroll-track.gif" enabled="true" />        
-            <div width="14" y="12" name="scrollbarBar" background="images/scroll-bar.gif" enabled="true" />                            
-            <div width="14" height="11" name="scrollbarDown" background="images/scroll-down.gif" enabled="true" />            
-          </div>     
+            <div width="14" y="12" name="scrollbarTrack" background="images/scroll-track.gif" enabled="true" />
+            <div width="14" y="12" name="scrollbarBar" background="images/scroll-bar.gif" enabled="true" />
+            <div width="14" height="11" name="scrollbarDown" background="images/scroll-down.gif" enabled="true" />
+          </div>
         </div>
         <div name="contentShadowRight" width="2"
-          background="images/dropshadow-right.gif" />              
+          background="images/dropshadow-right.gif" />
         <div name="contentShadowBottomLeft" width="2" height="2"
-          background="images/dropshadow-left-bottom.gif" />                         
+          background="images/dropshadow-left-bottom.gif" />
         <div name="contentShadowBottom" height="2"
-          background="images/dropshadow-bottom.gif" />                      
+          background="images/dropshadow-bottom.gif" />
         <div name="contentShadowBottomRight" width="2" height="2"
-          background="images/dropshadow-right-bottom.gif" />              
-            
+          background="images/dropshadow-right-bottom.gif" />
       </div>
-
-      <div name="commands" height="23">
-        <a name="commandsNew" x="3" height="14" font="helvetica" size="8" color="#0065cd" underline="true">&COMMAND_NEW;</a>
-        <div name="commandsNewArrow" cursor="hand" width="7" height="4" background="images/down-arrow.gif" enabled="true" />
-        <a name="commandsUpload" font="helvetica" size="8" color="#0065cd" underline="true">&COMMAND_UPLOAD;</a>
-        <a name="commandsSignout" font="helvetica" size="8" color="#0065cd" underline="true">&COMMAND_SIGN_OUT;</a>
-      </div>
-      
     </div>
+    -->
 
     <div name="autoFill" x="16" y="60" visible="false">
       <div name="autoFillTopLeft" width="3" height="3"
-           background="images/dropdown-top-left.png" />             
+           background="images/dropdown-top-left.png" />
       <div name="autoFillTopCenter" x="3" height="3"
            background="images/dropdown-top.png" />
       <div name="autoFillTopRight" width="5" height="3"
            background="images/dropdown-top-right.png" />
 
-      <div name="autoFillMiddleLeft" y="3" width="3" 
-           background="images/dropdown-left.png" />        
+      <div name="autoFillMiddleLeft" y="3" width="3"
+           background="images/dropdown-left.png" />
       <div name="autoFillMiddleRight" y="3" width="5"
            background="images/dropdown-right.png" />
 
       <div name="autoFillBottomLeft" width="3" height="5"
-           background="images/dropdown-bottom-left.png" />           
+           background="images/dropdown-bottom-left.png" />
       <div name="autoFillBottomCenter" x="3" height="5"
            background="images/dropdown-bottom.png" />
       <div name="autoFillBottomRight" width="5" height="5"
          background="images/dropdown-bottom-right.png" />
 
       <div name="autoFillOptions" x="3" y="3" background="#ffffff" />
-
     </div>
 
-    <div name="newDocument" x="2" width="106" height="88" visible="false">
+    <div name="commands" height="23" x="7">
+      <a name="commandsNew" x="3" height="14" font="helvetica" size="8" color="#0065cd" underline="true">&COMMAND_NEW;</a>
+      <div name="commandsNewArrow" cursor="hand" width="7" height="4" background="images/down-arrow.gif" enabled="true" />
+      <a name="commandsUpload" font="helvetica" size="8" color="#0065cd" underline="true">&COMMAND_UPLOAD;</a>
+      <a name="commandsSignout" font="helvetica" size="8" color="#0065cd" underline="true">&COMMAND_SIGN_OUT;</a>
+    </div>
+
+    <div name="newDocument" x="8" width="106" height="88" visible="false">
       <div name="newDocumentTopLeft" width="3" height="3"
-           background="images/dropdown-top-left.png" />             
+           background="images/dropdown-top-left.png" />
       <div name="newDocumentTopCenter" x="3" width="98" height="3"
            background="images/dropdown-top.png" />
       <div name="newDocumentTopRight" x="101" width="5" height="3"
            background="images/dropdown-top-right.png" />
 
       <div name="newDocumentMiddleLeft" y="3" width="3" height="80"
-           background="images/dropdown-left.png" />        
+           background="images/dropdown-left.png" />
       <div name="newDocumentMiddleRight" x="101 " y="3" width="5" height="80"
            background="images/dropdown-right.png" />
 
       <div name="newDocumentBottomLeft" y="83" width="3" height="5"
-           background="images/dropdown-bottom-left.png" />           
+           background="images/dropdown-bottom-left.png" />
       <div name="newDocumentBottomCenter" x="3" y="83" width="98" height="5"
            background="images/dropdown-bottom.png" />
       <div name="newDocumentBottomRight" x="101" y="83" width="5" height="5"
@@ -181,39 +210,39 @@
 
       <div name="newDocumentOptions" x="3" y="3" width="98" height="80" background="#ffffff">
         <div name="newDocumentDocument" y="0" width="98" height="20" enabled="true" cursor="hand"
-          onmouseover="event.srcElement.background='#e0ecf7'" 
+          onmouseover="event.srcElement.background='#e0ecf7'"
           onmouseout="event.srcElement.background=''">
-            <div x="6" y="2" width="16" height="16" background="images/icon-document.gif"/>          
+            <div x="6" y="2" width="16" height="16" background="images/icon-document.gif"/>
             <label x="28" y="2" font="helvetica" size="8" color="#000000">&DOCUMENT_DOCUMENT;</label>
         </div>
         <div name="newDocumentPresentation" y="20" width="98" height="20" enabled="true" cursor="hand"
           onmouseover="event.srcElement.background='#e0ecf7'"
           onmouseout="event.srcElement.background=''">
-            <div x="6" y="2" width="16" height="16" background="images/icon-presentation.gif"/>          
+            <div x="6" y="2" width="16" height="16" background="images/icon-presentation.gif"/>
             <label x="28" y="2" font="helvetica" size="8" color="#000000">&DOCUMENT_PRESENTATION;</label>
         </div>
         <div name="newDocumentSpreadsheet" y="40" width="98" height="20" enabled="true" cursor="hand"
-          onmouseover="event.srcElement.background='#e0ecf7'" 
+          onmouseover="event.srcElement.background='#e0ecf7'"
           onmouseout="event.srcElement.background=''">
-            <div x="6" y="2" width="16" height="16" background="images/icon-spreadsheet.gif"/>          
+            <div x="6" y="2" width="16" height="16" background="images/icon-spreadsheet.gif"/>
             <label x="28" y="2" font="helvetica" size="8" color="#000000">&DOCUMENT_SPREADSHEET;</label>
         </div>
         <div name="newDocumentForm" y="60" width="98" height="20" enabled="true" cursor="hand"
-          onmouseover="event.srcElement.background='#e0ecf7'" 
+          onmouseover="event.srcElement.background='#e0ecf7'"
           onmouseout="event.srcElement.background=''">
             <div x="6" y="2" width="16" height="16" background="images/icon-form.gif"/>
             <label x="28" y="2" font="helvetica" size="8" color="#000000">&DOCUMENT_FORM;</label>
         </div>
       </div>
-
     </div>
+
     <div name="loading" background="#cc4444" y="6" height="16" visible="false" >
       <label name="loadingLabel" font="arial" size="8" color="#ffffff">&LOADING;</label>
     </div>
-    <div name="searching" background="#cc4444" y="6" height="16" visible="false">    
+    <div name="searching" background="#cc4444" y="6" height="16" visible="false">
       <label name="searchingLabel" font="arial" size="8" color="#ffffff">&SEARCHING;</label>
     </div>
   </div>
-  
+
   <div width="33" height="34" background="images/logo.png" />
 </view>
