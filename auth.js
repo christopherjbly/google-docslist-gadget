@@ -1,13 +1,13 @@
 Auth.LOGIN_ERRORS = {
-  'BadAuthentication': ERROR_BAD_AUTH,
-  'NotVerified': ERROR_NOT_VERIFIED,
-  'TermsNotAgreed': ERROR_TERMS,
-  'CaptchaRequired': ERROR_CAPTCHA,
-  'Unknown': ERROR_UNKNOWN,
-  'AccountDeleted': ERROR_ACCOUNT_DELETED,
-  'AccountDisabled': ERROR_ACCOUNT_DISABLED,
-  'ServiceDisabled': ERROR_SERVICE_DISABLED,
-  'ServiceUnavailable': ERROR_SERVICE_UNAVAILABLE };
+  'BadAuthentication': strings.ERROR_BAD_AUTH,
+  'NotVerified': strings.ERROR_NOT_VERIFIED,
+  'TermsNotAgreed': strings.ERROR_TERMS,
+  'CaptchaRequired': strings.ERROR_CAPTCHA,
+  'Unknown': strings.ERROR_UNKNOWN,
+  'AccountDeleted': strings.ERROR_ACCOUNT_DELETED,
+  'AccountDisabled': strings.ERROR_ACCOUNT_DISABLED,
+  'ServiceDisabled': strings.ERROR_SERVICE_DISABLED,
+  'ServiceUnavailable': strings.ERROR_SERVICE_UNAVAILABLE };
 
 function Auth() {
   options.putDefaultValue(Auth.OPTIONS_KEY_TOKEN, '');

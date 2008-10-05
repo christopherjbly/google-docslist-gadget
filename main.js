@@ -1,14 +1,28 @@
 // TODO: what to do about retrieve requests that stagger in.
-// 1. after logged out.
-// 2. after a refresh.
+// 1. after a refresh.
 
 var g_httpRequest;
 var g_authHttpRequest;
 var g_errorMessage;
 
-/**
- * Constructor for Main class.
- */
+var REPORTED_CLIENT_NAME = 'gd-docslist-gadget-' + strings.VERSION_STRING;
+
+var UI = {
+  MIN_WIDTH: 170,
+  MIN_HEIGHT: 200,
+  MIN_DATE_WIDTH: 85 };
+
+var KEYS = {
+  ENTER: 13,
+  ESCAPE: 27,
+  SPACE: 32,
+  UP: 38,
+  DOWN: 40,
+  PAGE_UP: 33,
+  PAGE_DOWN: 34,
+  HOME: 36,
+  END: 35 };
+
 function Main() {
   g_httpRequest = new HTTPRequest();
   g_errorMessage = new ErrorMessage();
@@ -19,17 +33,28 @@ function Main() {
   this.documents = [];
   this.searchDocuments = [];
 
+  this.uploadFiles = [];
+  this.isUploading = false;
+  this.currentUploadIndex = 0;
+
   this.window = child(view, 'window');
 
   this.loginUi = new LoginUi(child(this.window, 'loginDiv'));
   this.loginUi.onLogin = this.onLogin.bind(this);
+  this.currentUi = this.loginUi;
+
   this.usernameLabel = child(this.window, 'username');
+
   this.docsUi = new DocsUi(child(this.window, 'mainDiv'), this);
   this.docsUi.onSearch = this.onSearch.bind(this);
   this.docsUi.onSearchReset = this.onSearchReset.bind(this);
-  view.onmousewheel = this.docsUi.scrollbar.wheel.bind(this.docsUi.scrollbar);
-  this.window.onkeydown = this.docsUi.scrollbar.keydown.bind(this.docsUi.scrollbar);
-  this.window.onkeyup = this.docsUi.scrollbar.keyup.bind(this.docsUi.scrollbar);
+  view.onmousewheel = this.onMouseWheel.bind(this);
+  this.window.onkeydown = this.onKeyDown.bind(this);
+  this.window.onkeyup = this.onKeyUp.bind(this);
+
+  this.uploadUi = new UploadUi(child(this.window, 'uploadDiv'), this);
+  this.uploadUi.onDoneCommand = this.onUploadDoneCommand.bind(this);
+  this.uploadUi.onCancelCommand = this.onUploadCancelCommand.bind(this);
 
   this.commandsDiv = child(this.window, 'commands');
   this.uploadCommand = child(this.commandsDiv, 'commandsUpload');
@@ -48,6 +73,18 @@ function Main() {
   view.onsize = this.resize.bind(this);
   view.onsizing = this.sizing.bind(this);
 
+  this.switchUploadMode();
+
+  var test = [];
+
+  test.push(new UploadFile('c:\\test.doc'));
+  var foo = new UploadFile('c:\\foo.xls');
+  foo.state = UploadFile.ERROR_STATE;
+  foo.errorCode = 415;
+
+  test.push(foo);
+  this.uploadUi.draw(test, false, 0);
+
   if (this.auth.hasCredentials()) {
     this.completeAuth();
   } else {
@@ -55,33 +92,62 @@ function Main() {
   }
 }
 
+//
+// Event handlers.
+//
+
+Main.prototype.onDragDrop = function() {
+  if (!event.dragFiles) {
+    return;
+  }
+
+  this.upload(event.dragFiles);
+};
+
+Main.prototype.onMenuItems = function(menu) {
+  var newCommands = menu.AddPopup(strings.COMMAND_NEW);
+  newCommands.AddItem(strings.DOCUMENT_DOCUMENT, 0,
+      this.onNewDocumentMenuItem.bind(this, Document.DOCUMENT));
+  newCommands.AddItem(strings.DOCUMENT_PRESENTATION, 0,
+      this.onNewDocumentMenuItem.bind(this, Document.PRESENTATION));
+  newCommands.AddItem(strings.DOCUMENT_SPREADSHEET, 0,
+      this.onNewDocumentMenuItem.bind(this, Document.SPREADSHEET));
+  newCommands.AddItem(strings.DOCUMENT_FORM, 0,
+      this.onNewDocumentMenuItem.bind(this, Document.FORM));
+  menu.AddItem(strings.COMMAND_REFRESH, 0, this.retrieve.bind(this));
+  menu.AddItem(strings.COMMAND_UPLOAD, 0, this.browseUpload.bind(this));
+  menu.AddItem(strings.COMMAND_SIGN_OUT, 0, this.logout.bind(this));
+};
+
+Main.prototype.onMouseWheel = function() {
+  if (this.currentUi.mouseWheel) {
+    this.currentUi.mouseWheel();
+  }
+};
+
+Main.prototype.onKeyDown = function() {
+  if (this.currentUi.keyDown) {
+    this.currentUi.keyDown();
+  }
+};
+
+Main.prototype.onKeyUp = function() {
+  if (this.currentUi.keyUp) {
+    this.currentUi.keyUp();
+  }
+};
+
+Main.prototype.onUploadDoneCommand = function() {
+  this.switchDocsMode();
+  this.retrieve();
+};
+
+Main.prototype.onUploadCancelCommand = function() {
+  alert('bar');
+};
+
 Main.prototype.onSearch = function(query) {
   this.search(query);
-};
-
-Main.prototype.search = function(query) {
-  var docsFeed = new DocsFeed(this.onSearchRetrieve.bind(this),
-      this.onSearchFail.bind(this), query);
-  docsFeed.retrieve();
-};
-
-Main.prototype.onSearchRetrieve = function(feed) {
-  if (feed.startIndex == 1) {
-    this.searchDocuments = feed.documents;
-  } else {
-    this.searchDocuments.concat(feed.documents);
-  }
-
-  if (!this.searchDocuments.length) {
-    this.docsUi.resetSearch();
-    g_errorMessage.display(strings.ERROR_SEARCH_NO_RESULTS);
-  } else {
-    this.docsUi.redraw(this.searchDocuments);
-  }
-};
-
-Main.prototype.onSearchFail = function() {
-  this.logout();
 };
 
 Main.prototype.onSearchReset = function() {
@@ -115,6 +181,14 @@ Main.prototype.onLogin = function(username, password, isRemember) {
       this.onLoginFailure.bind(this));
 };
 
+Main.prototype.onNewDocumentMenuItem = function(commandLabel, type) {
+  this.launchNewDocument(type);
+};
+
+//
+// Login.
+//
+
 Main.prototype.onLoginSuccess = function() {
   this.completeAuth();
 };
@@ -127,17 +201,6 @@ Main.prototype.completeAuth = function() {
   this.startRetrieve();
 };
 
-Main.prototype.onLoginFailure = function(code, reason) {
-  g_errorMessage.display(reason);
-};
-
-Main.prototype.launchNewDocument = function(type) {
-  alert(Document.buildNewDocumentUrl(type));
-};
-
-Main.prototype.browseUpload = function() {
-};
-
 Main.prototype.logout = function() {
   this.auth.clear();
   view.clearInterval(this.retrieveTimer);
@@ -145,6 +208,10 @@ Main.prototype.logout = function() {
   this.searchDocuments = [];
   this.switchLoginMode();
 };
+
+//
+// Retrieval.
+//
 
 Main.RETRIEVE_INTERVAL = 60 * 1000;
 
@@ -155,6 +222,10 @@ Main.prototype.retrieve = function() {
 };
 
 Main.prototype.onRetrieve = function(feed) {
+  if (this.isLoginMode()) {
+    return;
+  }
+
   if (feed.startIndex == 1) {
     this.documents = feed.documents;
   } else {
@@ -165,12 +236,12 @@ Main.prototype.onRetrieve = function(feed) {
 };
 
 Main.prototype.onRetrieveFail = function() {
-  // TODO: what if not logged in?
   this.logout();
 };
 
 Main.prototype.startRetrieve = function() {
   this.retrieve();
+  this.clearInterval(this.retrieveTimer);
   this.retrieveTimer = view.setInterval(this.retrieve.bind(this),
       Main.RETRIEVE_INTERVAL);
 };
@@ -179,23 +250,240 @@ Main.prototype.stopRetrieve = function() {
   this.clearInterval(this.retrieveTimer);
 };
 
+Main.prototype.search = function(query) {
+  var docsFeed = new DocsFeed(this.onSearchRetrieve.bind(this),
+      this.onSearchFail.bind(this), query);
+  docsFeed.retrieve();
+};
+
+Main.prototype.onSearchRetrieve = function(feed) {
+  if (this.isLoginMode()) {
+    return;
+  }
+
+  if (feed.startIndex == 1) {
+    this.searchDocuments = feed.documents;
+  } else {
+    this.searchDocuments.concat(feed.documents);
+  }
+
+  if (!this.searchDocuments.length) {
+    this.docsUi.resetSearch();
+    g_errorMessage.display(strings.ERROR_SEARCH_NO_RESULTS);
+  } else {
+    this.docsUi.redraw(this.searchDocuments);
+  }
+};
+
+Main.prototype.onSearchFail = function() {
+  this.logout();
+};
+
+Main.prototype.onLoginFailure = function(code, reason) {
+  g_errorMessage.display(reason);
+};
+
+//
+// Upload section.
+//
+
+Main.MAX_UPLOAD = 20;
+
+Main.prototype.upload = function(files) {
+  if (this.isUploading) {
+    view.alert(strings.ALREADY_UPLOAD);
+    return;
+  }
+
+  this.switchUploadMode();
+
+  var uploadFiles = [];
+
+  var e = new Enumerator(files);
+  var i = 0;
+
+  while (i < Main.MAX_UPLOAD && !e.atEnd()) {
+    ++i;
+    e.moveNext();
+
+    var path = e.item();
+    uploadFiles.push(new UploadFile(path));
+  }
+
+  this.uploadFiles = uploadFiles;
+
+  if (!this.uploadFiles.length) {
+    return;
+  }
+
+  this.startUploads();
+};
+
+Main.prototype.drawUploads = function() {
+  this.uploadUi.draw(this.uploadFiles, this.isUploading,
+      this.currentUploadIndex);
+};
+
+Main.prototype.getCurrentUpload = function() {
+  return this.uploadFiles[this.currentUploadIndex];
+};
+
+Main.prototype.startUploads = function() {
+  this.currentUploadIndex = 0;
+  this.isUploading = true;
+  this.uploadNext();
+};
+
+Main.prototype.uploadNext = function() {
+  if (this.currentUploadIndex >= this.uploadFiles.length ||
+      !this.isUploading) {
+    this.isUploading = false;
+    this.drawUploads();
+    return;
+  }
+
+  var file = this.getCurrentUpload();
+
+  if (file.isUnknownType()) {
+    this.onUploadError(file);
+  }
+
+  file.state = UploadFile.PENDING_STATE;
+  this.drawUploads();
+
+  // HTTP REQ goes here.
+
+  this.onUploadSuccess(file);
+};
+
+Main.prototype.onUploadSuccess = function(file) {
+  if (!this.isDocsMode()) {
+    return;
+  }
+
+  file.state = UploadFile.SUCCESS_STATE;
+  ++this.currentUploadIndex;
+  this.uploadNext();
+};
+
+Main.prototype.onUploadError = function(file) {
+  if (!this.isDocsMode()) {
+    return;
+  }
+
+  file.state = UploadFile.ERROR_STATE;
+//  file.errorCode = status
+  ++this.currentUploadIndex;
+  this.uploadNext();
+};
+
+Main.prototype.browseUpload = function() {
+  var extensions = [];
+
+  for (var i in FILE_EXTENSIONS) {
+    extensions.push('*.' + i);
+  }
+
+  var filter = strings.SUPPORTED_FILES + '|' + extensions.join(';') +
+      '|' + strings.ALL_FILES + '|*.*';
+
+  var files = framework.BrowseForFiles(filter);
+
+  if (!files.count) {
+    return;
+  }
+
+  this.upload(files);
+};
+
+//
+// UI modes.
+//
+
+Main.prototype.isLoginMode = function() {
+  return this.currentUi == this.loginUi;
+};
+
 Main.prototype.switchLoginMode = function() {
+  this.currentUi = this.loginUi;
+
+  this.loginUi.reset();
   this.loginUi.show();
+
   this.docsUi.hide();
+  this.docsUi.reset();
+
+  this.uploadUi.hide();
+  this.uploadUi.reset();
+
   this.commandsDiv.visible = false;
+  this.menuUi.close();
   pluginHelper.onAddCustomMenuItems = null;
+
+  this.drawUsername('');
+
+  this.window.dropTarget = false;
+  this.window.ondragdrop = null;
+};
+
+Main.prototype.isDocsMode = function() {
+  return this.currentUi == this.docsUi;
 };
 
 Main.prototype.switchDocsMode = function() {
+  this.currentUi = this.docsUi;
+
+  this.loginUi.reset();
   this.loginUi.hide();
+
   this.docsUi.show();
+
+  this.uploadUi.hide();
+
   this.commandsDiv.visible = true;
   pluginHelper.onAddCustomMenuItems = this.onMenuItems.bind(this);
+
+  this.window.dropTarget = true;
+  this.window.ondragdrop = this.onDragDrop.bind(this);
+};
+
+Main.prototype.isUploadMode = function() {
+  return this.currentUi == this.uploadUi;
+};
+
+Main.prototype.switchUploadMode = function() {
+  this.currentUi = this.uploadUi;
+
+  this.loginUi.reset();
+  this.loginUi.hide();
+
+  this.docsUi.hide();
+  this.docsUi.resetSearch();
+
+  this.uploadUi.show();
+
+  this.commandsDiv.visible = true;
+  pluginHelper.onAddCustomMenuItems = this.onMenuItems.bind(this);
+
+  this.window.dropTarget = true;
+  this.window.ondragdrop = this.onDragDrop.bind(this);
+};
+
+//
+// Other.
+//
+
+Main.prototype.launchNewDocument = function(type) {
+  alert(Document.buildNewDocumentUrl(type));
 };
 
 Main.prototype.drawUsername = function(username) {
   this.usernameLabel.innerText = username;
 };
+
+//
+// Search autofill.
+//
 
 Main.AUTOFILL_MAX = 5;
 
@@ -215,24 +503,9 @@ Main.prototype.getAutofillItems = function(query) {
   return items;
 };
 
-Main.prototype.onMenuItems = function(menu) {
-  var newCommands = menu.AddPopup(strings.COMMAND_NEW);
-  newCommands.AddItem(strings.DOCUMENT_DOCUMENT, 0,
-      this.onNewDocumentMenuItem.bind(this, Document.DOCUMENT));
-  newCommands.AddItem(strings.DOCUMENT_PRESENTATION, 0,
-      this.onNewDocumentMenuItem.bind(this, Document.PRESENTATION));
-  newCommands.AddItem(strings.DOCUMENT_SPREADSHEET, 0,
-      this.onNewDocumentMenuItem.bind(this, Document.SPREADSHEET));
-  newCommands.AddItem(strings.DOCUMENT_FORM, 0,
-      this.onNewDocumentMenuItem.bind(this, Document.FORM));
-  menu.AddItem(strings.COMMAND_REFRESH, 0, this.retrieve.bind(this));
-  menu.AddItem(strings.COMMAND_UPLOAD, 0, this.browseUpload.bind(this));
-  menu.AddItem(strings.COMMAND_SIGN_OUT, 0, this.logout.bind(this));
-};
-
-Main.prototype.onNewDocumentMenuItem = function(commandLabel, type) {
-  this.launchNewDocument(type);
-};
+//
+// Sizing.
+//
 
 Main.prototype.sizing = function() {
   if (event.width < UI.MIN_WIDTH) {
@@ -281,9 +554,7 @@ Main.prototype.resize = function() {
 
   this.loginUi.resize(this.window.width - 24, this.window.height - 50);
   this.docsUi.resize(this.window.width - 16, this.window.height - 46);
-
- //   uploadStatus.width = searchContainer.width - 2;
- //   uploadOption.x = uploadStatus.width - labelCalcWidth(uploadOption);
+  this.uploadUi.resize(this.window.width - 16, this.window.height - 46);
 
   // Footer.
   this.commandsDiv.y = this.window.height - 33;

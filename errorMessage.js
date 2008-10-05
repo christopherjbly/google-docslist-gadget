@@ -1,5 +1,4 @@
-// Copyright 2008 Google Inc.
-// All Rights Reserved.
+ErrorMessage.MESSAGE_TIMEOUT = 3000;
 
 function ErrorMessage() {
   this.removeTimer = null;
@@ -38,7 +37,7 @@ ErrorMessage.prototype.display = function(message) {
     view.clearTimeout(this.removeTimer);
   }
   this.removeTimer = view.setTimeout(this.remove.bind(this),
-      UI.ERROR_MESSAGE_TIMEOUT);
+      ErrorMessage.MESSAGE_TIMEOUT);
 
   this.messageAndErrorDiv.focus();
 };
