@@ -109,6 +109,7 @@ SearchUi.prototype.reset = function() {
   this.field.value = this.defaultValue;
   this.field.color = this.defaultColor;
   this.clearButton.visible = false;
+  this.hideAutofill();
 
   if (this.onReset) {
     this.onReset();
@@ -128,11 +129,12 @@ SearchUi.prototype.showAutofill = function() {
 };
 
 SearchUi.prototype.search = function() {
+  this.hideAutofill();
+
   if (!trim(this.field.value)) {
+    this.reset();
     return;
   }
-
-  this.hideAutofill();
 
   if (this.onSearch) {
     this.onSearch(this.field.value);

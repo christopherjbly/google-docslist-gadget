@@ -5,13 +5,13 @@ function createXhr() {
 Function.prototype.bind = function(context) {
   var __method = this;
   var __arguments = [];
-  for (var n = 1; n < arguments.length; n++) {
+  for (var n = 1; n < arguments.length; ++n) {
     __arguments.push(arguments[n]);
   }
 
   return function() {
     var myargs = [];
-    for (var m = 0; m < arguments.length; m++) {
+    for (var m = 0; m < arguments.length; ++m) {
       myargs.push(arguments[m]);
     }
 

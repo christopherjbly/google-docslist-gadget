@@ -1,7 +1,9 @@
 <strings>
   <GADGET_NAME>Google Docs</GADGET_NAME>
   <GADGET_DESCRIPTION>Search, open, and upload Google Docs documents</GADGET_DESCRIPTION>
-  <GADGET_ABOUT_TEXT>Search and open your Google Docs documents. Drag-and-drop files onto the gadget, and they get uploaded to Google docs.</GADGET_ABOUT_TEXT>
+  <GADGET_ABOUT_TEXT>Google Docs
+Copyright 2008 Google Inc. All Rights Reserved.
+Search and open your Google Docs documents. Drag-and-drop files onto the gadget, and they get uploaded to Google Docs.</GADGET_ABOUT_TEXT>
   <GADGET_COPYRIGHT>Copyright 2008 Google Inc. All Rights Reserved.</GADGET_COPYRIGHT>
   <GADGET_OWNER>Google</GADGET_OWNER>
   <VERSION_STRING>1.0.0.0</VERSION_STRING>
@@ -115,8 +117,6 @@
   <!-- Main view -->
   <UPLOAD_UPLOADING>Now uploading...</UPLOAD_UPLOADING>
   <UPLOAD_OF>of</UPLOAD_OF>
-  <UPLOAD_CANCEL>Cancel</UPLOAD_CANCEL>
-  <UPLOAD_DONE>Done</UPLOAD_DONE>
   <UPLOAD_ERROR_LINE1>Errors were encountered</UPLOAD_ERROR_LINE1>
   <UPLOAD_ERROR_LINE2>while uploading:</UPLOAD_ERROR_LINE2>
   <UPLOAD_SUCCESS_LINE1>Success!</UPLOAD_SUCCESS_LINE1>
@@ -139,4 +139,8 @@
 
   <LOADING>Loading...</LOADING>
   <SEARCHING>Searching...</SEARCHING>
+
+  <SUPPORTED_FILES>Supported Files</SUPPORTED_FILES>
+  <ALL_FILES>All Files</ALL_FILES>
+  <ALREADY_UPLOAD>Upload already in progress</ALREADY_UPLOAD>
 </strings>

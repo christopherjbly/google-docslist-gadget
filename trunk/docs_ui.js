@@ -1,6 +1,3 @@
-/**
- * Constructor for Doclist class.
- */
 function DocsUi(mainDiv, gadget) {
   this.mainDiv = mainDiv;
   this.gadget = gadget;
@@ -25,6 +22,18 @@ function DocsUi(mainDiv, gadget) {
   this.searchUi.onReset = this.onSearchUiReset.bind(this);
 }
 
+DocsUi.prototype.mouseWheel = function() {
+  this.scrollbar.wheel();
+};
+
+DocsUi.prototype.keyDown = function() {
+  this.scrollbar.keydown();
+};
+
+DocsUi.prototype.keyUp = function() {
+  this.scrollbar.keyup();
+};
+
 DocsUi.prototype.onScroll = function(value) {
   this.content.y = -value;
 };
@@ -43,6 +52,12 @@ DocsUi.prototype.onSearchUiReset = function() {
   if (this.onSearchReset) {
     this.onSearchReset();
   }
+};
+
+DocsUi.prototype.reset = function() {
+  this.documents = [];
+  this.resetSearch();
+  this.draw();
 };
 
 DocsUi.prototype.resetSearch = function() {
@@ -150,7 +165,6 @@ DocsUi.prototype.resizeContent = function() {
   } else {
     this.content.width -= this.scrollbar.getWidth();
     this.scrollbar.show();
-    // --this.content.height;
     this.scrollbar.setMax(this.content.height - this.container.height);
     this.scrollbar.resize(this.content.width + 9,
         this.container.height,

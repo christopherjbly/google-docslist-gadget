@@ -1,6 +1,3 @@
-// Copyright 2007 Google Inc.
-// All Rights Reserved.
-
 function AuthHTTPRequest(httpRequest, auth) {
   this.httpRequest = httpRequest;
   this.auth = auth;
@@ -146,9 +143,8 @@ HTTPRequest.prototype.hideLoading = function() {
 
 HTTPRequest.prototype.onFailure = function(failedHandler) {
   if (failedHandler) {
-    var status = this.packet.readyState;
-    if (status == 4) {
-      failedHandler(status, this.packet.responseText);
+    if (this.packet.readyState) {
+      failedHandler(this.packet.status, this.packet.responseText);
     } else {
       failedHandler(0, '');
     }
