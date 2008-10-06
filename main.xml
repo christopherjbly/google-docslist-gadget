@@ -94,7 +94,7 @@
         <div name="sortOptionsDate" height="18"
           background="images/active-bg.gif" enabled="true">
             <label x="5" y="1" font="helvetica" size="8" color="#000000">&SORT_DATE;</label>
-            <div name="sortOptionsDateArrow" y="7" width="9" height="6" background="images/name-date-arrow.gif" />
+            <div name="sortOptionsDateArrow" y="7" width="9" height="6" background="images/date-name-arrow.gif" />
         </div>
       </div>
 
