@@ -87,11 +87,13 @@ UploadUi.prototype.draw = function(files, isUploading, currentFileIndex) {
     var titleLabel = item.appendElement('<label name="title" x="46" y="2" font="helvetica" size="8" trimming="character-ellipsis" />');
     titleLabel.color = file.isNew() ? '#999999' : '#000000';
     titleLabel.innerText = file.title;
+    titleLabel.tooltip = file.title;
 
     if (file.isError()) {
       item.height = 33;
       var errorLabel = item.appendElement('<label x="46" width="100%" y="15" height="15" font="helvetica" size="8" color="#ff0000" trimming="character-ellipsis" />');
       errorLabel.innerText = file.getError();
+      errorLabel.tooltip = file.getError();
     }
 
     if (!file.isSuccess()) {
