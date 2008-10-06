@@ -17,16 +17,23 @@ Document.SPREADSHEET = 'spreadsheet';
 Document.PRESENTATION = 'presentation';
 Document.FORM = 'form';
 
-Document.buildNewDocumentUrl = function(type) {
-  // TODO: google apps URLs.
-  return Document.NEW_DOC_MAP[type];
+Document.buildNewDocumentUrl = function(type, appsDomain) {
+  if (appsDomain) {
+    appsDomain = 'a/' + appsDomain + '/';
+  }
+
+  return Document.NEW_DOC_MAP[type].replace('[![APPS_PATH]!]', appsDomain);
 };
 
 Document.NEW_DOC_MAP = {};
-Document.NEW_DOC_MAP[Document.DOCUMENT] = 'http://docs.google.com/MiscCommands?command=newdoc&redirectToDocument=true';
-Document.NEW_DOC_MAP[Document.SPREADSHEET] = 'http://spreadsheets.google.com/ccc?new';
-Document.NEW_DOC_MAP[Document.PRESENTATION] = 'http://docs.google.com/DocAction?action=new_presentation&source=doclist';
-Document.NEW_DOC_MAP[Document.FORM] = 'http://spreadsheets.google.com/newform';
+Document.NEW_DOC_MAP[Document.DOCUMENT] =
+    'http://docs.google.com/[![APPS_PATH]!]MiscCommands?command=newdoc';
+Document.NEW_DOC_MAP[Document.SPREADSHEET] =
+    'http://spreadsheets.google.com/[![APPS_PATH]!]ccc?new';
+Document.NEW_DOC_MAP[Document.PRESENTATION] =
+    'http://docs.google.com/[![APPS_PATH]!]DocAction?action=new_presentation';
+Document.NEW_DOC_MAP[Document.FORM] =
+     'http://spreadsheets.google.com/[![APPS_PATH]!]newform';
 
 var FILE_EXTENSIONS = {
   'csv': {
