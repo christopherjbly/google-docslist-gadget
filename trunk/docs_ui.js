@@ -201,6 +201,10 @@ DocsUi.prototype.resizeContent = function() {
   }
 };
 
+DocsUi.MIN_ITEM_NAME_WIDTH = 175;
+DocsUi.MAX_ITEM_DATE_WIDTH = 75;
+DocsUi.MIN_ITEM_DATE_WIDTH = 50;
+
 DocsUi.prototype.resize = function(width, height) {
   this.mainDiv.width = width;
   this.mainDiv.height = height;
@@ -226,26 +230,14 @@ DocsUi.prototype.resize = function(width, height) {
 
   var contentWidth = this.mainDiv.width - 6;
 
-  // If the width is greater than something.
-  //
-  /*
-  date should be no greater than X but no less than Y
-  name should be at least Z
-  */
+  var availableDateWidth = contentWidth - DocsUi.MIN_ITEM_NAME_WIDTH;
+  var itemNameWidth = contentWidth - availableDateWidth;
 
-  var MIN_ITEM_NAME_WIDTH = 175;
-  var MAX_ITEM_DATE_WIDTH = 75;
-  var MIN_ITEM_DATE_WIDTH = 50;
-
-  var availableDateWidth = contentWidth - MIN_ITEM_NAME_WIDTH;
-
-  if (availableDateWidth < MIN_ITEM_DATE_WIDTH) {
-    // No space for the poor date.
+  if (availableDateWidth < DocsUi.MIN_ITEM_DATE_WIDTH) {
+    // Date got squeezed out :(
     itemNameWidth = contentWidth;
-  } else if (availableDateWidth > MAX_ITEM_DATE_WIDTH) {
-    itemNameWidth = contentWidth - MAX_ITEM_DATE_WIDTH;
-  } else  {
-    itemNameWidth = contentWidth - availableDateWidth;
+  } else if (availableDateWidth > DocsUi.MAX_ITEM_DATE_WIDTH) {
+    itemNameWidth = contentWidth - DocsUi.MAX_ITEM_DATE_WIDTH;
   }
 
   this.itemNameWidth = itemNameWidth;

@@ -9,8 +9,7 @@ var REPORTED_CLIENT_NAME = 'gd-docslist-gadget-' + strings.VERSION_STRING;
 
 var UI = {
   MIN_WIDTH: 170,
-  MIN_HEIGHT: 200,
-  MIN_NAME_WIDTH: 146 };
+  MIN_HEIGHT: 200 };
 
 var KEYS = {
   ENTER: 13,
