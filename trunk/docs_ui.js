@@ -136,6 +136,7 @@ DocsUi.prototype.draw = function() {
 
     var dateLabel = item.appendElement('<label name="date" y="2" font="helvetica" size="8" color="#66b3ff" align="right" />');
     dateLabel.innerText = document.date;
+    dateLabel.tooltip = document.date;
 
     item.onmouseover = function() { event.srcElement.background='#E0ECF7'; };
     item.onmouseout = function() { event.srcElement.background=''; };
@@ -224,7 +225,30 @@ DocsUi.prototype.resize = function(width, height) {
   contentShadowBottomRight.y = this.container.height;
 
   var contentWidth = this.mainDiv.width - 6;
-  this.itemNameWidth = Math.ceil((2/3) * contentWidth);
+
+  // If the width is greater than something.
+  //
+  /*
+  date should be no greater than X but no less than Y
+  name should be at least Z
+  */
+
+  var MIN_ITEM_NAME_WIDTH = 175;
+  var MAX_ITEM_DATE_WIDTH = 75;
+  var MIN_ITEM_DATE_WIDTH = 50;
+
+  var availableDateWidth = contentWidth - MIN_ITEM_NAME_WIDTH;
+
+  if (availableDateWidth < MIN_ITEM_DATE_WIDTH) {
+    // No space for the poor date.
+    itemNameWidth = contentWidth;
+  } else if (availableDateWidth > MAX_ITEM_DATE_WIDTH) {
+    itemNameWidth = contentWidth - MAX_ITEM_DATE_WIDTH;
+  } else  {
+    itemNameWidth = contentWidth - availableDateWidth;
+  }
+
+  this.itemNameWidth = itemNameWidth;
   this.sortUi.resize(contentWidth, this.itemNameWidth);
   this.searchUi.resize(this.mainDiv.width);
 
