@@ -17,6 +17,7 @@ function Auth() {
   this.username = this.getStoredUsername();
   this.sid = '';
   this.lsid = '';
+  this.appsDomain = '';
 }
 
 Auth.OPTIONS_KEY_TOKEN = 'token';
@@ -47,9 +48,13 @@ Auth.TYPE = 'HOSTED_OR_GOOGLE';
 
 Auth.prototype.login = function(user, pass, isRemember, onSuccess, onFailure) {
   var passValue = pass;
-  var userValue = user.indexOf('@') == -1 ?
-      user + '@' + Auth.DEFAULT_DOMAIN :
-      user;
+  var userValue = user;
+
+  if (userValue.indexOf('@') == -1) {
+    userValue = userValue + '@' + Auth.DEFAULT_DOMAIN;
+  } else {
+    this.appsDomain = userValue.substr(userValue.indexOf('@') + 1);
+  }
 
   var defaultDomainIndex = userValue.indexOf('@' + Auth.DEFAULT_DOMAIN);
   this.username = defaultDomainIndex == -1 ?
@@ -73,6 +78,7 @@ Auth.prototype.clear = function() {
   this.token = '';
   this.sid = '';
   this.lsid = '';
+  this.appsDomain = '';
   this.setStoredToken('');
   this.setStoredUsername('');
 };

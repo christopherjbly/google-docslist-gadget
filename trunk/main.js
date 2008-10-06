@@ -203,7 +203,7 @@ Main.prototype.logout = function() {
 // Retrieval.
 //
 
-Main.RETRIEVE_INTERVAL = 15 * 60 * 1000;
+Main.RETRIEVE_INTERVAL = 30 * 1000;
 
 Main.prototype.retrieve = function() {
   var docsFeed;
@@ -358,6 +358,7 @@ Main.prototype.uploadNext = function() {
     'Content-Type': file.mime,
     'Slug': file.title };
 
+  debug.trace('Request to upload ' + file.filename);
   g_authHttpRequest.connect(DocsFeed.FEED_URL, file.filename,
        this.onUploadSuccess.bind(this, file),
        this.onUploadError.bind(this, file),
@@ -366,7 +367,7 @@ Main.prototype.uploadNext = function() {
 //  view.setTimeout(this.onUploadSuccess.bind(this, file), 3000);
 };
 
-Main.prototype.onUploadSuccess = function(file) {
+Main.prototype.onUploadSuccess = function(response, file) {
   if (!this.isUploadMode()) {
     return;
   }
@@ -486,7 +487,7 @@ Main.prototype.switchUploadMode = function() {
 //
 
 Main.prototype.launchNewDocument = function(type) {
-  alert(Document.buildNewDocumentUrl(type));
+  framework.openUrl(Document.buildNewDocumentUrl(type, this.auth.appsDomain));
 };
 
 Main.prototype.drawUsername = function(username) {
