@@ -7,20 +7,8 @@ var g_errorMessage;
 
 var REPORTED_CLIENT_NAME = 'gd-docslist-gadget-' + strings.VERSION_STRING;
 
-var UI = {
-  MIN_WIDTH: 170,
-  MIN_HEIGHT: 200 };
-
-var KEYS = {
-  ENTER: 13,
-  ESCAPE: 27,
-  SPACE: 32,
-  UP: 38,
-  DOWN: 40,
-  PAGE_UP: 33,
-  PAGE_DOWN: 34,
-  HOME: 36,
-  END: 35 };
+Main.MIN_WIDTH = 170;
+Main.MIN_HEIGHT = 200;
 
 function Main() {
   g_httpRequest = new HTTPRequest();
@@ -105,6 +93,20 @@ Main.prototype.onMenuItems = function(menu) {
   menu.AddItem(strings.COMMAND_REFRESH, 0, this.retrieve.bind(this));
   menu.AddItem(strings.COMMAND_UPLOAD, 0, this.browseUpload.bind(this));
   menu.AddItem(strings.COMMAND_SIGN_OUT, 0, this.logout.bind(this));
+  menu.AddItem(strings.COMMAND_SORT_BY_NAME,
+      this.docsUi.sortUi.isName() ? gddMenuItemFlagChecked : 0,
+      this.sortByName.bind(this));
+  menu.AddItem(strings.COMMAND_SORT_BY_DATE,
+      this.docsUi.sortUi.isDate() ? gddMenuItemFlagChecked : 0,
+      this.sortByDate.bind(this));
+};
+
+Main.prototype.sortByName = function() {
+  this.docsUi.sortUi.name();
+};
+
+Main.prototype.sortByDate = function() {
+  this.docsUi.sortUi.date();
 };
 
 Main.prototype.onMouseWheel = function() {
@@ -520,11 +522,11 @@ Main.prototype.getAutofillItems = function(query) {
 //
 
 Main.prototype.sizing = function() {
-  if (event.width < UI.MIN_WIDTH) {
-    event.width = UI.MIN_WIDTH;
+  if (event.width < Main.MIN_WIDTH) {
+    event.width = Main.MIN_WIDTH;
   }
-  if (event.height < UI.MIN_HEIGHT) {
-    event.height = UI.MIN_HEIGHT;
+  if (event.height < Main.MIN_HEIGHT) {
+    event.height = Main.MIN_HEIGHT;
   }
 };
 

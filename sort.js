@@ -35,6 +35,7 @@ SortUi.prototype.saveState = function() {
 
 SortUi.prototype.name = function() {
   if (this.active == SortUi.NAME_OPTION) {
+    this.date();
     return;
   }
   this.active = SortUi.NAME_OPTION;
@@ -48,6 +49,7 @@ SortUi.prototype.name = function() {
 
 SortUi.prototype.date = function() {
   if (this.active == SortUi.DATE_OPTION) {
+    this.name();
     return;
   }
   this.active = SortUi.DATE_OPTION;
@@ -67,8 +69,6 @@ SortUi.prototype.draw = function() {
     this.dateColumn.background = SortUi.ACTIVE_BG ;
     this.nameColumn.background = SortUi.INACTIVE_BG;
 
-    this.nameColumn.cursor = 'hand';
-    this.dateColumn.cursor = 'arrow';
     this.nameDateDivider.visible = true;
     this.dateNameDivider.visible = false;
     this.nameArrow.visible = false;
@@ -77,8 +77,6 @@ SortUi.prototype.draw = function() {
     this.dateColumn.background = SortUi.INACTIVE_BG;
     this.nameColumn.background = SortUi.ACTIVE_BG;
 
-    this.nameColumn.cursor = 'arrow';
-    this.dateColumn.cursor = 'hand';
     this.nameDateDivider.visible = false;
     this.dateNameDivider.visible = true;
     this.nameArrow.visible = true;

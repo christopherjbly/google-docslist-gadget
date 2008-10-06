@@ -92,7 +92,7 @@
         <div name="sortOptionsDateNameDivider" width="2" height="18"
           background="images/date-name-divider.gif" visible="false" />
         <div name="sortOptionsDate" height="18"
-          background="images/active-bg.gif" enabled="true">
+          background="images/active-bg.gif" cursor="hand" enabled="true">
             <label x="5" y="1" font="helvetica" size="8" color="#000000">&SORT_DATE;</label>
             <div name="sortOptionsDateArrow" y="7" width="9" height="6" background="images/date-name-arrow.gif" />
         </div>
