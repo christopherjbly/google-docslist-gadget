@@ -364,8 +364,6 @@ Main.prototype.uploadNext = function() {
        this.onUploadSuccess.bind(this, file),
        this.onUploadError.bind(this, file),
        headers, true);
-
-//  view.setTimeout(this.onUploadSuccess.bind(this, file), 3000);
 };
 
 Main.prototype.onUploadSuccess = function(response, file) {
@@ -488,7 +486,12 @@ Main.prototype.switchUploadMode = function() {
 //
 
 Main.prototype.launchNewDocument = function(type) {
-  framework.openUrl(Document.buildNewDocumentUrl(type, this.auth.appsDomain));
+  this.openUrlTokenAuth(
+      Document.buildNewDocumentUrl(type, this.auth.appsDomain));
+};
+
+Main.prototype.openUrlTokenAuth = function(url) {
+  this.auth.tryOpenUrlTokenAuth(url);
 };
 
 Main.prototype.drawUsername = function(username) {

@@ -140,7 +140,7 @@ DocsUi.prototype.draw = function() {
 
     item.onmouseover = function() { event.srcElement.background='#E0ECF7'; };
     item.onmouseout = function() { event.srcElement.background=''; };
-    item.onclick = function() { framework.openUrl(this.link); }.bind(document);
+    item.onclick = g_gadget.openUrlTokenAuth.bind(g_gadget, document.link);
 
     this.content.appendElement('<div height="1" background="#dddddd" />');
   }
