@@ -1,3 +1,14 @@
+var KEYS = {
+  ENTER: 13,
+  ESCAPE: 27,
+  SPACE: 32,
+  UP: 38,
+  DOWN: 40,
+  PAGE_UP: 33,
+  PAGE_DOWN: 34,
+  HOME: 36,
+  END: 35 };
+
 function createXhr() {
   return new XMLHttpRequest();
 }
