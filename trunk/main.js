@@ -32,6 +32,7 @@ function Main() {
   this.retrieveTimer = null;
   this.documents = [];
   this.searchDocuments = [];
+  this.searchQuery = '';
 
   this.uploadFiles = [];
   this.isUploading = false;
@@ -52,7 +53,7 @@ function Main() {
   this.window.onkeydown = this.onKeyDown.bind(this);
   this.window.onkeyup = this.onKeyUp.bind(this);
 
-  this.uploadUi = new UploadUi(child(this.window, 'uploadDiv'), this);
+  this.uploadUi = new UploadUi(child(this.window, 'uploadDiv'));
   this.uploadUi.onDoneCommand = this.onUploadDoneCommand.bind(this);
   this.uploadUi.onCancelCommand = this.onUploadCancelCommand.bind(this);
 
@@ -72,18 +73,6 @@ function Main() {
 
   view.onsize = this.resize.bind(this);
   view.onsizing = this.sizing.bind(this);
-
-  this.switchUploadMode();
-
-  var test = [];
-
-  test.push(new UploadFile('c:\\test.doc'));
-  var foo = new UploadFile('c:\\foo.xls');
-  foo.state = UploadFile.ERROR_STATE;
-  foo.errorCode = 415;
-
-  test.push(foo);
-  this.uploadUi.draw(test, false, 0);
 
   if (this.auth.hasCredentials()) {
     this.completeAuth();
@@ -143,7 +132,7 @@ Main.prototype.onUploadDoneCommand = function() {
 };
 
 Main.prototype.onUploadCancelCommand = function() {
-  alert('bar');
+  this.isUploading = false;
 };
 
 Main.prototype.onSearch = function(query) {
@@ -151,6 +140,7 @@ Main.prototype.onSearch = function(query) {
 };
 
 Main.prototype.onSearchReset = function() {
+  this.searchQuery = '';
   this.docsUi.redraw(this.documents);
   this.window.focus();
 };
@@ -213,11 +203,19 @@ Main.prototype.logout = function() {
 // Retrieval.
 //
 
-Main.RETRIEVE_INTERVAL = 60 * 1000;
+Main.RETRIEVE_INTERVAL = 15 * 60 * 1000;
 
 Main.prototype.retrieve = function() {
-  var docsFeed = new DocsFeed(this.onRetrieve.bind(this),
-      this.onRetrieveFail.bind(this));
+  var docsFeed;
+
+  if (this.searchQuery) {
+    docsFeed = new DocsFeed(this.onSearchRetrieve.bind(this),
+        this.onRetrieveFail.bind(this), this.searchQuery);
+  } else {
+    docsFeed = new DocsFeed(this.onRetrieve.bind(this),
+        this.onRetrieveFail.bind(this));
+  }
+
   docsFeed.retrieve();
 };
 
@@ -241,7 +239,7 @@ Main.prototype.onRetrieveFail = function() {
 
 Main.prototype.startRetrieve = function() {
   this.retrieve();
-  this.clearInterval(this.retrieveTimer);
+  view.clearInterval(this.retrieveTimer);
   this.retrieveTimer = view.setInterval(this.retrieve.bind(this),
       Main.RETRIEVE_INTERVAL);
 };
@@ -251,13 +249,16 @@ Main.prototype.stopRetrieve = function() {
 };
 
 Main.prototype.search = function(query) {
-  var docsFeed = new DocsFeed(this.onSearchRetrieve.bind(this),
-      this.onSearchFail.bind(this), query);
-  docsFeed.retrieve();
+  this.searchQuery = query;
+  this.retrieve();
 };
 
 Main.prototype.onSearchRetrieve = function(feed) {
   if (this.isLoginMode()) {
+    return;
+  }
+
+  if (!this.searchQuery) {
     return;
   }
 
@@ -273,10 +274,6 @@ Main.prototype.onSearchRetrieve = function(feed) {
   } else {
     this.docsUi.redraw(this.searchDocuments);
   }
-};
-
-Main.prototype.onSearchFail = function() {
-  this.logout();
 };
 
 Main.prototype.onLoginFailure = function(code, reason) {
@@ -303,11 +300,11 @@ Main.prototype.upload = function(files) {
   var i = 0;
 
   while (i < Main.MAX_UPLOAD && !e.atEnd()) {
-    ++i;
-    e.moveNext();
-
     var path = e.item();
     uploadFiles.push(new UploadFile(path));
+
+    ++i;
+    e.moveNext();
   }
 
   this.uploadFiles = uploadFiles;
@@ -331,12 +328,12 @@ Main.prototype.getCurrentUpload = function() {
 Main.prototype.startUploads = function() {
   this.currentUploadIndex = 0;
   this.isUploading = true;
+  this.drawUploads();
   this.uploadNext();
 };
 
 Main.prototype.uploadNext = function() {
-  if (this.currentUploadIndex >= this.uploadFiles.length ||
-      !this.isUploading) {
+  if (this.currentUploadIndex >= this.uploadFiles.length) {
     this.isUploading = false;
     this.drawUploads();
     return;
@@ -345,34 +342,49 @@ Main.prototype.uploadNext = function() {
   var file = this.getCurrentUpload();
 
   if (file.isUnknownType()) {
-    this.onUploadError(file);
+    this.onUploadError(UploadFile.CODE_415, '', file);
+    return;
+  }
+
+  if (!this.isUploading) {
+    this.onUploadError(UploadFile.CODE_CANCELLED, '', file);
+    return;
   }
 
   file.state = UploadFile.PENDING_STATE;
   this.drawUploads();
 
-  // HTTP REQ goes here.
+  var headers = {
+    'Content-Type': file.mime,
+    'Slug': file.title };
 
-  this.onUploadSuccess(file);
+  g_authHttpRequest.connect(DocsFeed.FEED_URL, file.filename,
+       this.onUploadSuccess.bind(this, file),
+       this.onUploadError.bind(this, file),
+       headers, true);
+
+//  view.setTimeout(this.onUploadSuccess.bind(this, file), 3000);
 };
 
 Main.prototype.onUploadSuccess = function(file) {
-  if (!this.isDocsMode()) {
+  if (!this.isUploadMode()) {
     return;
   }
 
   file.state = UploadFile.SUCCESS_STATE;
+  this.drawUploads();
   ++this.currentUploadIndex;
   this.uploadNext();
 };
 
-Main.prototype.onUploadError = function(file) {
-  if (!this.isDocsMode()) {
+Main.prototype.onUploadError = function(status, response, file) {
+  if (!this.isUploadMode()) {
     return;
   }
 
   file.state = UploadFile.ERROR_STATE;
-//  file.errorCode = status
+  file.errorCode = status;
+  this.drawUploads();
   ++this.currentUploadIndex;
   this.uploadNext();
 };
