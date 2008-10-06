@@ -113,10 +113,15 @@ Search and open your Google Docs documents. Drag-and-drop files onto the gadget,
   <ERROR_UPLOAD_NETWORK>
     a network error occurred
   </ERROR_UPLOAD_NETWORK>
+  <ERROR_UPLOAD_CANCELLED>
+    cancelled
+  </ERROR_UPLOAD_CANCELLED>
 
   <!-- Main view -->
   <UPLOAD_UPLOADING>Now uploading...</UPLOAD_UPLOADING>
   <UPLOAD_OF>of</UPLOAD_OF>
+  <UPLOAD_CANCEL>Cancel</UPLOAD_CANCEL>
+  <UPLOAD_DONE>Done</UPLOAD_DONE>
   <UPLOAD_ERROR_LINE1>Errors were encountered</UPLOAD_ERROR_LINE1>
   <UPLOAD_ERROR_LINE2>while uploading:</UPLOAD_ERROR_LINE2>
   <UPLOAD_SUCCESS_LINE1>Success!</UPLOAD_SUCCESS_LINE1>

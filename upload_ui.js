@@ -1,9 +1,8 @@
-function UploadUi(mainDiv, gadget) {
+function UploadUi(mainDiv) {
   this.onDoneCommand = null;
   this.onCancelCommand = null;
 
   this.mainDiv = mainDiv;
-  this.gadget = gadget;
 
   this.status = child(this.mainDiv, 'status');
   this.statusLeft = child(this.status, 'statusLeft');
@@ -159,7 +158,8 @@ UploadUi.prototype.resizeContent = function() {
   for (i = 0; i < this.content.children.count; ++i) {
     div = this.content.children.item(i);
     if (div.children.count > 0) {
-      div.children.item('title').width = this.content.width - div.children.item('title').x;
+      div.children.item('title').width =
+          this.content.width - div.children.item('title').x;
     }
   }
 };
@@ -172,9 +172,11 @@ UploadUi.prototype.resize = function(width, height) {
   this.contentArea.height = this.mainDiv.height - 83;
 
   var contentShadowBottom = child(this.contentArea, 'contentShadowBottom');
-  var contentShadowBottomLeft = child(this.contentArea, 'contentShadowBottomLeft');
+  var contentShadowBottomLeft = child(this.contentArea,
+      'contentShadowBottomLeft');
   var contentShadowRight = child(this.contentArea, 'contentShadowRight');
-  var contentShadowBottomRight = child(this.contentArea, 'contentShadowBottomRight');
+  var contentShadowBottomRight = child(this.contentArea,
+      'contentShadowBottomRight');
 
   this.status.width = this.mainDiv.width;
   this.statusContent.width = this.mainDiv.width -
@@ -187,8 +189,10 @@ UploadUi.prototype.resize = function(width, height) {
 
   this.container.width = this.contentArea.width - contentShadowRight.width;
   this.container.height = this.contentArea.height - contentShadowBottom.height;
-  contentShadowBottom.width = this.container.width - contentShadowBottomLeft.width;
-  contentShadowRight.height = this.contentArea.height - contentShadowBottomRight.height;
+  contentShadowBottom.width = this.container.width -
+      contentShadowBottomLeft.width;
+  contentShadowRight.height = this.contentArea.height -
+      contentShadowBottomRight.height;
   contentShadowBottom.x = contentShadowBottomLeft.width;
   contentShadowRight.x = this.container.width;
   contentShadowBottom.y = this.container.height;

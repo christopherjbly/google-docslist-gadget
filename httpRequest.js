@@ -71,6 +71,7 @@ HTTPRequest.prototype.connect = function (url, data, handler, failedHandler,
     stream = null;
   }
 
+  this.packet.onreadystatechange = HTTPRequest.nullFunction;
   this.packet.abort();
   this.packet.onreadystatechange = this.receivedData.bind(this,
       handler, failedHandler);
@@ -109,6 +110,7 @@ HTTPRequest.prototype.stop = function() {
     return;
   }
   if (this.packet.readyState != 4) {
+    this.packet.onreadystatechange = HTTPRequest.nullFunction;
     this.packet.abort();
   }
   view.setTimeout(HTTPRequest.finishedGracePeriod,
@@ -124,9 +126,14 @@ HTTPRequest.prototype.clearTimeout = function() {
   }
 };
 
+HTTPRequest.nullFunction = function() {
+};
+
 HTTPRequest.prototype.onTimeout = function(failedHandler) {
   debug.error('Request timed out.');
+  this.packet.onreadystatechange = HTTPRequest.nullFunction;
   this.packet.abort();
+
   view.setTimeout(HTTPRequest.finishedGracePeriod,
       HTTPRequest.TIME_BETWEEN_REQUESTS);
   this.hideLoading();
@@ -143,7 +150,7 @@ HTTPRequest.prototype.hideLoading = function() {
 
 HTTPRequest.prototype.onFailure = function(failedHandler) {
   if (failedHandler) {
-    if (this.packet.readyState) {
+    if (this.packet.readyState == 4) {
       failedHandler(this.packet.status, this.packet.responseText);
     } else {
       failedHandler(0, '');
@@ -166,7 +173,7 @@ HTTPRequest.prototype.receivedData = function(handler, failedHandler) {
       HTTPRequest.TIME_BETWEEN_REQUESTS);
 
   if (this.packet.status < 200 || this.packet.status >= 300) {
-    debug.error('A transfer error has occured !');
+    debug.error('A transfer error has occured:' + this.packet.status);
     this.onFailure(failedHandler);
     return;
   }

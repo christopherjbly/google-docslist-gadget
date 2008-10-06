@@ -53,10 +53,14 @@ UploadFile.prototype.getStatusIcon = function() {
   return 'images/icon-upload-' + this.state + '.gif';
 };
 
+UploadFile.CODE_415 = 415;
+// These are local errors and should not be HTTP response codes.
+UploadFile.CODE_CANCELLED = 1;
+
 UploadFile.prototype.getError = function() {
-  if (this.isUnknownType()) {
-    return strings.ERROR_UPLOAD_TYPE;
-  } else if (this.errorCode == 415) {
+  if (this.errorCode == UploadFile.CODE_CANCELLED) {
+    return strings.ERROR_UPLOAD_CANCELLED;
+  } else if (this.errorCode == UploadFile.CODE_415) {
     return strings.ERROR_UPLOAD_TYPE;
   } else if (this.errorCode == 401) {
     return strings.ERROR_UPLOAD_EXPIRED;
