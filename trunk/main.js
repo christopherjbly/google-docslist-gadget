@@ -45,8 +45,15 @@ function Main() {
   this.uploadUi.onCancelCommand = this.onUploadCancelCommand.bind(this);
 
   this.commandsDiv = child(this.window, 'commands');
+
   this.uploadCommand = child(this.commandsDiv, 'commandsUpload');
-  this.uploadCommand.onclick = this.onUploadClick.bind(this);
+
+  if (Utils.isWindows()) {
+    this.uploadCommand.onclick = this.onUploadClick.bind(this);
+  } else {
+    this.uploadCommand.visible = false;
+  }
+
   this.signoutCommand = child(this.commandsDiv, 'commandsSignout');
   this.signoutCommand.onclick = this.onSignoutClick.bind(this);
   this.newCommandArrow = child(this.commandsDiv, 'commandsNewArrow');
@@ -91,7 +98,9 @@ Main.prototype.onMenuItems = function(menu) {
   newCommands.AddItem(strings.DOCUMENT_FORM, 0,
       this.onNewDocumentMenuItem.bind(this, Document.FORM));
   menu.AddItem(strings.COMMAND_REFRESH, 0, this.retrieve.bind(this));
-  menu.AddItem(strings.COMMAND_UPLOAD, 0, this.browseUpload.bind(this));
+  if (Utils.isWindows()) {
+    menu.AddItem(strings.COMMAND_UPLOAD, 0, this.browseUpload.bind(this));
+  }
   menu.AddItem(strings.COMMAND_SIGN_OUT, 0, this.logout.bind(this));
   menu.AddItem(strings.COMMAND_SORT_BY_NAME,
       this.docsUi.sortUi.isName() ? gddMenuItemFlagChecked : 0,
@@ -455,8 +464,10 @@ Main.prototype.switchDocsMode = function() {
   this.commandsDiv.visible = true;
   pluginHelper.onAddCustomMenuItems = this.onMenuItems.bind(this);
 
-  this.window.dropTarget = true;
-  this.window.ondragdrop = this.onDragDrop.bind(this);
+  if (Utils.isWindows()) {
+    this.window.dropTarget = true;
+    this.window.ondragdrop = this.onDragDrop.bind(this);
+  }
 };
 
 Main.prototype.isUploadMode = function() {
