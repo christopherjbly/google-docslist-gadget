@@ -102,8 +102,9 @@ Auth.prototype.clear = function() {
   this.lsid = '';
   this.appsDomain = '';
   this.setStoredToken('');
-  this.getStoredSid('');
-  this.getStoredLsid('');
+  this.setStoredUsername('');
+  this.setStoredSid('');
+  this.setStoredLsid('');
 };
 
 Auth.prototype.parseResponse = function(response) {

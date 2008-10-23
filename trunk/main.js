@@ -204,7 +204,7 @@ Main.prototype.logout = function() {
 // Retrieval.
 //
 
-Main.RETRIEVE_INTERVAL = 30 * 1000;
+Main.RETRIEVE_INTERVAL = 10 * 60 * 1000;
 
 Main.prototype.retrieve = function() {
   var docsFeed;

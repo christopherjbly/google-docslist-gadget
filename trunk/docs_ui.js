@@ -130,9 +130,8 @@ DocsUi.prototype.draw = function() {
     titleLabel.innerText = document.title;
     titleLabel.tooltip = document.title;
 
-    if (document.starred) {
-      item.appendElement('<div name="star" y="4" width="12" height="12" background="images/icon-star.gif" />');
-    }
+    var starDiv = item.appendElement('<div name="star" y="4" width="12" height="12" background="images/icon-star.gif" />');
+    starDiv.visible = document.starred;
 
     var dateLabel = item.appendElement('<label name="date" y="2" font="helvetica" size="8" color="#66b3ff" align="right" />');
     dateLabel.innerText = document.date;
@@ -186,14 +185,12 @@ DocsUi.prototype.resizeContent = function() {
 
       title.width = this.itemNameWidth - icon.width - 3;
 
-      if (star) {
-        title.width -= star.width;
-        var starX = title.x + labelCalcWidth(title);
-        if (starX > title.x + title.width) {
-          starX = title.x + title.width;
-        }
-        star.x = starX;
+      title.width -= star.width;
+      var starX = title.x + labelCalcWidth(title);
+      if (starX > title.x + title.width) {
+        starX = title.x + title.width;
       }
+      star.x = starX;
 
       date.x = this.itemNameWidth + 2;
       date.width = this.content.width - date.x;
@@ -202,8 +199,8 @@ DocsUi.prototype.resizeContent = function() {
 };
 
 DocsUi.MIN_ITEM_NAME_WIDTH = 175;
-DocsUi.MAX_ITEM_DATE_WIDTH = 75;
-DocsUi.MIN_ITEM_DATE_WIDTH = 50;
+DocsUi.MAX_ITEM_DATE_WIDTH = 85;
+DocsUi.MIN_ITEM_DATE_WIDTH = 80;
 
 DocsUi.prototype.resize = function(width, height) {
   this.mainDiv.width = width;
