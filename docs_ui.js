@@ -130,7 +130,7 @@ DocsUi.prototype.draw = function() {
     titleLabel.innerText = document.title;
     titleLabel.tooltip = document.title;
 
-    var starDiv = item.appendElement('<div name="star" y="4" width="12" height="12" background="images/icon-star.gif" />');
+    var starDiv = item.appendElement('<div name="star" y="4" width="12" height="12" background="images/icon-star.gif" visible="false" />');
     starDiv.visible = document.starred;
 
     var dateLabel = item.appendElement('<label name="date" y="2" font="helvetica" size="8" color="#66b3ff" align="right" />');
@@ -185,12 +185,14 @@ DocsUi.prototype.resizeContent = function() {
 
       title.width = this.itemNameWidth - icon.width - 3;
 
-      title.width -= star.width;
-      var starX = title.x + labelCalcWidth(title);
-      if (starX > title.x + title.width) {
-        starX = title.x + title.width;
+      if (star.visible) {
+        title.width -= star.width;
+        var starX = title.x + labelCalcWidth(title);
+        if (starX > title.x + title.width) {
+          starX = title.x + title.width;
+        }
+        star.x = starX;
       }
-      star.x = starX;
 
       date.x = this.itemNameWidth + 2;
       date.width = this.content.width - date.x;
