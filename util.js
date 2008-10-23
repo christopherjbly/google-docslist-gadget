@@ -173,3 +173,34 @@ function labelCalcWidth(ele) {
   edit.height = idealRect.height;
   return idealRect.width;
 }
+
+function Utils() {
+}
+
+/**
+ * Detect if we are running on an apple.
+ * @return {boolean} True, if running on apple.
+ */
+Utils.isMac = function() {
+  if (!Utils.isLinux() && !Utils.isWindows()) {
+    return framework.system.machine.manufacturer == 'Apple';
+  } else {
+    return false;
+  }
+};
+
+/**
+ * Detect if we are running on a Linux machine.
+ * @return {boolean} True, if running on Linux.
+ */
+Utils.isLinux = function() {
+  return framework.runtime.osName == 'Linux';
+};
+
+/**
+ * Detect if we are running on a Linux machine.
+ * @return {boolean} True, if running on Windows.
+ */
+Utils.isWindows = function() {
+  return framework.runtime.osName.match(/windows/i) != null;
+};

@@ -183,7 +183,13 @@ DocsUi.prototype.resizeContent = function() {
       var star = child(div, 'star');
       var date = child(div, 'date');
 
-      title.width = this.itemNameWidth - icon.width - 3;
+      var itemNameWidth = this.itemNameWidth;
+
+      if (itemNameWidth > this.content.width) {
+        itemNameWidth = this.content.width;
+      }
+
+      title.width = itemNameWidth - icon.width - 3;
 
       if (star.visible) {
         title.width -= star.width;
