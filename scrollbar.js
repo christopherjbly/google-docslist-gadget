@@ -142,7 +142,7 @@ CustomScrollbar.prototype.wheel = function() {
 CustomScrollbar.prototype.startUp = function() {
   var time = (this.bar.height && this.track.height) ? 100 / (this.bar.height / this.track.height) : 100;
 
-  this.up = view.beginAnimation(function() {
+  this.upTimer = view.beginAnimation(function() {
     this.bar.y = event.value;
     this.scroll();
   }.bind(this), this.bar.y, this.min(), time * this.ratio());
@@ -151,18 +151,18 @@ CustomScrollbar.prototype.startUp = function() {
 CustomScrollbar.prototype.startDown = function() {
   var time = (this.bar.height && this.track.height) ? 100 / (this.bar.height / this.track.height) : 100;
 
-  this.down = view.beginAnimation(function() {
+  this.downTimer = view.beginAnimation(function() {
     this.bar.y = event.value;
     this.scroll();
   }.bind(this), this.bar.y, this.max(), time * (1 - this.ratio()));
 };
 
 CustomScrollbar.prototype.endUp = function() {
-  view.cancelAnimation(this.up);
+  view.cancelAnimation(this.upTimer);
 };
 
 CustomScrollbar.prototype.endDown = function() {
-  view.cancelAnimation(this.down);
+  view.cancelAnimation(this.downTimer);
 };
 
 CustomScrollbar.prototype.startBar = function() {
