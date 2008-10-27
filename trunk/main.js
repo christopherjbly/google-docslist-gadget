@@ -473,7 +473,6 @@ Main.prototype.onUploadError = function(status, response, file) {
   }
 
   file.state = UploadFile.ERROR_STATE;
-  debug.error(status);
   file.errorCode = status;
   this.drawUploads();
   ++this.currentUploadIndex;
