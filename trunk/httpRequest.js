@@ -49,6 +49,9 @@ HTTPRequest.prototype.connect = function (url, data, handler, failedHandler,
     return;
   }
 
+  this.packet.onreadystatechange = HTTPRequest.nullFunction;
+  this.packet.abort();
+
   this.showLoading();
 
   // Check if network is online.
@@ -71,8 +74,6 @@ HTTPRequest.prototype.connect = function (url, data, handler, failedHandler,
     stream = null;
   }
 
-  this.packet.onreadystatechange = HTTPRequest.nullFunction;
-  this.packet.abort();
   this.packet.onreadystatechange = this.receivedData.bind(this,
       handler, failedHandler);
   debug.trace('Opening URL: ' + url);
@@ -91,12 +92,6 @@ HTTPRequest.prototype.connect = function (url, data, handler, failedHandler,
     }
   }
 
-  /*
-  this.packet.setRequestHeader('cookie', 'none');
-  this.packet.setRequestHeader('Cache-Control', 'no-cache, no-transform');
-  this.packet.setRequestHeader('Connection', 'close');
-  this.packet.setRequestHeader('Host', this.host);
-  */
   this.packet.send(data);
   HTTPRequest.available = false;
 

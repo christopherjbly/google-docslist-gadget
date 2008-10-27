@@ -1,6 +1,3 @@
-// TODO: what to do about retrieve requests that stagger in.
-// 1. after a refresh.
-
 var g_httpRequest;
 var g_authHttpRequest;
 var g_errorMessage;
@@ -145,6 +142,11 @@ Main.prototype.onKeyUp = function() {
 };
 
 Main.prototype.onRefreshCommand = function() {
+  if (!Utils.isOnline()) {
+    g_errorMessage.display(strings.ERROR_SERVER_OR_NETWORK);
+    return;
+  }
+
   this.switchDocsMode();
   this.retrieve();
 };
@@ -159,6 +161,11 @@ Main.prototype.onUploadCancelCommand = function() {
 };
 
 Main.prototype.onSearch = function(query) {
+  if (!Utils.isOnline()) {
+    g_errorMessage.display(strings.ERROR_SERVER_OR_NETWORK);
+    return;
+  }
+
   this.search(query);
 };
 
@@ -231,7 +238,7 @@ Main.MAX_RETRIEVE_INTERVAL = 60 * 60 * 1000;
 Main.NETWORK_CHECK_INTERVAL = 30 * 1000;
 
 Main.prototype.retrieve = function() {
-  if (!framework.system.network.online) {
+  if (!Utils.isOnline()) {
     this.tryCount = 0;
     view.clearInterval(this.retrieveTimer);
     this.retrieveTimer = view.setTimeout(this.retrieve.bind(this),
@@ -466,6 +473,7 @@ Main.prototype.onUploadError = function(status, response, file) {
   }
 
   file.state = UploadFile.ERROR_STATE;
+  debug.error(status);
   file.errorCode = status;
   this.drawUploads();
   ++this.currentUploadIndex;
