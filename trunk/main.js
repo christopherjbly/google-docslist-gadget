@@ -17,6 +17,8 @@ function Main() {
   this.auth = new Auth();
 
   this.retrieveTimer = null;
+  this.tryCount = 0;
+
   this.documents = [];
   this.searchDocuments = [];
   this.searchQuery = '';
@@ -24,6 +26,7 @@ function Main() {
   this.uploadFiles = [];
   this.isUploading = false;
   this.currentUploadIndex = 0;
+
 
   this.window = child(view, 'window');
 
@@ -203,6 +206,7 @@ Main.prototype.completeAuth = function() {
 
 Main.prototype.logout = function() {
   this.auth.clear();
+  this.stopRetrieve();
   view.clearInterval(this.retrieveTimer);
   this.documents = [];
   this.searchDocuments = [];
@@ -214,8 +218,21 @@ Main.prototype.logout = function() {
 //
 
 Main.RETRIEVE_INTERVAL = 10 * 60 * 1000;
+Main.MAX_RETRIEVE_INTERVAL = 60 * 60 * 1000;
+Main.NETWORK_CHECK_INTERVAL = 30 * 1000;
 
 Main.prototype.retrieve = function() {
+  if (!framework.system.network.online) {
+    this.tryCount = 0;
+    view.clearInterval(this.retrieveTimer);
+    this.retrieveTimer = view.setTimeout(this.retrieve.bind(this),
+        Main.NETWORK_CHECK_INTERVAL);
+    return;
+  }
+
+  ++this.tryCount;
+  this.scheduleRetrieve();
+
   var docsFeed;
 
   if (this.searchQuery) {
@@ -230,6 +247,8 @@ Main.prototype.retrieve = function() {
 };
 
 Main.prototype.onRetrieve = function(feed) {
+  this.tryCount = 0;
+
   if (this.isLoginMode()) {
     return;
   }
@@ -247,15 +266,29 @@ Main.prototype.onRetrieveFail = function() {
   this.logout();
 };
 
+Main.prototype.scheduleRetrieve = function() {
+  view.clearInterval(this.retrieveTimer);
+
+  var nextRetryMs = Main.RETRIEVE_INTERVAL;
+
+  if (this.tryCount > 1) {
+    nextRetryMs *= (this.tryCount - 1) * 2;
+  }
+
+  if (nextRetryMs > Main.MAX_RETRIEVE_INTERVAL) {
+    nextRetryMs = Main.MAX_RETRIEVE_INTERVAL;
+  }
+
+  this.retrieveTimer = view.setTimeout(this.retrieve.bind(this),
+      nextRetryMs);
+};
+
 Main.prototype.startRetrieve = function() {
   this.retrieve();
-  view.clearInterval(this.retrieveTimer);
-  this.retrieveTimer = view.setInterval(this.retrieve.bind(this),
-      Main.RETRIEVE_INTERVAL);
 };
 
 Main.prototype.stopRetrieve = function() {
-  this.clearInterval(this.retrieveTimer);
+  view.clearInterval(this.retrieveTimer);
 };
 
 Main.prototype.search = function(query) {

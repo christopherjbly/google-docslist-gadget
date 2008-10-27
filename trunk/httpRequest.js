@@ -136,7 +136,6 @@ HTTPRequest.prototype.onTimeout = function(failedHandler) {
 
   view.setTimeout(HTTPRequest.finishedGracePeriod,
       HTTPRequest.TIME_BETWEEN_REQUESTS);
-  this.hideLoading();
   this.onFailure(failedHandler);
 };
 
@@ -149,6 +148,8 @@ HTTPRequest.prototype.hideLoading = function() {
 };
 
 HTTPRequest.prototype.onFailure = function(failedHandler) {
+  this.hideLoading();
+
   if (failedHandler) {
     if (this.packet.readyState == 4) {
       failedHandler(this.packet.status, this.packet.responseText);
