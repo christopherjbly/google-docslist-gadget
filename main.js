@@ -431,8 +431,6 @@ Main.prototype.onUploadSuccess = function(response, file) {
     }
   }
 
-  debug.trace(file.link);
-
   file.state = UploadFile.SUCCESS_STATE;
   this.drawUploads();
   ++this.currentUploadIndex;

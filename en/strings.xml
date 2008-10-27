@@ -68,12 +68,12 @@ Search and open your Google Docs documents. Drag-and-drop files onto the gadget,
     Please try again later.
   </ERROR_SERVER_OR_NETWORK>
   <ERROR_SEARCH_NO_RESULTS>
-    Your search did not match any documents
+    No documents matched your criteria
   </ERROR_SEARCH_NO_RESULTS>
 
   <!-- Login error messages -->
   <ERROR_BAD_AUTH>
-    Username and password did not match
+    Username and password do not match
   </ERROR_BAD_AUTH>
   <ERROR_NOT_VERIFIED>
     Your account has not been verified
@@ -89,7 +89,7 @@ Search and open your Google Docs documents. Drag-and-drop files onto the gadget,
     An unknown error occurred
   </ERROR_UNKNOWN>
   <ERROR_ACCOUNT_DELETED>
-    Your account was deleted
+    Your account is deleted
   </ERROR_ACCOUNT_DELETED>
   <ERROR_ACCOUNT_DISABLED>
     Your account is disabled
