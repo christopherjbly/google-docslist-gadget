@@ -212,9 +212,13 @@ Utils.isLinux = function() {
 };
 
 /**
- * Detect if we are running on a Linux machine.
+ * Detect if we are running on a Windows machine.
  * @return {boolean} True, if running on Windows.
  */
 Utils.isWindows = function() {
   return framework.runtime.osName.match(/windows/i) !== null;
+};
+
+Utils.isOnline = function() {
+  return framework.system.network.online;
 };
