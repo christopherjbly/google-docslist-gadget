@@ -67,16 +67,7 @@ DocsFeed.prototype.onError = function(status, response) {
 };
 
 DocsFeed.prototype.parseFeed = function(response) {
-  var doc = new DOMDocument();
-
-  try {
-    doc.resolveExternals = false;
-    doc.validateOnParse = false;
-    doc.setProperty('ProhibitDTD', false);
-  } catch(e) {
-    debug.warning('Could not set MS specific properties.');
-  }
-
+  var doc = createDomDocument();
   doc.loadXML(response);
 
   var feed = {};
@@ -106,7 +97,6 @@ DocsFeed.prototype.parseFeed = function(response) {
     document.updated = date;
     document.starred = false;
 
-    // format date
     var now = new Date();
     var yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);

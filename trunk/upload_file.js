@@ -13,6 +13,8 @@ function UploadFile(filename) {
   this.type = Document.UNKNOWN;
   this.mime = 'text/plain';
 
+  this.link = '';
+
   var extensionDesc = FILE_EXTENSIONS[this.extension];
 
   if (extensionDesc) {

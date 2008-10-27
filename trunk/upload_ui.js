@@ -103,11 +103,18 @@ UploadUi.prototype.draw = function(files, isUploading, currentFileIndex) {
     item.onmouseover = function() { event.srcElement.background='#E0ECF7'; };
     item.onmouseout = function() { event.srcElement.background=''; };
 
+    if (file.link) {
+      item.cursor = 'hand';
+      item.onclick = function(link) {
+        return function() {
+          framework.openUrl(link);
+        };
+      }(file.link);
+    }
+
     this.content.appendElement('<div height="1" width="100%" background="#dddddd" />');
   }
 
-  // TODO: open success files with a click.
-  // item.onclick = function() { framework.openUrl(this.link); }.bind(document);
 
   this.resizeContent();
 
