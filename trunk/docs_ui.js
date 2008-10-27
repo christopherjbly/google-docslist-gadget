@@ -87,9 +87,9 @@ DocsUi.prototype.sort = function() {
 DocsUi.sortByName = function(a, b) {
   a = a.title.toLowerCase();
   b = b.title.toLowerCase();
-  if (a < b) {
+  if (!a || a < b) {
     return -1;
-  } else if (a > b) {
+  } else if (!b || a > b) {
     return 1;
   } else {
     return 0;
