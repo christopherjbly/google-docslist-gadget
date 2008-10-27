@@ -216,7 +216,7 @@ Main.prototype.logout = function() {
 // Retrieval.
 //
 
-Main.RETRIEVE_INTERVAL = 1 * 60 * 1000;
+Main.RETRIEVE_INTERVAL = 10 * 60 * 1000;
 Main.MAX_RETRIEVE_INTERVAL = 60 * 60 * 1000;
 Main.NETWORK_CHECK_INTERVAL = 30 * 1000;
 
@@ -274,8 +274,6 @@ Main.prototype.scheduleRetrieve = function() {
     nextRetryMs *= (this.tryCount - 1) * 2;
   }
 
-  debug.trace(nextRetryMs);
-
   // A dash of randomness.
   var jitter = 60 * 1000;
   jitter *= Math.random();
@@ -286,8 +284,6 @@ Main.prototype.scheduleRetrieve = function() {
   if (nextRetryMs > Main.MAX_RETRIEVE_INTERVAL) {
     nextRetryMs = Main.MAX_RETRIEVE_INTERVAL;
   }
-
-  debug.trace(nextRetryMs);
 
   this.retrieveTimer = view.setTimeout(this.retrieve.bind(this),
       nextRetryMs);
