@@ -10,7 +10,15 @@ var KEYS = {
   END: 35 };
 
 function createXhr() {
-  return new XMLHttpRequest();
+  var xhr;
+
+  try {
+    xhr = framework.google.betaXmlHttpRequest2();
+  } catch (e) {
+    xhr = new XMLHttpRequest();
+  }
+
+  return xhr;
 }
 
 function createDomDocument() {
