@@ -202,5 +202,5 @@ Utils.isLinux = function() {
  * @return {boolean} True, if running on Windows.
  */
 Utils.isWindows = function() {
-  return framework.runtime.osName.match(/windows/i) != null;
+  return framework.runtime.osName.match(/windows/i) !== null;
 };

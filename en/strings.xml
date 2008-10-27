@@ -82,7 +82,8 @@ Search and open your Google Docs documents. Drag-and-drop files onto the gadget,
     You did not yet agree to the terms
   </ERROR_TERMS>
   <ERROR_CAPTCHA>
-    There is a problem with your account
+    Your account appears to be locked.
+    Please login using a browser to unlock.
   </ERROR_CAPTCHA>
   <ERROR_UNKNOWN>
     An unknown error occurred
