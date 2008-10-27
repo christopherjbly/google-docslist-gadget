@@ -27,7 +27,6 @@ function Main() {
   this.isUploading = false;
   this.currentUploadIndex = 0;
 
-
   this.window = child(view, 'window');
 
   this.loginUi = new LoginUi(child(this.window, 'loginDiv'));
@@ -100,9 +99,13 @@ Main.prototype.onMenuItems = function(menu) {
       this.onNewDocumentMenuItem.bind(this, Document.SPREADSHEET));
   newCommands.AddItem(strings.DOCUMENT_FORM, 0,
       this.onNewDocumentMenuItem.bind(this, Document.FORM));
-  menu.AddItem(strings.COMMAND_REFRESH, 0, this.retrieve.bind(this));
+  menu.AddItem(strings.COMMAND_REFRESH,
+      this.isUploading ? gddMenuItemFlagGrayed : 0,
+      this.onRefreshCommand.bind(this));
   if (Utils.isWindows()) {
-    menu.AddItem(strings.COMMAND_UPLOAD, 0, this.browseUpload.bind(this));
+    menu.AddItem(strings.COMMAND_UPLOAD,
+        this.isUploading ? gddMenuItemFlagGrayed : 0,
+        this.browseUpload.bind(this));
   }
   menu.AddItem(strings.COMMAND_SIGN_OUT, 0, this.logout.bind(this));
   menu.AddItem(strings.COMMAND_SORT_BY_NAME,
@@ -139,13 +142,18 @@ Main.prototype.onKeyUp = function() {
   }
 };
 
+Main.prototype.onRefreshCommand = function() {
+  this.switchDocsMode();
+  this.retrieve();
+};
+
 Main.prototype.onUploadDoneCommand = function() {
   this.switchDocsMode();
   this.retrieve();
 };
 
 Main.prototype.onUploadCancelCommand = function() {
-  this.isUploading = false;
+  this.stopUploads();
 };
 
 Main.prototype.onSearch = function(query) {
@@ -374,16 +382,27 @@ Main.prototype.getCurrentUpload = function() {
   return this.uploadFiles[this.currentUploadIndex];
 };
 
+Main.COMMANDS_ENABLED_COLOR = '#0065cd';
+Main.COMMANDS_DISABLED_COLOR = '#999999';
+
 Main.prototype.startUploads = function() {
   this.currentUploadIndex = 0;
   this.isUploading = true;
+  this.uploadCommand.enabled = false;
+  this.uploadCommand.color = Main.COMMANDS_DISABLED_COLOR;
   this.drawUploads();
   this.uploadNext();
 };
 
+Main.prototype.stopUploads = function() {
+  this.isUploading = false;
+  this.uploadCommand.enabled = true;
+  this.uploadCommand.color = Main.COMMANDS_ENABLED_COLOR;
+};
+
 Main.prototype.uploadNext = function() {
   if (this.currentUploadIndex >= this.uploadFiles.length) {
-    this.isUploading = false;
+    this.stopUploads();
     this.drawUploads();
     return;
   }
@@ -539,8 +558,8 @@ Main.prototype.switchUploadMode = function() {
   this.commandsDiv.visible = true;
   pluginHelper.onAddCustomMenuItems = this.onMenuItems.bind(this);
 
-  this.window.dropTarget = true;
-  this.window.ondragdrop = this.onDragDrop.bind(this);
+  this.window.dropTarget = false;
+  this.window.ondragdrop = null;
 };
 
 //
