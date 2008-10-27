@@ -13,6 +13,20 @@ function createXhr() {
   return new XMLHttpRequest();
 }
 
+function createDomDocument() {
+  var doc = new DOMDocument();
+
+  try {
+    doc.resolveExternals = false;
+    doc.validateOnParse = false;
+    doc.setProperty('ProhibitDTD', false);
+  } catch(e) {
+    debug.warning('Could not set MS specific properties.');
+  }
+
+  return doc;
+}
+
 Function.prototype.bind = function(context) {
   var __method = this;
   var __arguments = [];

@@ -419,6 +419,20 @@ Main.prototype.onUploadSuccess = function(response, file) {
     return;
   }
 
+  var doc = createDomDocument();
+  doc.loadXML(response);
+
+  var links = doc.getElementsByTagName('link');
+
+  for (var j = 0; j < links.length; ++j) {
+    var link = links[j];
+    if (link.getAttribute('rel') == 'alternate' || !file.link) {
+      file.link = link.getAttribute('href');
+    }
+  }
+
+  debug.trace(file.link);
+
   file.state = UploadFile.SUCCESS_STATE;
   this.drawUploads();
   ++this.currentUploadIndex;
