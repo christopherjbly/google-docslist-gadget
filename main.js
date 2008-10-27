@@ -16,6 +16,8 @@ function Main() {
 
   this.auth = new Auth();
 
+  this.docsFeed = null;
+
   this.retrieveTimer = null;
   this.tryCount = 0;
 
@@ -237,17 +239,19 @@ Main.prototype.retrieve = function() {
     return;
   }
 
-  var docsFeed;
+  if (this.docsFeed) {
+    this.docsFeed.destroy();
+  }
 
   if (this.searchQuery) {
-    docsFeed = new DocsFeed(this.onSearchRetrieve.bind(this),
+    this.docsFeed = new DocsFeed(this.onSearchRetrieve.bind(this),
         this.onRetrieveFail.bind(this), this.searchQuery);
   } else {
-    docsFeed = new DocsFeed(this.onRetrieve.bind(this),
+    this.docsFeed = new DocsFeed(this.onRetrieve.bind(this),
         this.onRetrieveFail.bind(this));
   }
 
-  docsFeed.retrieve();
+  this.docsFeed.retrieve();
 
   ++this.tryCount;
   this.scheduleRetrieve();
