@@ -27,6 +27,11 @@ DocsUi.prototype.mouseWheel = function() {
 };
 
 DocsUi.prototype.keyDown = function() {
+  if (event.keycode == KEYS.TAB) {
+    this.searchUi.focus();
+    return;
+  }
+
   this.scrollbar.keydown();
 };
 
