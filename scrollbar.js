@@ -167,7 +167,7 @@ CustomScrollbar.prototype.endDown = function() {
 
 CustomScrollbar.prototype.startBar = function() {
   this.halt.drag = true;
-  this.start = event.y;
+  this.previousDragY = framework.system.cursor.position.y;
 };
 
 CustomScrollbar.prototype.endBar = function() {
@@ -244,7 +244,9 @@ CustomScrollbar.prototype.dragBar = function() {
   }
   this.halt.drag = false;
 
-  this.moveBar(event.y - this.start);
+  var mouseY = framework.system.cursor.position.y;
+  this.moveBar(mouseY - this.previousDragY);
+  this.previousDragY = mouseY;
 
   this.halt.drag = true;
 };
