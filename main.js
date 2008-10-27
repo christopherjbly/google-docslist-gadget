@@ -207,7 +207,6 @@ Main.prototype.completeAuth = function() {
 Main.prototype.logout = function() {
   this.auth.clear();
   this.stopRetrieve();
-  view.clearInterval(this.retrieveTimer);
   this.documents = [];
   this.searchDocuments = [];
   this.switchLoginMode();
@@ -217,7 +216,7 @@ Main.prototype.logout = function() {
 // Retrieval.
 //
 
-Main.RETRIEVE_INTERVAL = 10 * 60 * 1000;
+Main.RETRIEVE_INTERVAL = 1 * 60 * 1000;
 Main.MAX_RETRIEVE_INTERVAL = 60 * 60 * 1000;
 Main.NETWORK_CHECK_INTERVAL = 30 * 1000;
 
@@ -230,9 +229,6 @@ Main.prototype.retrieve = function() {
     return;
   }
 
-  ++this.tryCount;
-  this.scheduleRetrieve();
-
   var docsFeed;
 
   if (this.searchQuery) {
@@ -244,6 +240,9 @@ Main.prototype.retrieve = function() {
   }
 
   docsFeed.retrieve();
+
+  ++this.tryCount;
+  this.scheduleRetrieve();
 };
 
 Main.prototype.onRetrieve = function(feed) {
@@ -275,9 +274,20 @@ Main.prototype.scheduleRetrieve = function() {
     nextRetryMs *= (this.tryCount - 1) * 2;
   }
 
+  debug.trace(nextRetryMs);
+
+  // A dash of randomness.
+  var jitter = 60 * 1000;
+  jitter *= Math.random();
+  jitter = Math.floor(jitter);
+
+  nextRetryMs += jitter;
+
   if (nextRetryMs > Main.MAX_RETRIEVE_INTERVAL) {
     nextRetryMs = Main.MAX_RETRIEVE_INTERVAL;
   }
+
+  debug.trace(nextRetryMs);
 
   this.retrieveTimer = view.setTimeout(this.retrieve.bind(this),
       nextRetryMs);
