@@ -9,7 +9,12 @@ function DocsFeed(callback, failback, opt_query) {
   this.callback = callback;
   this.failback = failback;
   this.query = opt_query;
+  this.isDead = false;
 }
+
+DocsFeed.prototype.destroy = function() {
+  this.isDead = true;
+};
 
 DocsFeed.prototype.buildFeedUrl = function(startIndex) {
   var params = {};
@@ -23,7 +28,6 @@ DocsFeed.prototype.buildFeedUrl = function(startIndex) {
   return DocsFeed.FEED_URL + '?' + buildQueryString(params);
 };
 
-// TODO: should cancel or ignore old chunks. may be out of sequence.
 DocsFeed.prototype.retrieve = function() {
   this.retrieveChunk(1);
 };
@@ -43,6 +47,10 @@ DocsFeed.prototype.retrieveChunk = function(startIndex) {
 };
 
 DocsFeed.prototype.onRetrieve = function(response) {
+  if (this.isDead) {
+    return;
+  }
+
   var feed = this.parseFeed(response);
 
   if (!feed) {
