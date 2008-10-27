@@ -35,6 +35,10 @@ function SearchUi(mainDiv, autofillDiv, gadget) {
   this.clearButton.onclick = this.reset.bind(this);
 }
 
+SearchUi.prototype.focus = function() {
+  this.field.focus();
+};
+
 SearchUi.prototype.resize = function(width) {
   this.mainDiv.width = width;
   this.content.width = this.mainDiv.width -
@@ -158,6 +162,11 @@ SearchUi.prototype.keydown = function() {
       break;
     case KEYS.DOWN:
       this.onAutofillDown();
+      break;
+    case KEYS.TAB:
+      if (!trim(this.field.value)) {
+        this.field.killFocus();
+      }
       break;
   }
 };
