@@ -29,6 +29,20 @@ function LoginUi(mainDiv) {
   this.reset();
 }
 
+LoginUi.prototype.disable = function() {
+  this.userField.enabled = false;
+  this.passwordField.enabled = false;
+  this.loginButton.enabled = false;
+  this.rememberCheck.enabled = false;
+};
+
+LoginUi.prototype.enable = function() {
+  this.userField.enabled = true;
+  this.passwordField.enabled = true;
+  this.loginButton.enabled = true;
+  this.rememberCheck.enabled = true;
+};
+
 LoginUi.prototype.resize = function(width, height) {
   this.mainDiv.width = width;
   this.mainDiv.height = height;
@@ -54,6 +68,7 @@ LoginUi.prototype.login = function() {
 };
 
 LoginUi.prototype.reset = function() {
+  this.enable();
   this.userField.value = '';
   this.passwordField.value = '';
   this.rememberCheck.value = false;

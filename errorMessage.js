@@ -18,6 +18,7 @@ function ErrorMessage() {
       'x="0" y="0" width="100%" height="100%" align="center" valign="middle" ' +
       'font="helvetica" bold="true" size="7" trimming="character-ellipsis" ' +
       'wordWrap="true" />');
+  this.messageAndErrorDiv.onclick =this.remove.bind(this);
 }
 
 ErrorMessage.prototype.display = function(message) {
