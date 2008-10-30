@@ -1,13 +1,17 @@
+/*
 SortUi.DATE_OPTION = 'date';
 SortUi.NAME_OPTION = 'name';
 SortUi.SORT_TYPE_OPTION = 'sort_type';
+*/
 
 function SortUi(mainDiv) {
-  this.mainDiv = mainDiv;
+  /*
   options.putDefaultValue(SortUi.SORT_TYPE_OPTION, SortUi.DATE_OPTION);
   this.active = options.getValue(SortUi.SORT_TYPE_OPTION);
   this.onChange = null;
+  */
 
+  this.mainDiv = mainDiv;
   this.nameColumn = child(this.mainDiv, 'sortOptionsName');
   this.nameArrow = child(this.nameColumn, 'sortOptionsNameArrow');
   this.nameDateDivider = child(this.mainDiv, 'sortOptionsNameDateDivider');
@@ -15,12 +19,15 @@ function SortUi(mainDiv) {
   this.dateColumn = child(this.mainDiv, 'sortOptionsDate');
   this.dateArrow = child(this.dateColumn, 'sortOptionsDateArrow');
 
+  /*
   this.nameColumn.onclick = this.name.bind(this);
   this.dateColumn.onclick = this.date.bind(this);
 
   this.draw();
+  */
 }
 
+/*
 SortUi.prototype.isDate = function() {
   return this.active == SortUi.DATE_OPTION;
 };
@@ -83,6 +90,7 @@ SortUi.prototype.draw = function() {
     this.dateArrow.visible = false;
   }
 };
+*/
 
 SortUi.prototype.resize = function(fullWidth, nameWidth) {
   this.mainDiv.width = fullWidth;
