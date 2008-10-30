@@ -131,8 +131,10 @@ Auth.prototype.onLoginSuccess = function(response,
   if (isRemember) {
     this.setStoredToken(this.token);
     this.setStoredUsername(user);
+    /*
     this.setStoredSid(this.sid);
     this.setStoredLsid(this.lsid);
+    */
   }
 
   onSuccess();

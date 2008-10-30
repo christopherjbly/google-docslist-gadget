@@ -89,6 +89,9 @@ Main.prototype.onDragDrop = function() {
 };
 
 Main.prototype.onMenuItems = function(menu) {
+  menu.AddItem(strings.COMMAND_REFRESH,
+      this.isUploading ? gddMenuItemFlagGrayed : 0,
+      this.onRefreshCommand.bind(this));
   var newCommands = menu.AddPopup(strings.COMMAND_NEW);
   newCommands.AddItem(strings.DOCUMENT_DOCUMENT, 0,
       this.onNewDocumentMenuItem.bind(this, Document.DOCUMENT));
@@ -98,9 +101,6 @@ Main.prototype.onMenuItems = function(menu) {
       this.onNewDocumentMenuItem.bind(this, Document.SPREADSHEET));
   newCommands.AddItem(strings.DOCUMENT_FORM, 0,
       this.onNewDocumentMenuItem.bind(this, Document.FORM));
-  menu.AddItem(strings.COMMAND_REFRESH,
-      this.isUploading ? gddMenuItemFlagGrayed : 0,
-      this.onRefreshCommand.bind(this));
   if (Utils.isWindows()) {
     menu.AddItem(strings.COMMAND_UPLOAD,
         this.isUploading ? gddMenuItemFlagGrayed : 0,
@@ -182,6 +182,7 @@ Main.prototype.onNewClick = function() {
 };
 
 Main.prototype.onLogin = function(username, password, isRemember) {
+  this.loginUi.disable();
   this.auth.login(username, password, isRemember,
       this.onLoginSuccess.bind(this),
       this.onLoginFailure.bind(this));
@@ -331,6 +332,7 @@ Main.prototype.onSearchRetrieve = function(feed) {
 };
 
 Main.prototype.onLoginFailure = function(code, reason) {
+  this.loginUi.enable();
   g_errorMessage.display(reason);
 };
 

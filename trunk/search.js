@@ -241,7 +241,6 @@ SearchUi.prototype.addAutofillItem = function(index) {
 
   var titleLabel = item.appendElement('<label name="title" x="28" y="2" font="helvetica" size="8" color="#000000" trimming="character-ellipsis" />');
   titleLabel.innerText = document.title;
-
   iconDiv.tooltip = document.title;
   titleLabel.tooltip = document.title;
 
