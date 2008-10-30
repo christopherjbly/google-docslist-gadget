@@ -1,7 +1,7 @@
 DocsFeed.FEED_URL = 'https://docs.google.com/feeds/documents/private/full';
 
 DocsFeed.MAX_RESULTS_PARAM = 'max-results';
-DocsFeed.MAX_RESULTS = 25;
+DocsFeed.MAX_RESULTS = 30;
 DocsFeed.SEARCH_PARAM ='q';
 DocsFeed.START_INDEX_PARAM = 'start-index';
 
@@ -32,7 +32,7 @@ DocsFeed.prototype.retrieve = function() {
   this.retrieveChunk(1);
 };
 
-DocsFeed.STOP_RETRIEVE_THRESHOLD = 50;
+DocsFeed.STOP_RETRIEVE_THRESHOLD = 60;
 
 DocsFeed.prototype.retrieveChunk = function(startIndex) {
   if (startIndex >= DocsFeed.STOP_RETRIEVE_THRESHOLD) {
