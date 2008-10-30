@@ -110,7 +110,6 @@ DocsUi.prototype.redraw = function(documents) {
 };
 
 DocsUi.prototype.draw = function() {
-  this.sort();
   var documents = this.documents;
   this.clear();
 

@@ -107,20 +107,6 @@ Main.prototype.onMenuItems = function(menu) {
         this.browseUpload.bind(this));
   }
   menu.AddItem(strings.COMMAND_SIGN_OUT, 0, this.logout.bind(this));
-  menu.AddItem(strings.COMMAND_SORT_BY_NAME,
-      this.docsUi.sortUi.isName() ? gddMenuItemFlagChecked : 0,
-      this.sortByName.bind(this));
-  menu.AddItem(strings.COMMAND_SORT_BY_DATE,
-      this.docsUi.sortUi.isDate() ? gddMenuItemFlagChecked : 0,
-      this.sortByDate.bind(this));
-};
-
-Main.prototype.sortByName = function() {
-  this.docsUi.sortUi.name();
-};
-
-Main.prototype.sortByDate = function() {
-  this.docsUi.sortUi.date();
 };
 
 Main.prototype.onMouseWheel = function() {
