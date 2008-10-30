@@ -13,7 +13,6 @@ function DocsUi(mainDiv, gadget) {
   this.documents = [];
 
   this.sortUi = new SortUi(child(this.mainDiv, 'sortOptionsArea'));
-  this.sortUi.onChange = this.onSortChange.bind(this);
   this.searchUi = new SearchUi(child(this.mainDiv, 'searchStatus'),
       child(this.gadget.window, 'autoFill'), this.gadget);
 
@@ -41,10 +40,6 @@ DocsUi.prototype.keyUp = function() {
 
 DocsUi.prototype.onScroll = function(value) {
   this.content.y = -value;
-};
-
-DocsUi.prototype.onSortChange = function() {
-  this.draw();
 };
 
 DocsUi.prototype.onSearchUiSearch = function(query) {
@@ -82,11 +77,7 @@ DocsUi.prototype.hide = function() {
 };
 
 DocsUi.prototype.sort = function() {
-  if (this.sortUi.isDate()) {
-    this.documents.sort(DocsUi.sortByDate);
-  } else {
-    this.documents.sort(DocsUi.sortByName);
-  }
+  this.documents.sort(DocsUi.sortByDate);
 };
 
 DocsUi.sortByName = function(a, b) {

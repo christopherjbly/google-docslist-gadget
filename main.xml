@@ -1,4 +1,4 @@
-<view width="260" height="340" resizable="true" resizeBorder="10 15 15 15">
+<view width="280" height="340" resizable="true" resizeBorder="10 15 15 15">
 
   <script src="auth.js" />
   <script src="date.js" />
@@ -83,18 +83,18 @@
 
       <div name="sortOptionsArea" y="46" height="18">
         <div name="sortOptionsName" height="18"
-          background="images/inactive-bg.gif" cursor="hand" enabled="true">
+          background="images/inactive-bg.gif">
             <label x="6" y="1" font="helvetica" size="8" color="#000000">&SORT_NAME;</label>
-            <div name="sortOptionsNameArrow" y="7" width="9" height="6" background="images/name-date-arrow.gif" visible="false" />
+            <div name="sortOptionsNameArrow" y="6" width="9" height="6" background="images/name-date-arrow.gif" visible="false" />
         </div>
         <div name="sortOptionsNameDateDivider" width="2" height="18"
           background="images/name-date-divider.gif" />
         <div name="sortOptionsDateNameDivider" width="2" height="18"
           background="images/date-name-divider.gif" visible="false" />
         <div name="sortOptionsDate" height="18"
-          background="images/active-bg.gif" cursor="hand" enabled="true">
+          background="images/inactive-bg.gif">
             <label x="5" y="1" font="helvetica" size="8" color="#000000">&SORT_DATE;</label>
-            <div name="sortOptionsDateArrow" y="7" width="9" height="6" background="images/date-name-arrow.gif" />
+            <div name="sortOptionsDateArrow" y="6" width="9" height="6" background="images/date-name-arrow.gif" />
         </div>
       </div>
 
