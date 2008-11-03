@@ -1,9 +1,9 @@
 <strings>
   <GADGET_NAME>Google Docs</GADGET_NAME>
-  <GADGET_DESCRIPTION>Search, open, and upload Google Docs documents</GADGET_DESCRIPTION>
+  <GADGET_DESCRIPTION>Find, open, and upload Google Docs documents</GADGET_DESCRIPTION>
   <GADGET_ABOUT_TEXT>Google Docs
 Copyright 2008 Google Inc. All Rights Reserved.
-Search and open your Google Docs documents. Drag-and-drop files onto the gadget, and they get uploaded to Google Docs.</GADGET_ABOUT_TEXT>
+Find and open your Google Docs documents. To upload files to Google Docs, drag them into the gadget.</GADGET_ABOUT_TEXT>
   <GADGET_COPYRIGHT>Copyright 2008 Google Inc. All Rights Reserved.</GADGET_COPYRIGHT>
   <GADGET_OWNER>Google</GADGET_OWNER>
   <VERSION_STRING>1.0.0.0</VERSION_STRING>
@@ -83,16 +83,16 @@ Search and open your Google Docs documents. Drag-and-drop files onto the gadget,
   </ERROR_TERMS>
   <ERROR_CAPTCHA>
     Your account appears to be locked.
-    Please login using a browser to unlock.
+    To unlock it, please sign in using a browser.
   </ERROR_CAPTCHA>
   <ERROR_UNKNOWN>
     An unknown error occurred
   </ERROR_UNKNOWN>
   <ERROR_ACCOUNT_DELETED>
-    Your account is deleted
+    Your account has been deleted
   </ERROR_ACCOUNT_DELETED>
   <ERROR_ACCOUNT_DISABLED>
-    Your account is disabled
+    Your account has been disabled
   </ERROR_ACCOUNT_DISABLED>
   <ERROR_SERVICE_DISABLED>
     This service has been disabled
