@@ -12,20 +12,14 @@ Auth.LOGIN_ERRORS = {
 function Auth() {
   options.putDefaultValue(Auth.OPTIONS_KEY_TOKEN, '');
   options.putDefaultValue(Auth.OPTIONS_KEY_USERNAME, '');
-  options.putDefaultValue(Auth.OPTIONS_KEY_SID, '');
-  options.putDefaultValue(Auth.OPTIONS_KEY_LSID, '');
 
   this.token = this.getStoredToken();
   this.username = this.getStoredUsername();
-  this.sid = this.getStoredSid();
-  this.lsid = this.getStoredLsid();
   this.appsDomain = '';
 }
 
 Auth.OPTIONS_KEY_TOKEN = 'token';
 Auth.OPTIONS_KEY_USERNAME = 'username';
-Auth.OPTIONS_KEY_SID = 'sid';
-Auth.OPTIONS_KEY_LSID = 'lsid';
 
 Auth.prototype.getStoredToken = function() {
   return options.getValue(Auth.OPTIONS_KEY_TOKEN);
@@ -43,24 +37,6 @@ Auth.prototype.getStoredUsername = function() {
 Auth.prototype.setStoredUsername = function(username) {
   options.putValue(Auth.OPTIONS_KEY_USERNAME, username);
   options.encryptValue(Auth.OPTIONS_KEY_USERNAME);
-};
-
-Auth.prototype.getStoredSid = function() {
-  return options.getValue(Auth.OPTIONS_KEY_SID);
-};
-
-Auth.prototype.setStoredSid = function(sid) {
-  options.putValue(Auth.OPTIONS_KEY_SID, sid);
-  options.encryptValue(Auth.OPTIONS_KEY_SID);
-};
-
-Auth.prototype.getStoredLsid = function() {
-  return options.getValue(Auth.OPTIONS_KEY_LSID);
-};
-
-Auth.prototype.setStoredLsid = function(lsid) {
-  options.putValue(Auth.OPTIONS_KEY_LSID, lsid);
-  options.encryptValue(Auth.OPTIONS_KEY_LSID);
 };
 
 Auth.DEFAULT_DOMAIN = 'gmail.com';
@@ -98,13 +74,9 @@ Auth.prototype.login = function(user, pass, isRemember, onSuccess, onFailure) {
 Auth.prototype.clear = function() {
   this.username = '';
   this.token = '';
-  this.sid = '';
-  this.lsid = '';
   this.appsDomain = '';
   this.setStoredToken('');
   this.setStoredUsername('');
-  this.setStoredSid('');
-  this.setStoredLsid('');
 };
 
 Auth.prototype.parseResponse = function(response) {
@@ -125,16 +97,10 @@ Auth.prototype.onLoginSuccess = function(response,
   var responseData = this.parseResponse(response);
 
   this.token = responseData['Auth'];
-  this.sid = responseData['SID'];
-  this.lsid = responseData['LSID'];
 
   if (isRemember) {
     this.setStoredToken(this.token);
     this.setStoredUsername(user);
-    /*
-    this.setStoredSid(this.sid);
-    this.setStoredLsid(this.lsid);
-    */
   }
 
   onSuccess();
@@ -145,9 +111,13 @@ Auth.prototype.onLoginError = function(status, response, onFailure) {
 
   var error = 'Unknown';
 
+  debug.trace(status);
+
   if (status == 403) {
     var responseData = this.parseResponse(response);
     error = responseData['Error'] || error;
+  } else if (status === 0) {
+     onFailure(error, strings.ERROR_SERVER_OR_NETWORK);
   }
 
   onFailure(error, Auth.LOGIN_ERRORS[error]);
@@ -155,49 +125,4 @@ Auth.prototype.onLoginError = function(status, response, onFailure) {
 
 Auth.prototype.hasCredentials = function() {
   return this.token && this.username;
-};
-
-Auth.ISSUE_AUTH_TOKEN_URL = 'https://www.google.com/accounts/IssueAuthToken';
-Auth.TOKEN_AUTH_URL = 'https://www.google.com/accounts/TokenAuth';
-
-Auth.prototype.tryOpenUrlTokenAuth = function(url) {
-  // TODO: doesn't seem to work.
-  if (true) {
-    framework.openUrl(url);
-    return;
-  }
-
-  if (!this.sid || !this.lsid) {
-    framework.openUrl(url);
-    return;
-  }
-
-  var params = { 'SID': this.sid,
-                 'LSID': this.lsid,
-                 'service': Auth.SERVICE,
-                 'Session': false };
-  var data = buildQueryString(params);
-
-  g_httpRequest.connect(Auth.ISSUE_AUTH_TOKEN_URL, data,
-      this.onTokenAuthSuccess.bind(this, url),
-      this.onTokenAuthError.bind(this, url));
-};
-
-Auth.prototype.buildTokenAuthUrl = function(token, url) {
-  var params = { 'auth': token,
-                 'source': REPORTED_CLIENT_NAME,
-                 'service': Auth.SERVICE,
-                 'continue': url };
-  var data = buildQueryString(params);
-
-  return Auth.TOKEN_AUTH_URL + '?' + data;
-};
-
-Auth.prototype.onTokenAuthSuccess = function(response, url) {
-  framework.openUrl(this.buildTokenAuthUrl(response, url));
-};
-
-Auth.prototype.onTokenAuthError = function(status, response, url) {
-  debug.warning('Could not get auth token.');
-  framework.openUrl(url);
 };
