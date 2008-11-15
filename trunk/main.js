@@ -571,7 +571,7 @@ Main.prototype.launchNewDocument = function(type) {
 };
 
 Main.prototype.openUrlTokenAuth = function(url) {
-  this.auth.tryOpenUrlTokenAuth(url);
+  framework.openUrl(url);
 };
 
 Main.prototype.drawUsername = function(username) {
