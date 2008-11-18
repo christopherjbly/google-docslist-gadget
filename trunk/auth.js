@@ -111,13 +111,12 @@ Auth.prototype.onLoginError = function(status, response, onFailure) {
 
   var error = 'Unknown';
 
-  debug.trace(status);
-
   if (status == 403) {
     var responseData = this.parseResponse(response);
     error = responseData['Error'] || error;
   } else if (status === 0) {
-     onFailure(error, strings.ERROR_SERVER_OR_NETWORK);
+    onFailure(error, strings.ERROR_SERVER_OR_NETWORK);
+    return;
   }
 
   onFailure(error, Auth.LOGIN_ERRORS[error]);
