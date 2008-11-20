@@ -280,16 +280,16 @@ Main.prototype.scheduleRetrieve = function() {
     nextRetryMs *= (this.tryCount - 1) * 2;
   }
 
+  if (nextRetryMs > Main.MAX_RETRIEVE_INTERVAL && nextRetryMs < 0) {
+    nextRetryMs = Main.MAX_RETRIEVE_INTERVAL;
+  }
+
   // A dash of randomness.
   var jitter = 60 * 1000;
   jitter *= Math.random();
   jitter = Math.floor(jitter);
 
   nextRetryMs += jitter;
-
-  if (nextRetryMs > Main.MAX_RETRIEVE_INTERVAL) {
-    nextRetryMs = Main.MAX_RETRIEVE_INTERVAL;
-  }
 
   this.retrieveTimer = view.setTimeout(this.retrieve.bind(this),
       nextRetryMs);
