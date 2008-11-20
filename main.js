@@ -280,7 +280,7 @@ Main.prototype.scheduleRetrieve = function() {
     nextRetryMs *= (this.tryCount - 1) * 2;
   }
 
-  if (nextRetryMs > Main.MAX_RETRIEVE_INTERVAL && nextRetryMs < 0) {
+  if (nextRetryMs > Main.MAX_RETRIEVE_INTERVAL || nextRetryMs < 0) {
     nextRetryMs = Main.MAX_RETRIEVE_INTERVAL;
   }
 
