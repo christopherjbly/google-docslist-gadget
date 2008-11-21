@@ -7,6 +7,8 @@ var REPORTED_CLIENT_NAME = 'gd-docslist-gadget-' + strings.VERSION_STRING;
 Main.MIN_WIDTH = 170;
 Main.MIN_HEIGHT = 200;
 
+Main.isDocked = true;
+
 function Main() {
   g_httpRequest = new HTTPRequest();
   g_errorMessage = new ErrorMessage();
@@ -37,7 +39,7 @@ function Main() {
   this.docsUi = new DocsUi(child(this.window, 'mainDiv'), this);
   this.docsUi.onSearch = this.onSearch.bind(this);
   this.docsUi.onSearchReset = this.onSearchReset.bind(this);
-  view.onmousewheel = this.onMouseWheel.bind(this);
+
   this.window.onkeydown = this.onKeyDown.bind(this);
   this.window.onkeyup = this.onKeyUp.bind(this);
 
@@ -67,6 +69,8 @@ function Main() {
   this.window.onclick = this.onWindowClick.bind(this);
 
   view.onsize = this.resize.bind(this);
+  view.onpopout = this.resizeDelayed.bind(this);
+  view.onpopin = this.resizeDelayed.bind(this);
   view.onsizing = this.sizing.bind(this);
 
   if (this.auth.hasCredentials()) {
@@ -74,6 +78,14 @@ function Main() {
   } else {
     this.switchLoginMode();
   }
+}
+
+Main.onDock = function() {
+  Main.isDocked = true;
+}
+
+Main.onUndock = function() {
+  Main.isDocked = false;
 }
 
 //
@@ -107,12 +119,6 @@ Main.prototype.onMenuItems = function(menu) {
         this.browseUpload.bind(this));
   }
   menu.AddItem(strings.COMMAND_SIGN_OUT, 0, this.logout.bind(this));
-};
-
-Main.prototype.onMouseWheel = function() {
-  if (this.currentUi.mouseWheel) {
-    this.currentUi.mouseWheel();
-  }
 };
 
 Main.prototype.onKeyDown = function() {
@@ -612,6 +618,10 @@ Main.prototype.sizing = function() {
     event.height = Main.MIN_HEIGHT;
   }
 };
+
+Main.prototype.resizeDelayed = function() {
+  view.setTimeout(this.resize.bind(this), 200);
+}
 
 Main.prototype.resize = function() {
   this.window.width = view.width - 2;
