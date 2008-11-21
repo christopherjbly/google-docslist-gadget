@@ -35,21 +35,7 @@ function UploadUi(mainDiv) {
   this.contentArea = child(this.mainDiv, 'contentArea');
   this.container = child(this.contentArea, 'contentContainer');
   this.content = child(this.container, 'uploaderContent');
-  this.scrollbar = new CustomScrollbar(child(this.container, 'scrollbar'));
-  this.scrollbar.onChange = this.onScroll.bind(this);
 }
-
-UploadUi.prototype.mouseWheel = function() {
-  this.scrollbar.wheel();
-};
-
-UploadUi.prototype.keyDown = function() {
-  this.scrollbar.keydown();
-};
-
-UploadUi.prototype.keyUp = function() {
-  this.scrollbar.keyup();
-};
 
 UploadUi.prototype.onDoneClick = function() {
   if (this.onDoneCommand) {
@@ -61,10 +47,6 @@ UploadUi.prototype.onCancelClick = function() {
   if (this.onCancelCommand) {
     this.onCancelCommand();
   }
-};
-
-UploadUi.prototype.onScroll = function(value) {
-  this.content.y = -value;
 };
 
 UploadUi.prototype.clear = function() {
@@ -167,17 +149,9 @@ UploadUi.prototype.resizeContent = function() {
 
   this.content.width = this.container.width - 14;
 
-  if (this.content.height <= this.container.height) {
-    this.scrollbar.hide();
-  } else {
-    this.content.width -= this.scrollbar.getWidth();
-    this.scrollbar.show();
-    this.scrollbar.setMax(this.content.height - this.container.height);
-    this.scrollbar.resize(this.content.width + 9,
-        this.container.height,
-        this.content.height === 0 ?
-            1 :
-            this.container.height / this.content.height);
+  if ((this.container.scrollbar && this.container.scrollbar.visible) ||
+      (this.content.height > this.container.height && !Main.isDocked)) {
+    this.content.width -= DocsUi.SCROLLBAR_OFFSET;
   }
 
   for (i = 0; i < this.content.children.count; ++i) {

@@ -7,8 +7,6 @@ function DocsUi(mainDiv, gadget) {
   this.contentArea = child(this.mainDiv, 'contentArea');
   this.container = child(this.contentArea, 'contentContainer');
   this.content = child(this.container, 'doclistContent');
-  this.scrollbar = new CustomScrollbar(child(this.container, 'scrollbar'));
-  this.scrollbar.onChange = this.onScroll.bind(this);
 
   this.documents = [];
 
@@ -21,25 +19,14 @@ function DocsUi(mainDiv, gadget) {
   this.searchUi.onReset = this.onSearchUiReset.bind(this);
 }
 
-DocsUi.prototype.mouseWheel = function() {
-  this.scrollbar.wheel();
-};
-
 DocsUi.prototype.keyDown = function() {
   if (event.keycode == KEYS.TAB) {
     this.searchUi.focus();
     return;
   }
-
-  this.scrollbar.keydown();
 };
 
 DocsUi.prototype.keyUp = function() {
-  this.scrollbar.keyup();
-};
-
-DocsUi.prototype.onScroll = function(value) {
-  this.content.y = -value;
 };
 
 DocsUi.prototype.onSearchUiSearch = function(query) {
@@ -142,6 +129,9 @@ DocsUi.prototype.draw = function() {
   this.resizeContent();
 };
 
+// TODO: This happens to be true in Windows. What about other platforms?
+DocsUi.SCROLLBAR_OFFSET = 17;
+
 DocsUi.prototype.resizeContent = function() {
   var y = 0;
 
@@ -155,17 +145,9 @@ DocsUi.prototype.resizeContent = function() {
 
   this.content.width = this.container.width - 14;
 
-  if (this.content.height <= this.container.height) {
-    this.scrollbar.hide();
-  } else {
-    this.content.width -= this.scrollbar.getWidth();
-    this.scrollbar.show();
-    this.scrollbar.setMax(this.content.height - this.container.height);
-    this.scrollbar.resize(this.content.width + 9,
-        this.container.height,
-        this.content.height === 0 ?
-            1 :
-            this.container.height / this.content.height);
+  if ((this.container.scrollbar && this.container.scrollbar.visible) ||
+      (this.content.height > this.container.height && !Main.isDocked)) {
+    this.content.width -= DocsUi.SCROLLBAR_OFFSET;
   }
 
   for (i = 0; i < this.content.children.count; ++i) {
