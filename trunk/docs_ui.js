@@ -8,6 +8,12 @@ function DocsUi(mainDiv, gadget) {
   this.container = child(this.contentArea, 'contentContainer');
   this.content = child(this.container, 'doclistContent');
 
+  if (this.container.scrollbar) {
+    if (this.container.scrollbar.lineStep) {
+      this.container.scrollbar.lineStep = 20;
+    }
+  }
+
   this.documents = [];
 
   this.sortUi = new SortUi(child(this.mainDiv, 'sortOptionsArea'));
