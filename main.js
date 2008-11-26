@@ -93,13 +93,13 @@ Main.prototype.onMandatoryUpgrade = function(upgradeInfo) {
   this.logout();
 
   this.upgradeUi.reasonLabel.innerText = upgradeInfo.reason;
-  this.upgradeUi.downloadLink.href = upgradeInfo.infoUrl;
-  this.upgradeUi.infoLink.href = upgradeInfo.downloadUrl;
+  this.upgradeUi.downloadLink.href = upgradeInfo.downloadUrl;
+  this.upgradeUi.infoLink.href = upgradeInfo.infoUrl;
 
   this.switchUpgradeMode();
 };
 
-Main.ondock = function() {
+Main.onDock = function() {
   Main.isDocked = true;
 };
 
