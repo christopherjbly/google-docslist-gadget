@@ -8,12 +8,9 @@ Main.MIN_WIDTH = 170;
 Main.MIN_HEIGHT = 200;
 
 Main.isDocked = true;
+Main.VERSION_CHECK_URL = 'http://james.yum.googlepages.com/docs_gadget_version_info.txt';
 
 function Main() {
-  this.versionChecker = new VersionChecker(strings.VERSION_STRING,
-      'http://james.yum.googlepages.com/docs_gadget_version_info.txt',
-      function() { alert(''); });
-
   g_httpRequest = new HTTPRequest();
   g_errorMessage = new ErrorMessage();
 
@@ -43,6 +40,8 @@ function Main() {
   this.docsUi = new DocsUi(child(this.window, 'mainDiv'), this);
   this.docsUi.onSearch = this.onSearch.bind(this);
   this.docsUi.onSearchReset = this.onSearchReset.bind(this);
+
+  this.upgradeUi = new UpgradeUi(child(this.window, 'upgradeDiv'));
 
   this.window.onkeydown = this.onKeyDown.bind(this);
   this.window.onkeyup = this.onKeyUp.bind(this);
@@ -82,18 +81,34 @@ function Main() {
   } else {
     this.switchLoginMode();
   }
+
+  this.versionChecker = new VersionChecker(strings.VERSION_STRING,
+      Main.VERSION_CHECK_URL,
+      this.onMandatoryUpgrade.bind(this));
 }
 
-Main.onDock = function() {
+Main.prototype.onMandatoryUpgrade = function(upgradeInfo) {
+  debug.trace('Received mandatory upgrade notice.');
+
+  this.logout();
+
+  this.upgradeUi.reasonLabel.innerText = upgradeInfo.reason;
+  this.upgradeUi.downloadLink.href = upgradeInfo.infoUrl;
+  this.upgradeUi.infoLink.href = upgradeInfo.downloadUrl;
+
+  this.switchUpgradeMode();
+};
+
+Main.ondock = function() {
   Main.isDocked = true;
-}
+};
 
 Main.onUndock = function() {
   Main.isDocked = false;
-}
+};
 
 //
-// Event handlers.
+// event handlers.
 //
 
 Main.prototype.onDragDrop = function() {
@@ -518,7 +533,31 @@ Main.prototype.switchLoginMode = function() {
 
   this.commandsDiv.visible = false;
   this.menuUi.close();
-  pluginHelper.onAddCustomMenuItems = null;
+  plugin.onAddCustomMenuItems = null;
+
+  this.drawUsername('');
+
+  this.window.dropTarget = false;
+  this.window.ondragdrop = null;
+};
+
+Main.prototype.switchUpgradeMode = function() {
+  this.currentUi = this.upgradeUi;
+
+  this.loginUi.reset();
+  this.loginUi.hide();
+
+  this.docsUi.hide();
+  this.docsUi.reset();
+
+  this.uploadUi.hide();
+  this.uploadUi.reset();
+
+  this.upgradeUi.show();
+
+  this.commandsDiv.visible = false;
+  this.menuUi.close();
+  plugin.onAddCustomMenuItems = null;
 
   this.drawUsername('');
 
@@ -541,7 +580,7 @@ Main.prototype.switchDocsMode = function() {
   this.uploadUi.hide();
 
   this.commandsDiv.visible = true;
-  pluginHelper.onAddCustomMenuItems = this.onMenuItems.bind(this);
+  plugin.onAddCustomMenuItems = this.onMenuItems.bind(this);
 
   if (Utils.isWindows()) {
     this.window.dropTarget = true;
@@ -565,7 +604,7 @@ Main.prototype.switchUploadMode = function() {
   this.uploadUi.show();
 
   this.commandsDiv.visible = true;
-  pluginHelper.onAddCustomMenuItems = this.onMenuItems.bind(this);
+  plugin.onAddCustomMenuItems = this.onMenuItems.bind(this);
 
   this.window.dropTarget = false;
   this.window.ondragdrop = null;
@@ -625,7 +664,7 @@ Main.prototype.sizing = function() {
 
 Main.prototype.resizeDelayed = function() {
   view.setTimeout(this.resize.bind(this), 200);
-}
+};
 
 Main.prototype.resize = function() {
   this.window.width = view.width - 2;
@@ -666,6 +705,7 @@ Main.prototype.resize = function() {
   this.loginUi.resize(this.window.width - 24, this.window.height - 50);
   this.docsUi.resize(this.window.width - 16, this.window.height - 46);
   this.uploadUi.resize(this.window.width - 16, this.window.height - 46);
+  this.upgradeUi.resize(this.window.width - 24, this.window.height - 50);
 
   // Footer.
   this.commandsDiv.y = this.window.height - 33;

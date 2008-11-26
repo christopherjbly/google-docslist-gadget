@@ -17,6 +17,7 @@
   <script src="sort.js" />
   <script src="upload_file.js" />
   <script src="upload_ui.js" />
+  <script src="upgrade_ui.js" />
   <script src="version_checker.js" />
   <script src="util.js" />
   <script src="main.js" />
@@ -237,6 +238,15 @@
             <label x="28" y="2" font="helvetica" size="8" color="#000000">&DOCUMENT_FORM;</label>
         </div>
       </div>
+    </div>
+
+    <div name="upgradeDiv" x="10" y="40" height="180" visible="false">
+      <label name="upgradeReason" size="9" color="#000000" font="helvetica"
+        width="240" height="45" y="0" wordWrap="true" />
+      <a name="upgradeDownloadUrl" size="10" font="helvetica"
+        width="100%" height="20" y="45">&DOWNLOAD_GADGET;</a>
+      <a name="upgradeInfoUrl" size="9" font="helvetica"
+        width="100%" height="20" y="65">&MORE_INFORMATION;</a>
     </div>
 
     <div name="loading" background="#cc4444" y="6" height="16" visible="false" >

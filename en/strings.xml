@@ -158,4 +158,7 @@ http://code.google.com/p/google-docslist-gadget/
   <SUPPORTED_FILES>Supported Files</SUPPORTED_FILES>
   <ALL_FILES>All Files</ALL_FILES>
   <ALREADY_UPLOAD>Upload already in progress</ALREADY_UPLOAD>
+
+  <MORE_INFORMATION>More information</MORE_INFORMATION>
+  <DOWNLOAD_GADGET>Download new gadget</DOWNLOAD_GADGET>
 </strings>
