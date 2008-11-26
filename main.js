@@ -10,6 +10,10 @@ Main.MIN_HEIGHT = 200;
 Main.isDocked = true;
 
 function Main() {
+  this.versionChecker = new VersionChecker(strings.VERSION_STRING,
+      'http://james.yum.googlepages.com/docs_gadget_version_info.txt',
+      function() { alert(''); });
+
   g_httpRequest = new HTTPRequest();
   g_errorMessage = new ErrorMessage();
 

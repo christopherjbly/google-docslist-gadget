@@ -35,6 +35,12 @@ function UploadUi(mainDiv) {
   this.contentArea = child(this.mainDiv, 'contentArea');
   this.container = child(this.contentArea, 'contentContainer');
   this.content = child(this.container, 'uploaderContent');
+
+  if (this.container.scrollbar) {
+    if (this.container.scrollbar.lineStep) {
+      this.container.scrollbar.lineStep = 20;
+    }
+  }
 }
 
 UploadUi.prototype.onDoneClick = function() {

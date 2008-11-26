@@ -17,6 +17,7 @@
   <script src="sort.js" />
   <script src="upload_file.js" />
   <script src="upload_ui.js" />
+  <script src="version_checker.js" />
   <script src="util.js" />
   <script src="main.js" />
 
