@@ -123,8 +123,8 @@ UpgradeInfo.prototype.toString = function() {
       this.infoUrl;
 };
 
-VersionChecker.CHECK_INTERVAL = 2 * 60 * 60 * 1000;
-VersionChecker.CHECK_INTERVAL = 60 * 1000;
+VersionChecker.CHECK_INTERVAL = 60 * 60 * 1000;
+VersionChecker.LAST_PING_ON_KEY = 'version_checker_last_ping_on';
 
 function VersionChecker(currentVersionString, url, onUpgradeNeeded) {
   this.isActive = true;
@@ -137,18 +137,30 @@ function VersionChecker(currentVersionString, url, onUpgradeNeeded) {
     return;
   }
 
-  this.scheduleTimer(this.makeFuzz());
+  this.check();
+  this.checkTimer = view.setInterval(this.makeCheck(),
+      VersionChecker.CHECK_INTERVAL);
 }
 
-VersionChecker.prototype.scheduleTimer = function(interval) {
-  debug.trace('Scheduling version check in ' + interval);
-  view.clearTimeout(this.checkTimer);
-  this.checkTimer = view.setTimeout(this.makeCheck(),
-      interval);
+VersionChecker.prototype.getLastPingOn = function() {
+  var d = options.getValue(VersionChecker.LAST_PING_ON_KEY);
+
+  if (d) {
+    return new Date(d);
+  }
+
+  return null;
+};
+
+VersionChecker.prototype.setLastPingOn = function(d) {
+  if (d) {
+    options.putValue(VersionChecker.LAST_PING_ON_KEY, d.getTime());
+  } else {
+    options.putValue(VersionChecker.LAST_PING_ON_KEY, '');
+  }
 };
 
 VersionChecker.BASE_FUZZ = 15 * 60 * 1000;
-VersionChecker.BASE_FUZZ = 15 * 1000;
 
 VersionChecker.prototype.makeFuzz = function() {
   var fuzz = VersionChecker.BASE_FUZZ;
@@ -166,6 +178,21 @@ VersionChecker.prototype.makeCheck = function() {
   };
 };
 
+VersionChecker.prototype.makePing = function() {
+  var me = this;
+
+  return function() {
+    me.ping();
+  };
+};
+
+VersionChecker.prototype.schedulePing = function() {
+  var interval = this.makeFuzz();
+
+  debug.error('Scheduling version check in ' + interval);
+  view.setTimeout(this.makePing(), interval);
+};
+
 VersionChecker.prototype.makeOnReadyStateChange = function(request) {
   var me = this;
 
@@ -179,14 +206,27 @@ VersionChecker.prototype.check = function() {
     return;
   }
 
+  var now = new Date();
+
+  var lastPingOn = this.getLastPingOn();
+
+  if (lastPingOn) {
+    if (now.getMonth() == lastPingOn.getMonth() &&
+        now.getDate() == lastPingOn.getDate()) {
+      debug.trace('Already attempted a ping today.');
+      return;
+    }
+  }
+
+  this.setLastPingOn(now);
+  this.schedulePing();
+};
+
+VersionChecker.prototype.ping = function() {
   var request = new XMLHttpRequest();
   request.open('GET', this.url, true);
   request.onreadystatechange = this.makeOnReadyStateChange(request);
   request.send();
-
-  var nextCheck = VersionChecker.CHECK_INTERVAL;
-  nextCheck += this.makeFuzz();
-  this.scheduleTimer(nextCheck);
 };
 
 VersionChecker.prototype.onReadyStateChange = function(request) {
