@@ -139,6 +139,7 @@ http://code.google.com/p/google-docslist-gadget/
   <SORT_DATE>Date</SORT_DATE>
 
   <COMMAND_NEW>New</COMMAND_NEW>
+  <COMMAND_SHOW>Show</COMMAND_SHOW>
   <COMMAND_UPLOAD>Upload</COMMAND_UPLOAD>
   <COMMAND_SIGN_OUT>Sign out</COMMAND_SIGN_OUT>
   <COMMAND_REFRESH>Refresh</COMMAND_REFRESH>
