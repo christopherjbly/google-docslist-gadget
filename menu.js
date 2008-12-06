@@ -62,3 +62,53 @@ DocumentMenu.prototype.newDocument = function(type) {
     this.onSelected(type);
   }
 };
+
+
+function ShowMenu(mainDiv) {
+  this.onSelected = null;
+
+  this.mainDiv = mainDiv;
+  this.list = child(this.mainDiv, 'items');
+
+  this.allItem = child(this.list, 'showAll');
+  this.ownedItem = child(this.list, 'showOwned');
+  this.openedItem = child(this.list, 'showOpened');
+  this.starredItem = child(this.list, 'showStarred');
+
+  this.allItem.onclick = this.handleClick.bind(this,
+      Document.FORM);
+  this.ownedItem.onclick = this.handleClick.bind(this,
+      Document.PRESENTATION);
+  this.openedItem.onclick = this.handleClick.bind(this,
+      Document.SPREADSHEET);
+  this.starredItem.onclick = this.handleClick.bind(this,
+      Document.DOCUMENT);
+}
+
+ShowMenu.prototype.isOpen = function() {
+  return this.mainDiv.visible;
+};
+
+ShowMenu.prototype.toggle = function() {
+  if (this.isOpen()) {
+    this.close();
+  } else {
+    this.open();
+  }
+};
+
+ShowMenu.prototype.open = function() {
+  this.mainDiv.visible = true;
+};
+
+ShowMenu.prototype.close = function() {
+  this.mainDiv.visible = false;
+};
+
+ShowMenu.prototype.handleClick = function(type) {
+  this.close();
+
+  if (this.onSelected) {
+    this.onSelected(type);
+  }
+};
