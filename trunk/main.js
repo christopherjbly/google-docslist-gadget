@@ -65,11 +65,16 @@ function Main() {
   this.newCommandArrow = child(this.commandsDiv, 'commandsNewArrow');
   this.newCommand = child(this.commandsDiv, 'commandsNew');
   this.newCommand.onclick = this.onNewClick.bind(this);
-  this.showCommandArrow = child(this.commandsDiv, 'commandsShowArrow');
-  this.showCommand = child(this.commandsDiv, 'commandsShow');
 
   this.menuUi = new DocumentMenu(child(this.window, 'newDocument'));
   this.menuUi.onSelected = this.onMenuSelected.bind(this);
+
+  this.showCommandArrow = child(this.commandsDiv, 'commandsShowArrow');
+  this.showCommand = child(this.commandsDiv, 'commandsShow');
+  this.showCommand.onclick = this.onShowClick.bind(this);
+
+  this.showUi = new ShowMenu(child(this.window, 'showMenu'));
+  this.showUi.onSelected = this.onShowSelected.bind(this);
 
   this.window.onclick = this.onWindowClick.bind(this);
 
@@ -190,10 +195,15 @@ Main.prototype.onSearchReset = function() {
 
 Main.prototype.onWindowClick = function() {
   this.menuUi.close();
+  this.showUi.close();
 };
 
 Main.prototype.onMenuSelected = function(type) {
   this.launchNewDocument(type);
+};
+
+Main.prototype.onShowSelected = function(type) {
+  alert(type);
 };
 
 Main.prototype.onUploadClick = function() {
@@ -206,6 +216,12 @@ Main.prototype.onSignoutClick = function() {
 
 Main.prototype.onNewClick = function() {
   this.menuUi.toggle();
+  this.showUi.close();
+};
+
+Main.prototype.onShowClick = function() {
+  this.showUi.toggle();
+  this.menuUi.close();
 };
 
 Main.prototype.onLogin = function(username, password, isRemember) {
@@ -535,6 +551,7 @@ Main.prototype.switchLoginMode = function() {
 
   this.commandsDiv.visible = false;
   this.menuUi.close();
+  this.showUi.close();
   plugin.onAddCustomMenuItems = null;
 
   this.drawUsername('');
@@ -559,6 +576,7 @@ Main.prototype.switchUpgradeMode = function() {
 
   this.commandsDiv.visible = false;
   this.menuUi.close();
+  this.showUi.close();
   plugin.onAddCustomMenuItems = null;
 
   this.drawUsername('');
@@ -726,6 +744,9 @@ Main.prototype.resize = function() {
   this.signoutCommand.x = this.commandsDiv.width -
       (labelCalcWidth(this.signoutCommand) + 4);
   this.menuUi.mainDiv.y = this.commandsDiv.y - this.menuUi.mainDiv.height;
+
+  this.showUi.mainDiv.x = this.showCommand.x;
+  this.showUi.mainDiv.y = this.commandsDiv.y - this.showUi.mainDiv.height;
 };
 
 var g_gadget = new Main();

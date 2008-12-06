@@ -162,4 +162,10 @@ http://code.google.com/p/google-docslist-gadget/
 
   <MORE_INFORMATION>More information</MORE_INFORMATION>
   <DOWNLOAD_GADGET>Download new gadget</DOWNLOAD_GADGET>
+
+  <ALL_ITEMS>All items</ALL_ITEMS>
+  <OWNED_BY_ME>Owned by me</OWNED_BY_ME>
+  <OPENED_BY_ME>Opened by me</OPENED_BY_ME>
+  <STARRED>Starred</STARRED>
+
 </strings>
