@@ -8,7 +8,7 @@ Main.MIN_WIDTH = 170;
 Main.MIN_HEIGHT = 200;
 
 Main.isDocked = true;
-Main.VERSION_CHECK_URL = 'http://james.yum.googlepages.com/docs_gadget_version_info.txt';
+Main.VERSION_CHECK_URL = 'http://desktop.google.com/plugins/versions/docs.txt';
 
 function Main() {
   g_httpRequest = new HTTPRequest();
@@ -65,6 +65,8 @@ function Main() {
   this.newCommandArrow = child(this.commandsDiv, 'commandsNewArrow');
   this.newCommand = child(this.commandsDiv, 'commandsNew');
   this.newCommand.onclick = this.onNewClick.bind(this);
+  this.showCommandArrow = child(this.commandsDiv, 'commandsShowArrow');
+  this.showCommand = child(this.commandsDiv, 'commandsShow');
 
   this.menuUi = new DocumentMenu(child(this.window, 'newDocument'));
   this.menuUi.onSelected = this.onMenuSelected.bind(this);
@@ -712,8 +714,15 @@ Main.prototype.resize = function() {
   this.commandsDiv.width = this.window.width - 16;
   this.newCommandArrow.x = labelCalcWidth(this.newCommand) + 2;
   this.newCommandArrow.y = this.newCommandArrow.height + 3;
-  this.uploadCommand.x = this.newCommandArrow.x +
+
+  this.showCommand.x = this.newCommandArrow.x +
       this.newCommandArrow.width + 7;
+  this.showCommandArrow.x = this.showCommand.x +
+      labelCalcWidth(this.showCommand) + 2;
+  this.showCommandArrow.y = this.showCommandArrow.height + 3;
+
+  this.uploadCommand.x = this.showCommandArrow.x +
+      this.showCommandArrow.width + 7;
   this.signoutCommand.x = this.commandsDiv.width -
       (labelCalcWidth(this.signoutCommand) + 4);
   this.menuUi.mainDiv.y = this.commandsDiv.y - this.menuUi.mainDiv.height;
