@@ -76,28 +76,43 @@ function ShowMenu(mainDiv) {
   this.starredItem = child(this.list, 'showStarred');
 
   this.allItem.onclick = this.handleClick.bind(this,
-      Document.FORM);
+      Main.FILTER_ALL);
   this.ownedItem.onclick = this.handleClick.bind(this,
-      Document.PRESENTATION);
+      Main.FILTER_OWNED);
   this.openedItem.onclick = this.handleClick.bind(this,
-      Document.SPREADSHEET);
+      Main.FILTER_OPENED);
   this.starredItem.onclick = this.handleClick.bind(this,
-      Document.DOCUMENT);
+      Main.FILTER_STARRED);
 }
 
 ShowMenu.prototype.isOpen = function() {
   return this.mainDiv.visible;
 };
 
-ShowMenu.prototype.toggle = function() {
+ShowMenu.prototype.toggle = function(filter) {
   if (this.isOpen()) {
     this.close();
   } else {
-    this.open();
+    this.open(filter);
   }
 };
 
-ShowMenu.prototype.open = function() {
+ShowMenu.prototype.open = function(filter) {
+  child(this.ownedItem, 'check').visible = false;
+  child(this.openedItem, 'check').visible = false;
+  child(this.starredItem, 'check').visible = false;
+  child(this.allItem, 'check').visible = false;
+
+  if (filter == Main.FILTER_OWNED) {
+    child(this.ownedItem, 'check').visible = true;
+  } else if (filter == Main.FILTER_OPENED) {
+    child(this.openedItem, 'check').visible = true;
+  } else if (filter == Main.FILTER_STARRED) {
+    child(this.starredItem, 'check').visible = true;
+  } else {
+    child(this.allItem, 'check').visible = true;
+  }
+
   this.mainDiv.visible = true;
 };
 

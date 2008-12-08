@@ -115,6 +115,24 @@ Main.onUndock = function() {
 };
 
 //
+// filter option.
+//
+
+Main.OPTIONS_FILTER_KEY = 'filter';
+Main.FILTER_ALL = '';
+Main.FILTER_OWNED = 'owned';
+Main.FILTER_OPENED = 'opened';
+Main.FILTER_STARRED = 'starred';
+
+Main.prototype.getFilter = function() {
+  return options.getValue(Main.OPTIONS_FILTER_KEY) || Main.FILTER_ALL;
+};
+
+Main.prototype.setFilter = function(filter) {
+  options.putValue(Main.OPTIONS_FILTER_KEY, filter);
+};
+
+//
 // event handlers.
 //
 
@@ -202,8 +220,8 @@ Main.prototype.onMenuSelected = function(type) {
   this.launchNewDocument(type);
 };
 
-Main.prototype.onShowSelected = function(type) {
-  alert(type);
+Main.prototype.onShowSelected = function(filter) {
+  this.setFilter(filter);
 };
 
 Main.prototype.onUploadClick = function() {
@@ -220,7 +238,7 @@ Main.prototype.onNewClick = function() {
 };
 
 Main.prototype.onShowClick = function() {
-  this.showUi.toggle();
+  this.showUi.toggle(this.getFilter());
   this.menuUi.close();
 };
 

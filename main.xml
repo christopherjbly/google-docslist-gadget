@@ -266,28 +266,32 @@
         <div name="showAll" y="0" width="100%" height="20" enabled="true" cursor="hand"
           onmouseover="event.srcElement.background='#e0ecf7'"
           onmouseout="event.srcElement.background=''">
-            <div x="2" y="2" width="16" height="16" background="images/icon-check.gif"/>
+            <div name="check" x="2" y="2" width="16" height="16" background="images/icon-check.gif"
+              visible="false" />
             <div x="20" y="2" width="16" height="16" background="images/icon-all.gif"/>
             <label x="38" y="2" font="helvetica" size="8" color="#000000">&ALL_ITEMS;</label>
         </div>
         <div name="showOwned" y="20" width="100%" height="20" enabled="true" cursor="hand"
           onmouseover="event.srcElement.background='#e0ecf7'"
           onmouseout="event.srcElement.background=''">
-            <div x="2" y="2" width="16" height="16" background="images/icon-check.gif" visible="false" />
+            <div name="check" x="2" y="2" width="16" height="16" background="images/icon-check.gif"
+              visible="false" />
             <div x="20" y="2" width="16" height="16" background="images/icon-pad.gif"/>
             <label x="38" y="2" font="helvetica" size="8" color="#000000">&OWNED_BY_ME;</label>
         </div>
         <div name="showOpened" y="40" width="100%" height="20" enabled="true" cursor="hand"
           onmouseover="event.srcElement.background='#e0ecf7'"
           onmouseout="event.srcElement.background=''">
-            <div x="2" y="2" width="16" height="16" background="images/icon-check.gif" visible="false" />
+            <div name="check" x="2" y="2" width="16" height="16" background="images/icon-check.gif"
+              visible="false" />
             <div x="20" y="2" width="16" height="16" background="images/icon-pad.gif"/>
             <label x="38" y="2" font="helvetica" size="8" color="#000000">&OPENED_BY_ME;</label>
         </div>
         <div name="showStarred" y="60" width="100%" height="20" enabled="true" cursor="hand"
           onmouseover="event.srcElement.background='#e0ecf7'"
           onmouseout="event.srcElement.background=''">
-            <div x="2" y="2" width="16" height="16" background="images/icon-check.gif" visible="false" />
+            <div name="check" x="2" y="2" width="16" height="16" background="images/icon-check.gif"
+              visible="false" />
             <div x="20" y="2" width="16" height="16" background="images/icon-star-big.gif"/>
             <label x="38" y="2" font="helvetica" size="8" color="#000000">&STARRED;</label>
         </div>
