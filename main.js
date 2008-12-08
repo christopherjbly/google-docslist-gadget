@@ -157,6 +157,23 @@ Main.prototype.onMenuItems = function(menu) {
       this.onNewDocumentMenuItem.bind(this, Document.SPREADSHEET));
   newCommands.AddItem(strings.DOCUMENT_FORM, 0,
       this.onNewDocumentMenuItem.bind(this, Document.FORM));
+
+  var filter = this.getFilter();
+
+  var showCommands = menu.AddPopup(strings.COMMAND_SHOW);
+  showCommands.AddItem(strings.ALL_ITEMS,
+      filter == Main.FILTER_ALL ? gddMenuItemFlagChecked : 0,
+      this.onMenuShowSelected.bind(this, Main.FILTER_ALL));
+  showCommands.AddItem(strings.OWNED_BY_ME,
+      filter == Main.FILTER_OWNED ? gddMenuItemFlagChecked : 0,
+      this.onMenuShowSelected.bind(this, Main.FILTER_OWNED));
+  showCommands.AddItem(strings.OPENED_BY_ME,
+      filter == Main.FILTER_OPENED ? gddMenuItemFlagChecked : 0,
+      this.onMenuShowSelected.bind(this, Main.FILTER_OPENED));
+  showCommands.AddItem(strings.STARRED,
+      filter == Main.FILTER_STARRED ? gddMenuItemFlagChecked : 0,
+      this.onMenuShowSelected.bind(this, Main.FILTER_STARRED));
+
   if (Utils.isWindows()) {
     menu.AddItem(strings.COMMAND_UPLOAD,
         this.isUploading ? gddMenuItemFlagGrayed : 0,
@@ -221,6 +238,10 @@ Main.prototype.onMenuSelected = function(type) {
 };
 
 Main.prototype.onShowSelected = function(filter) {
+  this.setFilter(filter);
+};
+
+Main.prototype.onMenuShowSelected = function(text, filter) {
   this.setFilter(filter);
 };
 

@@ -98,10 +98,10 @@ ShowMenu.prototype.toggle = function(filter) {
 };
 
 ShowMenu.prototype.open = function(filter) {
+  child(this.allItem, 'check').visible = false;
   child(this.ownedItem, 'check').visible = false;
   child(this.openedItem, 'check').visible = false;
   child(this.starredItem, 'check').visible = false;
-  child(this.allItem, 'check').visible = false;
 
   if (filter == Main.FILTER_OWNED) {
     child(this.ownedItem, 'check').visible = true;
