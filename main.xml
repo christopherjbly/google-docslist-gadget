@@ -188,8 +188,8 @@
     <div name="commands" height="23" x="7">
       <a name="commandsNew" x="3" height="14" font="helvetica" size="8" color="#0065cd" underline="true">&COMMAND_NEW;</a>
       <div name="commandsNewArrow" cursor="hand" width="7" height="4" background="images/down-arrow.gif" enabled="true" />
-      <a name="commandsShow" x="3" height="14" font="helvetica" size="8" color="#0065cd" underline="true">&COMMAND_SHOW;</a>
-      <div name="commandsShowArrow" cursor="hand" width="7" height="4" background="images/down-arrow.gif" enabled="true" />
+      <a name="commandsShow" x="3" height="14" font="helvetica" size="8" color="#0065cd" underline="true" visible="false">&COMMAND_SHOW;</a>
+      <div name="commandsShowArrow" cursor="hand" width="7" height="4" background="images/down-arrow.gif" enabled="true" visible="false" />
       <a name="commandsUpload" font="helvetica" size="8" color="#0065cd" underline="true">&COMMAND_UPLOAD;</a>
       <a name="commandsSignout" font="helvetica" size="8" color="#0065cd" underline="true">&COMMAND_SIGN_OUT;</a>
     </div>

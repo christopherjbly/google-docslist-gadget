@@ -54,11 +54,7 @@ function Main() {
 
   this.uploadCommand = child(this.commandsDiv, 'commandsUpload');
 
-  if (Utils.isWindows()) {
-    this.uploadCommand.onclick = this.onUploadClick.bind(this);
-  } else {
-    this.uploadCommand.visible = false;
-  }
+  this.uploadCommand.onclick = this.onUploadClick.bind(this);
 
   this.signoutCommand = child(this.commandsDiv, 'commandsSignout');
   this.signoutCommand.onclick = this.onSignoutClick.bind(this);
@@ -160,6 +156,7 @@ Main.prototype.onMenuItems = function(menu) {
 
   var filter = this.getFilter();
 
+  /*
   var showCommands = menu.AddPopup(strings.COMMAND_SHOW);
   showCommands.AddItem(strings.ALL_ITEMS,
       filter == Main.FILTER_ALL ? gddMenuItemFlagChecked : 0,
@@ -173,12 +170,12 @@ Main.prototype.onMenuItems = function(menu) {
   showCommands.AddItem(strings.STARRED,
       filter == Main.FILTER_STARRED ? gddMenuItemFlagChecked : 0,
       this.onMenuShowSelected.bind(this, Main.FILTER_STARRED));
+      */
 
-  if (Utils.isWindows()) {
-    menu.AddItem(strings.COMMAND_UPLOAD,
-        this.isUploading ? gddMenuItemFlagGrayed : 0,
-        this.browseUpload.bind(this));
-  }
+  menu.AddItem(strings.COMMAND_UPLOAD,
+      this.isUploading ? gddMenuItemFlagGrayed : 0,
+      this.browseUpload.bind(this));
+
   menu.AddItem(strings.COMMAND_SIGN_OUT, 0, this.logout.bind(this));
 };
 
@@ -242,7 +239,7 @@ Main.prototype.onShowSelected = function(filter) {
 };
 
 Main.prototype.onMenuShowSelected = function(text, filter) {
-  this.setFilter(filter);
+  this.onShowSelected(filter);
 };
 
 Main.prototype.onUploadClick = function() {
@@ -641,10 +638,8 @@ Main.prototype.switchDocsMode = function() {
   this.commandsDiv.visible = true;
   plugin.onAddCustomMenuItems = this.onMenuItems.bind(this);
 
-  if (Utils.isWindows()) {
-    this.window.dropTarget = true;
-    this.window.ondragdrop = this.onDragDrop.bind(this);
-  }
+  this.window.dropTarget = true;
+  this.window.ondragdrop = this.onDragDrop.bind(this);
 };
 
 Main.prototype.isUploadMode = function() {
@@ -772,6 +767,10 @@ Main.prototype.resize = function() {
   this.newCommandArrow.x = labelCalcWidth(this.newCommand) + 2;
   this.newCommandArrow.y = this.newCommandArrow.height + 3;
 
+  this.uploadCommand.x = this.newCommandArrow.x +
+      this.newCommandArrow.width + 7;
+
+  /*
   this.showCommand.x = this.newCommandArrow.x +
       this.newCommandArrow.width + 7;
   this.showCommandArrow.x = this.showCommand.x +
@@ -780,6 +779,7 @@ Main.prototype.resize = function() {
 
   this.uploadCommand.x = this.showCommandArrow.x +
       this.showCommandArrow.width + 7;
+      */
   this.signoutCommand.x = this.commandsDiv.width -
       (labelCalcWidth(this.signoutCommand) + 4);
   this.menuUi.mainDiv.y = this.commandsDiv.y - this.menuUi.mainDiv.height;
