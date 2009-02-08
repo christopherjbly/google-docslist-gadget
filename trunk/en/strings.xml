@@ -2,7 +2,7 @@
   <GADGET_NAME>Google Docs</GADGET_NAME>
   <GADGET_DESCRIPTION>Find, open, and upload Google Docs documents</GADGET_DESCRIPTION>
   <GADGET_ABOUT_TEXT>Google Docs
-Copyright 2008 Google Inc. All Rights Reserved.
+Copyright 2009 Google Inc. All Rights Reserved.
 Find and open your Google Docs documents. To upload files to Google Docs, drag them into the gadget.
 
 Licensed under the Apache License, Version 2.0
@@ -11,9 +11,9 @@ http://www.apache.org/licenses/LICENSE-2.0
 This gadget was created by Google and is maintained by the open-source community
 http://code.google.com/p/google-docslist-gadget/
 </GADGET_ABOUT_TEXT>
-  <GADGET_COPYRIGHT>Copyright 2008 Google Inc. All Rights Reserved.</GADGET_COPYRIGHT>
+  <GADGET_COPYRIGHT>Copyright 2009 Google Inc. All Rights Reserved.</GADGET_COPYRIGHT>
   <GADGET_OWNER>Google</GADGET_OWNER>
-  <VERSION_STRING>1.0.0.0</VERSION_STRING>
+  <VERSION_STRING>1.0.0.1</VERSION_STRING>
 
   <!-- date strings -->
   <DATE_YESTERDAY>Yesterday</DATE_YESTERDAY>

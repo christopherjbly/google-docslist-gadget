@@ -15,16 +15,18 @@ limitations under the License.
 */
 
 DocsFeed.FEED_URL = 'https://docs.google.com/feeds/documents/private/full';
+DocsFeed.LABELS_SCHEME = '/-/{http:%2F%2Fschemas.google.com%2Fg%2F2005%2Flabels}';
 
 DocsFeed.MAX_RESULTS_PARAM = 'max-results';
 DocsFeed.MAX_RESULTS = 30;
 DocsFeed.SEARCH_PARAM ='q';
 DocsFeed.START_INDEX_PARAM = 'start-index';
 
-function DocsFeed(callback, failback, opt_query) {
+function DocsFeed(callback, failback, opt_query, opt_label) {
   this.callback = callback;
   this.failback = failback;
   this.query = opt_query;
+  this.label = opt_label;
   this.isDead = false;
 }
 
@@ -37,11 +39,15 @@ DocsFeed.prototype.buildFeedUrl = function(startIndex) {
   params[DocsFeed.MAX_RESULTS_PARAM] = DocsFeed.MAX_RESULTS;
   params[DocsFeed.START_INDEX_PARAM] = startIndex;
 
+  var path = DocsFeed.FEED_URL;
+
   if (this.query) {
     params[DocsFeed.SEARCH_PARAM] = this.query;
+  } else if (this.label) {
+    path += DocsFeed.LABELS_SCHEME + encodeURIComponent(this.label);
   }
 
-  return DocsFeed.FEED_URL + '?' + buildQueryString(params);
+  return path + '?' + buildQueryString(params);
 };
 
 DocsFeed.prototype.retrieve = function() {

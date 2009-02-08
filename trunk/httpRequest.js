@@ -31,6 +31,8 @@ AuthHTTPRequest.prototype.connect = function (url, data, handler, failedHandler,
 HTTPRequest.TIME_BETWEEN_REQUESTS = 1000;  // 1 second.
 HTTPRequest.TIMEOUT = 30000;  // 30 seconds.
 
+HTTPRequest.USER_AGENT = 'GoogleDesktop-DocsGadget-1.0.0.1';
+
 function HTTPRequest() {
   this.packet = createXhr();
 
@@ -79,7 +81,7 @@ HTTPRequest.prototype.connect = function (url, data, handler, failedHandler,
   if (isFile) {
     var filename = data;
 
-    var stream = new ActiveXObject("ADODB.Stream");
+    var stream = new ActiveXObject('ADODB.Stream');
 
     stream.Type = 1;  // adTypeBinary
     stream.Open();
@@ -101,6 +103,8 @@ HTTPRequest.prototype.connect = function (url, data, handler, failedHandler,
   } else {
     this.packet.open('GET', url, true);
   }
+
+  this.packet.setRequestHeader('User-Agent', HTTPRequest.USER_AGENT);
 
   for (var key in headers) {
     if (typeof headers[key] == 'string') {
