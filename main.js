@@ -133,7 +133,6 @@ Main.onUndock = function() {
 Main.OPTIONS_FILTER_KEY = 'filter';
 Main.FILTER_ALL = '';
 Main.FILTER_OWNED = 'mine';
-Main.FILTER_OPENED = 'opened';
 Main.FILTER_STARRED = 'starred';
 
 Main.prototype.getFilter = function() {
@@ -179,11 +178,6 @@ Main.prototype.onMenuItems = function(menu) {
   showCommands.AddItem(strings.OWNED_BY_ME,
       filter == Main.FILTER_OWNED ? gddMenuItemFlagChecked : 0,
       this.onMenuShowSelected.bind(this, Main.FILTER_OWNED));
-  /*
-  showCommands.AddItem(strings.OPENED_BY_ME,
-      filter == Main.FILTER_OPENED ? gddMenuItemFlagChecked : 0,
-      this.onMenuShowSelected.bind(this, Main.FILTER_OPENED));
-      */
   showCommands.AddItem(strings.STARRED,
       filter == Main.FILTER_STARRED ? gddMenuItemFlagChecked : 0,
       this.onMenuShowSelected.bind(this, Main.FILTER_STARRED));
@@ -279,6 +273,8 @@ Main.prototype.onShowClick = function() {
 
 Main.prototype.onLogin = function(username, password, isRemember) {
   this.loginUi.disable();
+  // This is a new session. Clear filter preference.
+  this.setFilter('');
   this.auth.login(username, password, isRemember,
       this.onLoginSuccess.bind(this),
       this.onLoginFailure.bind(this));
@@ -792,6 +788,8 @@ Main.prototype.resize = function() {
 
   this.uploadCommand.x = this.showCommandArrow.x +
       this.showCommandArrow.width + 7;
+
+  this.uploadCommand.visible = this.window.width > 193;
 
   this.signoutCommand.x = this.commandsDiv.width -
       (labelCalcWidth(this.signoutCommand) + 4);
