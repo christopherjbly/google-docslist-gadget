@@ -132,7 +132,7 @@ Main.onUndock = function() {
 
 Main.OPTIONS_FILTER_KEY = 'filter';
 Main.FILTER_ALL = '';
-Main.FILTER_OWNED = 'owned';
+Main.FILTER_OWNED = 'mine';
 Main.FILTER_OPENED = 'opened';
 Main.FILTER_STARRED = 'starred';
 
@@ -172,7 +172,6 @@ Main.prototype.onMenuItems = function(menu) {
 
   var filter = this.getFilter();
 
-  /*
   var showCommands = menu.AddPopup(strings.COMMAND_SHOW);
   showCommands.AddItem(strings.ALL_ITEMS,
       filter == Main.FILTER_ALL ? gddMenuItemFlagChecked : 0,
@@ -180,13 +179,14 @@ Main.prototype.onMenuItems = function(menu) {
   showCommands.AddItem(strings.OWNED_BY_ME,
       filter == Main.FILTER_OWNED ? gddMenuItemFlagChecked : 0,
       this.onMenuShowSelected.bind(this, Main.FILTER_OWNED));
+  /*
   showCommands.AddItem(strings.OPENED_BY_ME,
       filter == Main.FILTER_OPENED ? gddMenuItemFlagChecked : 0,
       this.onMenuShowSelected.bind(this, Main.FILTER_OPENED));
+      */
   showCommands.AddItem(strings.STARRED,
       filter == Main.FILTER_STARRED ? gddMenuItemFlagChecked : 0,
       this.onMenuShowSelected.bind(this, Main.FILTER_STARRED));
-      */
 
   menu.AddItem(strings.COMMAND_UPLOAD,
       this.isUploading ? gddMenuItemFlagGrayed : 0,
@@ -252,6 +252,7 @@ Main.prototype.onMenuSelected = function(type) {
 
 Main.prototype.onShowSelected = function(filter) {
   this.setFilter(filter);
+  this.retrieve();
 };
 
 Main.prototype.onMenuShowSelected = function(text, filter) {
@@ -337,7 +338,7 @@ Main.prototype.retrieve = function() {
         this.onRetrieveFail.bind(this), this.searchQuery);
   } else {
     this.docsFeed = new DocsFeed(this.onRetrieve.bind(this),
-        this.onRetrieveFail.bind(this));
+        this.onRetrieveFail.bind(this), null, this.getFilter());
   }
 
   this.docsFeed.retrieve();
@@ -435,7 +436,7 @@ Main.prototype.onLoginFailure = function(code, reason) {
 // Upload section.
 //
 
-Main.MAX_UPLOAD = 20;
+Main.MAX_UPLOAD = 30;
 
 Main.prototype.upload = function(files) {
   if (this.isUploading) {
@@ -783,10 +784,6 @@ Main.prototype.resize = function() {
   this.newCommandArrow.x = labelCalcWidth(this.newCommand) + 2;
   this.newCommandArrow.y = this.newCommandArrow.height + 3;
 
-  this.uploadCommand.x = this.newCommandArrow.x +
-      this.newCommandArrow.width + 7;
-
-  /*
   this.showCommand.x = this.newCommandArrow.x +
       this.newCommandArrow.width + 7;
   this.showCommandArrow.x = this.showCommand.x +
@@ -795,7 +792,7 @@ Main.prototype.resize = function() {
 
   this.uploadCommand.x = this.showCommandArrow.x +
       this.showCommandArrow.width + 7;
-      */
+
   this.signoutCommand.x = this.commandsDiv.width -
       (labelCalcWidth(this.signoutCommand) + 4);
   this.menuUi.mainDiv.y = this.commandsDiv.y - this.menuUi.mainDiv.height;

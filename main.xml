@@ -188,8 +188,8 @@
     <div name="commands" height="23" x="7">
       <a name="commandsNew" x="3" height="14" font="helvetica" size="8" color="#0065cd" underline="true">&COMMAND_NEW;</a>
       <div name="commandsNewArrow" cursor="hand" width="7" height="4" background="images/down-arrow.gif" enabled="true" />
-      <a name="commandsShow" x="3" height="14" font="helvetica" size="8" color="#0065cd" underline="true" visible="false">&COMMAND_SHOW;</a>
-      <div name="commandsShowArrow" cursor="hand" width="7" height="4" background="images/down-arrow.gif" enabled="true" visible="false" />
+      <a name="commandsShow" x="3" height="14" font="helvetica" size="8" color="#0065cd" underline="true" visible="true">&COMMAND_SHOW;</a>
+      <div name="commandsShowArrow" cursor="hand" width="7" height="4" background="images/down-arrow.gif" enabled="true" visible="true" />
       <a name="commandsUpload" font="helvetica" size="8" color="#0065cd" underline="true">&COMMAND_UPLOAD;</a>
       <a name="commandsSignout" font="helvetica" size="8" color="#0065cd" underline="true">&COMMAND_SIGN_OUT;</a>
     </div>
@@ -242,7 +242,7 @@
       </div>
     </div>
 
-    <div name="showMenu" x="8" width="126" height="88" visible="false">
+    <div name="showMenu" x="8" width="126" height="68" visible="false">
       <div width="3" height="3"
            background="images/dropdown-top-left.png" />
       <div x="3" width="118" height="3"
@@ -250,19 +250,19 @@
       <div x="121" width="5" height="3"
            background="images/dropdown-top-right.png" />
 
-      <div y="3" width="3" height="80"
+      <div y="3" width="3" height="60"
            background="images/dropdown-left.png" />
-      <div x="121 " y="3" width="5" height="80"
+      <div x="121 " y="3" width="5" height="60"
            background="images/dropdown-right.png" />
 
-      <div y="83" width="3" height="5"
+      <div y="63" width="3" height="5"
            background="images/dropdown-bottom-left.png" />
-      <div x="3" y="83" width="118" height="5"
+      <div x="3" y="63" width="118" height="5"
            background="images/dropdown-bottom.png" />
-      <div x="121" y="83" width="5" height="5"
+      <div x="121" y="63" width="5" height="5"
          background="images/dropdown-bottom-right.png" />
 
-      <div name="items" x="3" y="3" width="118" height="80" background="#ffffff">
+      <div name="items" x="3" y="3" width="118" height="60" background="#ffffff">
         <div name="showAll" y="0" width="100%" height="20" enabled="true" cursor="hand"
           onmouseover="event.srcElement.background='#e0ecf7'"
           onmouseout="event.srcElement.background=''">
@@ -279,6 +279,15 @@
             <div x="20" y="2" width="16" height="16" background="images/icon-pad.gif"/>
             <label x="38" y="2" font="helvetica" size="8" color="#000000">&OWNED_BY_ME;</label>
         </div>
+        <div name="showStarred" y="40" width="100%" height="20" enabled="true" cursor="hand"
+          onmouseover="event.srcElement.background='#e0ecf7'"
+          onmouseout="event.srcElement.background=''">
+            <div name="check" x="2" y="2" width="16" height="16" background="images/icon-check.gif"
+              visible="false" />
+            <div x="20" y="2" width="16" height="16" background="images/icon-star-big.gif"/>
+            <label x="38" y="2" font="helvetica" size="8" color="#000000">&STARRED;</label>
+        </div>
+        <!--
         <div name="showOpened" y="40" width="100%" height="20" enabled="true" cursor="hand"
           onmouseover="event.srcElement.background='#e0ecf7'"
           onmouseout="event.srcElement.background=''">
@@ -287,14 +296,7 @@
             <div x="20" y="2" width="16" height="16" background="images/icon-pad.gif"/>
             <label x="38" y="2" font="helvetica" size="8" color="#000000">&OPENED_BY_ME;</label>
         </div>
-        <div name="showStarred" y="60" width="100%" height="20" enabled="true" cursor="hand"
-          onmouseover="event.srcElement.background='#e0ecf7'"
-          onmouseout="event.srcElement.background=''">
-            <div name="check" x="2" y="2" width="16" height="16" background="images/icon-check.gif"
-              visible="false" />
-            <div x="20" y="2" width="16" height="16" background="images/icon-star-big.gif"/>
-            <label x="38" y="2" font="helvetica" size="8" color="#000000">&STARRED;</label>
-        </div>
+        -->
       </div>
     </div>
 

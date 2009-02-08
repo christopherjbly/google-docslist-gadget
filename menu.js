@@ -72,15 +72,17 @@ function ShowMenu(mainDiv) {
 
   this.allItem = child(this.list, 'showAll');
   this.ownedItem = child(this.list, 'showOwned');
-  this.openedItem = child(this.list, 'showOpened');
+  // this.openedItem = child(this.list, 'showOpened');
   this.starredItem = child(this.list, 'showStarred');
 
   this.allItem.onclick = this.handleClick.bind(this,
       Main.FILTER_ALL);
   this.ownedItem.onclick = this.handleClick.bind(this,
       Main.FILTER_OWNED);
+  /*
   this.openedItem.onclick = this.handleClick.bind(this,
       Main.FILTER_OPENED);
+      */
   this.starredItem.onclick = this.handleClick.bind(this,
       Main.FILTER_STARRED);
 }
@@ -100,13 +102,15 @@ ShowMenu.prototype.toggle = function(filter) {
 ShowMenu.prototype.open = function(filter) {
   child(this.allItem, 'check').visible = false;
   child(this.ownedItem, 'check').visible = false;
-  child(this.openedItem, 'check').visible = false;
+  // child(this.openedItem, 'check').visible = false;
   child(this.starredItem, 'check').visible = false;
 
   if (filter == Main.FILTER_OWNED) {
     child(this.ownedItem, 'check').visible = true;
+  /*
   } else if (filter == Main.FILTER_OPENED) {
     child(this.openedItem, 'check').visible = true;
+    */
   } else if (filter == Main.FILTER_STARRED) {
     child(this.starredItem, 'check').visible = true;
   } else {
