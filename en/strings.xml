@@ -13,7 +13,7 @@ http://code.google.com/p/google-docslist-gadget/
 </GADGET_ABOUT_TEXT>
   <GADGET_COPYRIGHT>Copyright 2009 Google Inc. All Rights Reserved.</GADGET_COPYRIGHT>
   <GADGET_OWNER>Google</GADGET_OWNER>
-  <VERSION_STRING>1.0.0.1</VERSION_STRING>
+  <VERSION_STRING>1.0.0.2</VERSION_STRING>
 
   <!-- date strings -->
   <DATE_YESTERDAY>Yesterday</DATE_YESTERDAY>

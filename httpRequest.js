@@ -72,8 +72,7 @@ HTTPRequest.prototype.connect = function (url, data, handler, failedHandler,
 
   this.showLoading();
 
-  // Check if network is online.
-  if (!framework.system.network.online) {
+  if (!Utils.isOnline()) {
     this.onFailure(failedHandler);
     return;
   }

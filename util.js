@@ -244,6 +244,12 @@ Utils.isWindows = function() {
   return framework.runtime.osName.match(/windows/i) !== null;
 };
 
+Utils.onlineChecker = null;
+
 Utils.isOnline = function() {
-  return framework.system.network.online;
+  if (!Utils.onlineChecker) {
+    Utils.onlineChecker = new OnlineChecker();
+  }
+
+  return Utils.onlineChecker.isOnline();
 };
