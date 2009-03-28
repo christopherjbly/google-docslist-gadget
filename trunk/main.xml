@@ -12,6 +12,7 @@
   <script src="httpRequest.js" />
   <script src="login_ui.js" />
   <script src="menu.js" />
+  <script src="online_checker.js" />
   <script src="scrollbar.js" />
   <script src="search.js" />
   <script src="sort.js" />

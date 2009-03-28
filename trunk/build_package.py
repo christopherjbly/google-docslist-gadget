@@ -17,6 +17,7 @@ FILES = [
   'main.js',
   'main.xml',
   'menu.js',
+  'online_checker.js',
   'scrollbar.js',
   'search.js',
   'sort.js',
