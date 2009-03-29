@@ -1,14 +1,13 @@
 OnlineChecker.PING_URL = 'http://clients3.google.com';
-OnlineChecker.CHECK_INTERVAL_MS = 15 * 60 * 1000;
+OnlineChecker.CHECK_INTERVAL_MS = 2 * 60 * 1000;
 OnlineChecker.PING_TIMEOUT_MS = 30 * 1000;
-OnlineChecker.USE_FRAMEWORK_API = true;
+OnlineChecker.USE_FRAMEWORK_API = false;
 
 function OnlineChecker() {
   // Assume online at first.
   this.isPingSucceeded = true;
   this.timeoutTimer = null;
-  this.pingTimer = view.setInterval(this.makePing(),
-      OnlineChecker.CHECK_INTERVAL_MS);
+  this.pingTimer = null;
   this.ping();
 }
 
@@ -25,6 +24,14 @@ OnlineChecker.prototype.isOnline = function() {
 };
 
 OnlineChecker.prototype.ping = function() {
+  var interval = OnlineChecker.CHECK_INTERVAL_MS;
+  var fuzz = interval / 5;
+  fuzz *= Math.random();
+  fuzz = Math.floor(fuzz)
+  interval += fuzz;
+  debug.info(interval);
+  this.pingTimer = view.setTimeout(this.makePing(), interval);
+
   if (OnlineChecker.USE_FRAMEWORK_API) {
     if (framework.system.network.online) {
       this.isPingSucceeded = true;
