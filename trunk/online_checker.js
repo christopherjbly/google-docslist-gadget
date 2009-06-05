@@ -39,7 +39,7 @@ OnlineChecker.prototype.ping = function() {
     }
   }
 
-  var request = new XMLHttpRequest();
+  var request = createXhr();
   request.open('GET', OnlineChecker.PING_URL, true);
   this.timeoutTimer = view.setTimeout(
       this.makeOnTimeout(),
