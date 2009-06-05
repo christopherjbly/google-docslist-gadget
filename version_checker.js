@@ -223,7 +223,7 @@ VersionChecker.prototype.check = function() {
 };
 
 VersionChecker.prototype.ping = function() {
-  var request = new XMLHttpRequest();
+  var request = createXhr();
   request.open('GET', this.url, true);
   request.onreadystatechange = this.makeOnReadyStateChange(request);
   request.send();
